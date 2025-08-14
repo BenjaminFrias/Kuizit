@@ -1,0 +1,34 @@
+# Ignore all node_modules folders
+node_modules/
+
+# Ignore log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Environment variables 
+.env
+.env.local
+
+# Compiled JavaScript and build outputs for the server and client
+client/dist/
+server/dist/
+
+# VS Code
+.vscode/
+
+# Ignore settings.json as it's user-specific
+!.vscode/extensions.json
+.vscode/*.code-workspace
+.vscode/settings.json
+
+# WebStorm / JetBrains IDEs
+.idea/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
