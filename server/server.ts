@@ -25,9 +25,9 @@ app.get('/', async (req, res) => {
 			optionTypes
 		);
 		res.status(200).send(quiz);
-	} catch (error) {
-		console.log('Quiz generation failed: ', error);
-		res.status(400).json({ error: error });
+	} catch (error: any) {
+		console.error('Quiz generation failed: ', error);
+		res.status(400).json({ error: error.message });
 	}
 });
 

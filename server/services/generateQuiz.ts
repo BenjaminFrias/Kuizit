@@ -1,11 +1,11 @@
-import { GoogleGenAI, Type } from '@google/genai';
+import {
+	GoogleGenAI,
+	HarmBlockThreshold,
+	HarmCategory,
+	Type,
+} from '@google/genai';
 
 const API_KEY = process.env.GEMINI_API_KEY;
-
-if (!API_KEY) {
-	console.error('GEMINI_API_KEY is not set in the .env file.');
-	throw new Error();
-}
 
 const ai = new GoogleGenAI({ apiKey: API_KEY });
 
@@ -15,6 +15,25 @@ export async function generateQuiz(
 	difficulty: string,
 	optionTypes: string[]
 ) {
+	const safetySettings = [
+		{
+			category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+			threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH,
+		},
+		{
+			category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+			threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH,
+		},
+		{
+			category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+			threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH,
+		},
+		{
+			category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+			threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH,
+		},
+	];
+
 	const configAI = {
 		systemInstruction: `
         You are an expert quiz question generator. Your task is to create quiz questions based on provided content.
@@ -32,8 +51,9 @@ export async function generateQuiz(
             - Ensure only ONE option has 'answer: true'.
         - The response MUST strictly follow the provided JSON schema.
         - You should provide a longer explanation of the answer, ideally between 20 and 50 words.
+		- If the content does not met the safety settings return an empty array
         `,
-
+		safetySettings: safetySettings,
 		responseMimeType: 'application/json',
 		responseSchema: {
 			type: Type.ARRAY,
@@ -79,19 +99,28 @@ export async function generateQuiz(
 		},
 	};
 
-	const result = await ai.models.generateContent({
-		model: 'gemini-2.5-flash',
-		contents: userContent,
-		config: configAI,
-	});
+	try {
+		const result = await ai.models.generateContent({
+			model: 'gemini-2.5-flash',
+			contents: userContent,
+			config: configAI,
+		});
 
-	const responseText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+		const responseText = result?.candidates?.[0]?.content?.parts?.[0]?.text;
 
-	if (typeof responseText === 'string' && responseText.length > 0) {
+		if (typeof responseText !== 'string' || responseText.length === 0) {
+			throw new Error('AI returned no text content.');
+		}
+
 		const quizData = JSON.parse(responseText);
-		return quizData;
-	} else {
-		console.log('AI response was not valid: ', responseText);
-		throw new Error('AI did not return valid quiz data.');
+
+		if (Array.isArray(quizData) && quizData.length > 0) {
+			return quizData;
+		} else {
+			throw new Error('Parsed data is empty due to invalid content.');
+		}
+	} catch (error: any) {
+		console.error('Failed to generate quiz: ', error);
+		throw new Error('Could not generate quiz. Please try again.');
 	}
 }
