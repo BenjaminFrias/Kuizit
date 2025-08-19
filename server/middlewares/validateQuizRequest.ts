@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 
 type QuizRequestBody = {
+	quizInputType: string;
 	content: string;
 	numQuestions: string;
 	difficulty: string;
@@ -8,6 +9,7 @@ type QuizRequestBody = {
 };
 
 type ValidatedQuizData = {
+	quizInputType: string;
 	content: string;
 	numQuestions: number;
 	difficulty: string;
@@ -20,24 +22,50 @@ declare module 'express-serve-static-core' {
 	}
 }
 
+interface FileRequest extends Request {
+	file: Express.Multer.File;
+}
+
 function validateQuizRequest(req: Request, res: Response, next: NextFunction) {
-	const { content, numQuestions, difficulty, optionTypes } =
+	const { quizInputType, content, numQuestions, difficulty, optionTypes } =
 		req.body as QuizRequestBody;
 
-	if (!content || !numQuestions || !difficulty || !optionTypes) {
+	if (
+		!quizInputType ||
+		!content ||
+		!numQuestions ||
+		!difficulty ||
+		!optionTypes
+	) {
 		return res.status(400).json({ error: 'Missing required field.' });
 	}
 
+	// Validate Quiz input type
+	const validQuizInputTypes = ['prompt', 'file'];
+	if (!validQuizInputTypes.includes(quizInputType)) {
+		return res.status(400).json({ error: 'Invalid input type.' });
+	}
+
+	if (quizInputType === 'file') {
+		const fileReq = req as FileRequest;
+		if (!fileReq.file) {
+			return res.status(400).json({ error: 'No file uploaded.' });
+		}
+	}
+
+	// Validate number of questions
 	const parsedNumQuestions = parseInt(numQuestions);
 	if (isNaN(parsedNumQuestions) || parsedNumQuestions < 3) {
 		return res.status(400).json({ error: 'Invalid number of questions.' });
 	}
 
+	// Validate difficulty option
 	const validDifficulties = ['easy', 'medium', 'hard', 'expert'];
 	if (!validDifficulties.includes(difficulty.toLowerCase())) {
 		return res.status(400).json({ error: 'Invalid difficulty level.' });
 	}
 
+	// Validate answer option types
 	const validOptionTypes = ['multiple_choice', 'true_false'];
 	const selectedOptionTypes = Array.isArray(optionTypes)
 		? optionTypes
@@ -52,6 +80,7 @@ function validateQuizRequest(req: Request, res: Response, next: NextFunction) {
 	}
 
 	req.validatedQuizData = {
+		quizInputType: quizInputType,
 		content: content,
 		numQuestions: parsedNumQuestions,
 		difficulty: difficulty,

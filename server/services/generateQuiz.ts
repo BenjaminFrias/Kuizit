@@ -10,6 +10,7 @@ const API_KEY = process.env.GEMINI_API_KEY;
 const ai = new GoogleGenAI({ apiKey: API_KEY });
 
 export async function generateQuiz(
+	quizInputType: string,
 	userContent: string,
 	numQuestions: number,
 	difficulty: string,
