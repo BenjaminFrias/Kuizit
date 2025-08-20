@@ -1,8 +1,11 @@
 import {
 	GoogleGenAI,
+	createPartFromUri,
+	createUserContent,
 	HarmBlockThreshold,
 	HarmCategory,
 	Type,
+	Content,
 } from '@google/genai';
 
 const API_KEY = process.env.GEMINI_API_KEY;
@@ -11,7 +14,7 @@ const ai = new GoogleGenAI({ apiKey: API_KEY });
 
 export async function generateQuiz(
 	quizInputType: string,
-	userContent: string,
+	quizContent: string | Express.Multer.File,
 	numQuestions: number,
 	difficulty: string,
 	optionTypes: string[]
@@ -101,9 +104,18 @@ export async function generateQuiz(
 	};
 
 	try {
+		// Get correct content for AI based on quiz type (file or prompt)
+		let validQuizContent: string | Content = '';
+
+		if (quizInputType === 'prompt' && typeof quizContent === 'string') {
+			validQuizContent = quizContent;
+		} else if (quizInputType === 'file' && typeof quizContent !== 'string') {
+			validQuizContent = await getContentFromFile(quizContent);
+		}
+
 		const result = await ai.models.generateContent({
 			model: 'gemini-2.5-flash',
-			contents: userContent,
+			contents: validQuizContent,
 			config: configAI,
 		});
 
@@ -123,5 +135,28 @@ export async function generateQuiz(
 	} catch (error: any) {
 		console.error('Failed to generate quiz: ', error);
 		throw new Error('Could not generate quiz. Please try again.');
+	}
+}
+
+async function getContentFromFile(file: Express.Multer.File) {
+	const { buffer, mimetype } = file;
+
+	try {
+		const fileBlob = new Blob([buffer], { type: mimetype });
+
+		// Pass the Blob object to the upload method
+		const uploadedFile = await ai.files.upload({
+			file: fileBlob,
+		});
+
+		return createUserContent([
+			createPartFromUri(
+				uploadedFile.uri ? uploadedFile.uri : '',
+				uploadedFile.mimeType ? uploadedFile.mimeType : ''
+			),
+		]);
+	} catch (error) {
+		console.error('Error processing file with Gemini:', error);
+		throw error;
 	}
 }
