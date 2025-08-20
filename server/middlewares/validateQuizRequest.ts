@@ -1,20 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
-
-type QuizRequestBody = {
-	quizInputType: string;
-	content: string;
-	numQuestions: string;
-	difficulty: string;
-	optionTypes: string | string[];
-};
-
-type ValidatedQuizData = {
-	quizInputType: string;
-	content: string;
-	numQuestions: number;
-	difficulty: string;
-	optionTypes: string[];
-};
+import type {
+	FileRequest,
+	QuizRequestBody,
+	ValidatedQuizData,
+} from '../types/quiz';
 
 declare module 'express-serve-static-core' {
 	interface Request {
@@ -22,19 +11,16 @@ declare module 'express-serve-static-core' {
 	}
 }
 
-interface FileRequest extends Request {
-	file: Express.Multer.File;
-}
-
 function validateQuizRequest(req: Request, res: Response, next: NextFunction) {
-	const { quizInputType, content, numQuestions, difficulty, optionTypes } =
+	const { quizInputType, numQuestions, difficulty, optionTypes } =
 		req.body as QuizRequestBody;
 
 	if (
 		!quizInputType ||
-		!content ||
+		quizInputType.trim() === '' ||
 		!numQuestions ||
 		!difficulty ||
+		difficulty.trim() === '' ||
 		!optionTypes
 	) {
 		return res.status(400).json({ error: 'Missing required field.' });
@@ -46,11 +32,33 @@ function validateQuizRequest(req: Request, res: Response, next: NextFunction) {
 		return res.status(400).json({ error: 'Invalid input type.' });
 	}
 
-	if (quizInputType === 'file') {
+	let quizContent;
+	if (quizInputType === 'prompt') {
+		if (!req.body.content || req.body.content.trim() === '') {
+			return res.status(400).json({ error: 'Please write your quiz prompt.' });
+		}
+
+		quizContent = req.body.content;
+	} else if (quizInputType === 'file') {
 		const fileReq = req as FileRequest;
 		if (!fileReq.file) {
 			return res.status(400).json({ error: 'No file uploaded.' });
 		}
+
+		const allowedMimeTypes = [
+			'application/pdf',
+			'text/plain',
+			'application/msword',
+			'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+			'text/markdown',
+		];
+		if (!allowedMimeTypes.includes(fileReq.file.mimetype)) {
+			return res.status(400).json({
+				error: 'Invalid file type. Please upload a PDF or a text file.',
+			});
+		}
+
+		quizContent = fileReq.file;
 	}
 
 	// Validate number of questions
@@ -79,13 +87,15 @@ function validateQuizRequest(req: Request, res: Response, next: NextFunction) {
 		return res.status(400).json({ error: 'Invalid option types selected.' });
 	}
 
-	req.validatedQuizData = {
+	const validQuizData: ValidatedQuizData = {
 		quizInputType: quizInputType,
-		content: content,
+		quizContent: quizContent,
 		numQuestions: parsedNumQuestions,
 		difficulty: difficulty,
 		optionTypes: selectedOptionTypes,
 	};
+
+	req.validatedQuizData = validQuizData;
 
 	next();
 }

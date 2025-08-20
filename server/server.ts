@@ -5,6 +5,7 @@ import multer, { memoryStorage } from 'multer';
 dotenv.config();
 import { generateQuiz } from './services/generateQuiz';
 import validateQuizRequest from './middlewares/validateQuizRequest';
+import { ValidatedQuizData } from './types/quiz';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -26,13 +27,18 @@ app.post(
 				.json({ error: 'Internal server error: Quiz data is invalid.' });
 		}
 
-		const { quizInputType, content, numQuestions, difficulty, optionTypes } =
-			req.validatedQuizData;
+		const {
+			quizInputType,
+			quizContent,
+			numQuestions,
+			difficulty,
+			optionTypes,
+		}: ValidatedQuizData = req.validatedQuizData;
 
 		try {
 			const quizResult = await generateQuiz(
 				quizInputType,
-				content,
+				quizContent,
 				numQuestions,
 				difficulty,
 				optionTypes
