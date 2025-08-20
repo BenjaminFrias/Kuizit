@@ -6,6 +6,7 @@ dotenv.config();
 import { generateQuiz } from './services/generateQuiz';
 import validateQuizRequest from './middlewares/validateQuizRequest';
 import { ValidatedQuizData } from './types/quiz';
+import { QuizResultSchema } from './schemas/quiz';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -44,7 +45,9 @@ app.post(
 				optionTypes
 			);
 
-			res.status(200).json(quizResult);
+			const validatedQuizData = QuizResultSchema.parse(quizResult);
+
+			res.status(200).json(validatedQuizData);
 		} catch (error: any) {
 			console.error('Quiz generation failed: ', error);
 			res.status(500).json({ error: 'Internal server error.' });
