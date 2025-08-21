@@ -27,7 +27,8 @@ function validateQuizRequest(req: Request, res: Response, next: NextFunction) {
 	}
 
 	// Validate Quiz input type
-	const validQuizInputTypes = ['prompt', 'file'];
+	const validQuizInputTypes = ['prompt', 'file', 'youtube_link'];
+
 	if (!validQuizInputTypes.includes(quizInputType)) {
 		return res.status(400).json({ error: 'Invalid input type.' });
 	}
@@ -38,7 +39,7 @@ function validateQuizRequest(req: Request, res: Response, next: NextFunction) {
 			return res.status(400).json({ error: 'Please write your quiz prompt.' });
 		}
 
-		quizContent = req.body.content;
+		quizContent = req.body.content.trim();
 	} else if (quizInputType === 'file') {
 		const fileReq = req as FileRequest;
 		if (!fileReq.file) {
@@ -59,6 +60,19 @@ function validateQuizRequest(req: Request, res: Response, next: NextFunction) {
 		}
 
 		quizContent = fileReq.file;
+	} else if (quizInputType === 'youtube_link') {
+		if (!req.body.content || req.body.content.trim() === '') {
+			return res.status(400).json({ error: 'Please write your quiz prompt.' });
+		}
+
+		quizContent = req.body.content.trim();
+		const regex =
+			/^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})(&.*)?$/;
+		if (!regex.test(quizContent)) {
+			return res.status(400).json({
+				error: 'Invalid youtube link. Please paste a valid youtube link.',
+			});
+		}
 	}
 
 	// Validate number of questions
