@@ -9,18 +9,19 @@ import {
 	Part,
 	FinishReason,
 } from '@google/genai';
+import { ValidatedQuizData } from '../types/quiz';
 
 const API_KEY = process.env.GEMINI_API_KEY;
 
 const ai = new GoogleGenAI({ apiKey: API_KEY });
 
-export async function generateQuiz(
-	quizInputType: string,
-	quizContent: string | Express.Multer.File,
-	numQuestions: number,
-	difficulty: string,
-	optionTypes: string[]
-) {
+export async function generateQuiz({
+	quizInputType,
+	quizContent,
+	numQuestions,
+	difficulty,
+	optionTypes,
+}: ValidatedQuizData) {
 	const safetySettings = [
 		{
 			category: HarmCategory.HARM_CATEGORY_HARASSMENT,
@@ -106,33 +107,38 @@ export async function generateQuiz(
 	};
 
 	try {
-		// Get correct content for AI based on quiz type (file or prompt)
-		let validQuizContent:
-			| string
-			| (string | { fileData: { fileUri: string } })[]
-			| Content = '';
+		const parts: Part[] = [];
 
-		if (quizInputType === 'prompt' && typeof quizContent === 'string') {
-			validQuizContent = quizContent;
-		} else if (quizInputType === 'file' && typeof quizContent !== 'string') {
-			validQuizContent = await getContentFromFile(quizContent);
-		} else if (
-			quizInputType === 'youtube_link' &&
-			typeof quizContent === 'string'
-		) {
-			validQuizContent = [
-				'Please create a quiz based on the content on this video.',
-				{
-					fileData: {
-						fileUri: quizContent,
-					},
-				},
-			];
+		// Quiz content can be either the quiz prompt, youtube link or file
+
+		// Push correct content type to parts depending on quiz type
+		if (typeof quizContent === 'string') {
+			switch (quizInputType) {
+				case 'prompt':
+					parts.push({
+						text: quizContent,
+					});
+					break;
+				case 'youtube_link':
+					parts.push({
+						fileData: {
+							fileUri: quizContent as string,
+						},
+					});
+					break;
+			}
+		} else if (quizInputType === 'file') {
+			const filePart = await getContentFromFile(
+				quizContent as Express.Multer.File
+			);
+			if (filePart) {
+				parts.push(filePart as Part);
+			}
 		}
 
 		const response = await ai.models.generateContent({
 			model: 'gemini-2.5-flash',
-			contents: validQuizContent,
+			contents: [{ role: 'user', parts: parts }],
 			config: configAI,
 		});
 
@@ -178,9 +184,9 @@ export async function generateQuiz(
 		} else {
 			throw new Error('Parsed data is empty due to invalid content.');
 		}
-	} catch (error: any) {
+	} catch (error) {
 		console.error('Failed to generate quiz: ', error);
-		throw new Error('Could not generate quiz. Please try again.');
+		throw error;
 	}
 }
 
@@ -188,19 +194,20 @@ async function getContentFromFile(file: Express.Multer.File) {
 	const { buffer, mimetype } = file;
 
 	try {
-		const fileBlob = new Blob([buffer], { type: mimetype });
+		const arrayBuffer = new Uint8Array(buffer).buffer;
+		const fileBlob = new Blob([arrayBuffer], { type: mimetype });
 
 		// Pass the Blob object to the upload method
 		const uploadedFile = await ai.files.upload({
 			file: fileBlob,
 		});
 
-		return createUserContent([
-			createPartFromUri(
-				uploadedFile.uri ? uploadedFile.uri : '',
-				uploadedFile.mimeType ? uploadedFile.mimeType : ''
-			),
-		]);
+		return {
+			fileData: {
+				fileUri: uploadedFile.uri,
+				mimeType: uploadedFile.mimeType,
+			},
+		};
 	} catch (error) {
 		console.error('Error processing file with Gemini:', error);
 		throw error;

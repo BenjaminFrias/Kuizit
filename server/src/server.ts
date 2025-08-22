@@ -22,29 +22,19 @@ app.post(
 	upload.single('quizFile'),
 	validateQuizRequest,
 	async (req: Request, res: Response) => {
+		// Validate if quiz data from user is valid
 		if (!req.validatedQuizData) {
 			return res
 				.status(500)
 				.json({ error: 'Internal server error: Quiz data is invalid.' });
 		}
 
-		const {
-			quizInputType,
-			quizContent,
-			numQuestions,
-			difficulty,
-			optionTypes,
-		}: ValidatedQuizData = req.validatedQuizData;
+		const quizData: ValidatedQuizData = req.validatedQuizData;
 
 		try {
-			const quizResult = await generateQuiz(
-				quizInputType,
-				quizContent,
-				numQuestions,
-				difficulty,
-				optionTypes
-			);
+			const quizResult = await generateQuiz(quizData);
 
+			// Validate quiz result data from generateQuiz
 			const validatedQuizData = QuizResultSchema.parse(quizResult);
 
 			res.status(200).json(validatedQuizData);
