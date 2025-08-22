@@ -1,11 +1,8 @@
 import {
 	GoogleGenAI,
-	createPartFromUri,
-	createUserContent,
 	HarmBlockThreshold,
 	HarmCategory,
 	Type,
-	Content,
 	Part,
 	FinishReason,
 } from '@google/genai';
