@@ -1,7 +1,8 @@
-import { ChevronRightIcon } from 'lucide-react';
 import './App.css';
 import BlurryShape from './components/blurryShape';
 import { Button } from '@/components/ui/button';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons';
 
 function App() {
 	return (
@@ -26,7 +27,7 @@ function App() {
 						</p>
 						<Button className="mt-12" size="lg" variant="green">
 							Generate quiz
-							<ChevronRightIcon />
+							<FontAwesomeIcon icon={faWandMagicSparkles} />
 						</Button>
 
 						{/* Blurry shapes for blurry effect on h1 */}
