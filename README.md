@@ -1,4 +1,4 @@
-# Quizify
+# Kuizit
 
 This is a full-stack web app that generates quizzes using AI.
 Users can input text, a YouTube video URL, or a topic, and the application will create a quiz with different question types.
@@ -30,8 +30,8 @@ To run this project locally, follow these steps:
 **Bash**
 
 ```
-git clone https://github.com/BenjaminFrias/Quizify
-cd Quizify
+git clone https://github.com/BenjaminFrias/Kuizit
+cd Kuizit
 ```
 
 2. Set up the Backend
