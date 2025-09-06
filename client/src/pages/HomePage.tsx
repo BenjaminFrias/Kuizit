@@ -10,7 +10,7 @@ export default function HomePage() {
 		<div className="min-h-screen min-w-screen p-8 flex flex-col items-center justify-center overflow-hidden bg-custom-gray">
 			<div className="absolute flex flex-col items-center w-full h-full z-999">
 				<h2 className="absolute top-10 center font-bold text-white text-lg uppercase">
-					Quizify
+					Kuizit
 				</h2>
 
 				<div className="flex flex-col items-center justify-center flex-grow mt-14">
