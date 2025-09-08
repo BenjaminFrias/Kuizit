@@ -9,9 +9,10 @@
 	--font-primary: 'DM sans', 'sans-serif';
 	--font-logo: 'Panchang', 'sans-serif';
 	--color-custom-gray: #151515;
+	--color-custom-white: #ebe6dc;
 	--color-custom-green: #569d5b;
-	--text-shadow-title: 0px 0px 4px #cececeb7, 0px 0px 4px #cececeb7;
-	--inset-shadow-md: inset 0 5px 8px rgba(0, 0, 0, 0.25);
+	--text-shadow-title: 0px 0px 10px #cececeb7, 0px 0px 10px #cececeb7;
+	--inset-shadow-md: inset 0 10px 15px rgba(0, 0, 0, 0.25);
 }
 
 @font-face {
