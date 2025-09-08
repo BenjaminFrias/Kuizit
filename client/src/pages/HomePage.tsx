@@ -9,14 +9,14 @@ export default function HomePage() {
 	return (
 		<div className="min-h-screen min-w-screen p-8 flex flex-col items-center justify-center overflow-hidden bg-custom-gray">
 			<div className="absolute flex flex-col items-center w-full h-full z-999">
-				<h2 className="absolute top-10 center font-bold text-white text-lg uppercase">
+				<h2 className="absolute top-10 center font-logo text-white text-lg uppercase">
 					Kuizit
 				</h2>
 
 				<div className="flex flex-col items-center justify-center flex-grow mt-14">
 					<h1
 						className="
-						font-primary font-medium text-[#f8f8f7e1] text-shadow-title text-center w-full text-[6.5rem] tracking-wide max-w-200"
+						font-primary font-medium text-white text-shadow-title text-center w-full text-[6.5rem] tracking-wide max-w-200"
 					>
 						Instantly create quizzes with AI
 					</h1>
