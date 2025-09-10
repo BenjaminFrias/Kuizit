@@ -32,12 +32,12 @@ export default function Inputpage({
 	numberQuestions,
 }: inputPageParameters) {
 	return (
-		<div className="min-h-screen min-w-screen px-8 py-5 flex flex-col items-center justify-between overflow-hidden bg-custom-white">
+		<div className="min-h-screen min-w-screen w-full px-8 py-5 flex flex-col items-center justify-between overflow-hidden bg-custom-white">
 			<h2 className="flex center font-logo text-custom-green text-lg uppercase">
 				Kuizit
 			</h2>
 
-			<div className="flex flex-col items-center gap-6">
+			<div className="flex flex-col w-full max-w-[600px] items-center gap-6">
 				<h1 className="font-primary font-regular text-custom-gray text-[2.7rem]">
 					Generate Quiz
 				</h1>
@@ -75,7 +75,7 @@ export default function Inputpage({
 					/>
 				) : null}
 
-				<div className="flex flex-col justify-center gap-3">
+				<div className="flex flex-col w-full justify-center gap-3">
 					<div className=" w-full">
 						<h3 className="text-center font-primary text-custom-light-gray font-medium">
 							Difficulty
