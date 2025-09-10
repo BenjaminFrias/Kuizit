@@ -24,6 +24,16 @@
 	font-style: normal;
 }
 
+.active-button {
+	background-color: var(--primary);
+	color: white;
+}
+
+.no-outline:focus {
+	outline: none;
+	box-shadow: none;
+}
+
 :root {
 	font-family: 'DM sans', Avenir, Helvetica, Arial, sans-serif;
 	line-height: 1.5;

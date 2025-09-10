@@ -1,5 +1,7 @@
+import { FileUploadDropZone } from '@/components/FileUploadDropZone';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+
 import type {
 	answerOptionsType,
 	numberQuestionsType,
@@ -43,7 +45,7 @@ export default function Inputpage({
 				</h1>
 				<div className="input-types flex gap-2 w-full justify-center items-center">
 					<Button
-						className="flex-1"
+						className={`flex-1 ${inputType === 1 ? 'active-button' : ''}`}
 						size="md"
 						variant={`${inputType === 1 ? 'green' : 'minimal'}`}
 						onClick={() => onInputTypeChange(1)}
@@ -51,7 +53,7 @@ export default function Inputpage({
 						Prompt
 					</Button>
 					<Button
-						className="flex-1"
+						className={`flex-1 ${inputType === 2 ? 'active-button' : ''}`}
 						size="md"
 						variant={`${inputType === 2 ? 'green' : 'minimal'}`}
 						onClick={() => onInputTypeChange(2)}
@@ -59,7 +61,7 @@ export default function Inputpage({
 						File
 					</Button>
 					<Button
-						className="flex-1"
+						className={`flex-1 ${inputType === 3 ? 'active-button' : ''}`}
 						size="md"
 						variant={`${inputType === 3 ? 'green' : 'minimal'}`}
 						onClick={() => onInputTypeChange(3)}
@@ -68,12 +70,19 @@ export default function Inputpage({
 					</Button>
 				</div>
 
+				{/* If input is Prompt or link use textarea if not, use file upload input */}
 				{inputType === 1 || inputType === 3 ? (
 					<Textarea
 						className="resize-none"
-						placeholder="Create a quiz about the solar system..."
+						placeholder={`${
+							inputType === 1
+								? 'Create a quiz about the solar system...'
+								: 'Paste YouTube link...'
+						}`}
 					/>
-				) : null}
+				) : (
+					<FileUploadDropZone />
+				)}
 
 				<div className="flex flex-col w-full justify-center gap-3">
 					<div className=" w-full">
@@ -190,7 +199,9 @@ export default function Inputpage({
 				className="mb-4"
 				size="md"
 				variant="green"
-				onClick={() => onPageChange('home')}
+				onClick={() => {
+					onPageChange('home');
+				}}
 			>
 				Generate quiz
 				<FontAwesomeIcon icon={faWandMagicSparkles} />
