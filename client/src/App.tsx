@@ -3,40 +3,54 @@ import './App.css';
 import HomePage from './pages/HomePage';
 import Inputpage from './pages/InputPage';
 import type {
-	answerOptionsType,
-	pageOptionsType,
-	numberQuestionsType,
+	AnswerOptions,
+	Page,
+	NumberQuestions,
+	QuizRequestBody,
+	InputOption,
+	Difficulty,
 } from './types';
 
 function App() {
 	const [currentPage, setCurrentPage] = useState('home');
-	const [selectedInputType, setSelectedInputType] = useState(1);
-	const [selectedDifficulty, setSelectedDifficulty] = useState(1);
-	const [answerOption, setAnswerOption] =
-		useState<answerOptionsType>('multiple_choice');
-	const [numberQuestions, setNumberQuestions] =
-		useState<numberQuestionsType>(10);
+	const [quizContent, setQuizContent] = useState('');
+	const [quizInputType, setSelectedInputType] = useState<InputOption>('prompt');
+	const [quizDifficulty, setSelectedDifficulty] = useState<Difficulty>('easy');
+	const [quizAnswerOptions, setQuizAnswerOptions] =
+		useState<AnswerOptions>('multiple_choice');
+	const [quizNumberQuestions, setNumberQuestions] =
+		useState<NumberQuestions>(10);
 
-	const handleInputTypeChange = (id: number) => {
-		setSelectedInputType(id);
+	const handleContentChange = (newContent: string) => {
+		setQuizContent(newContent);
 	};
 
-	const handleDifficultyChange = (id: number) => {
-		setSelectedDifficulty(id);
+	const handleInputTypeChange = (inputTypeName: InputOption) => {
+		setSelectedInputType(inputTypeName);
 	};
 
-	const handleAnswerOptionChange = (option: answerOptionsType) => {
-		setAnswerOption(option);
+	const handleDifficultyChange = (diffName: Difficulty) => {
+		setSelectedDifficulty(diffName);
 	};
 
-	const handleNumberQuestionsChange = (
-		numberOfQuestions: numberQuestionsType
-	) => {
+	const handleAnswerOptionsChange = (option: AnswerOptions) => {
+		setQuizAnswerOptions(option);
+	};
+
+	const handleNumberQuestionsChange = (numberOfQuestions: NumberQuestions) => {
 		setNumberQuestions(numberOfQuestions);
 	};
 
-	const handlePageChange = (pageName: pageOptionsType) => {
+	const handlePageChange = (pageName: Page) => {
 		setCurrentPage(pageName);
+	};
+
+	const quizData: QuizRequestBody = {
+		quizInputType: quizInputType,
+		content: quizContent,
+		numQuestions: String(quizNumberQuestions),
+		difficulty: quizDifficulty,
+		optionTypes: quizAnswerOptions,
 	};
 
 	switch (currentPage) {
@@ -48,12 +62,14 @@ function App() {
 					onPageChange={handlePageChange}
 					onInputTypeChange={handleInputTypeChange}
 					onDifficultyChange={handleDifficultyChange}
-					onAnswerOptionChange={handleAnswerOptionChange}
+					onAnswerOptionsChange={handleAnswerOptionsChange}
 					onNumberQuestionsChange={handleNumberQuestionsChange}
-					inputType={selectedInputType}
-					difficulty={selectedDifficulty}
-					answerOption={answerOption}
-					numberQuestions={numberQuestions}
+					onContentChange={handleContentChange}
+					quizInputType={quizInputType}
+					quizContent={quizContent}
+					quizDifficulty={quizDifficulty}
+					quizAnswerOptions={quizAnswerOptions}
+					quizNumberQuestions={quizNumberQuestions}
 				/>
 			);
 		default:

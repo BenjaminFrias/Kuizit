@@ -1,7 +1,16 @@
-export interface onPageChangeType {
-	onPageChange: (pageName: pageOptionsType) => void;
-}
+export type InputOption = 'prompt' | 'youtube_link' | 'file';
+export type AnswerOptions = 'multiple_choice' | 'true_false';
+export type Page = 'home' | 'input' | 'quiz' | 'result';
+export type Difficulty = 'easy' | 'medium' | 'hard' | 'expert';
+export type NumberQuestions = 5 | 10 | 15 | 20;
+export type QuizRequestBody = {
+	quizInputType: string;
+	content?: string;
+	numQuestions: string;
+	difficulty: string;
+	optionTypes: string | string[];
+};
 
-export type answerOptionsType = 'multiple_choice' | 'true_false';
-export type pageOptionsType = 'home' | 'input' | 'quiz' | 'result';
-export type numberQuestionsType = 5 | 10 | 15 | 20;
+export interface onPageChangeType {
+	onPageChange: (pageName: Page) => void;
+}
