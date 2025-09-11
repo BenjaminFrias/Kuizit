@@ -54,6 +54,8 @@ function App() {
 		optionTypes: quizAnswerOptions,
 	};
 
+	console.log(quizData);
+
 	switch (currentPage) {
 		case 'home':
 			return <HomePage onPageChange={handlePageChange} />;
