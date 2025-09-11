@@ -5,8 +5,8 @@ export type Difficulty = 'easy' | 'medium' | 'hard' | 'expert';
 export type NumberQuestions = 5 | 10 | 15 | 20;
 export type QuizRequestBody = {
 	quizInputType: string;
-	content?: string;
-	numQuestions: string;
+	content?: string | File | File[];
+	numQuestions: number;
 	difficulty: string;
 	optionTypes: string | string[];
 };

@@ -19,6 +19,8 @@ type inputPageParameters = {
 	onAnswerOptionsChange: (optionName: AnswerOptions) => void;
 	onNumberQuestionsChange: (numberQuestions: NumberQuestions) => void;
 	onContentChange: (content: string) => void;
+	setFiles: (files: File[]) => void;
+	quizFiles: File[];
 	quizInputType: InputOption;
 	quizContent: string;
 	quizDifficulty: Difficulty;
@@ -33,7 +35,9 @@ export default function Inputpage({
 	onAnswerOptionsChange,
 	onContentChange,
 	onNumberQuestionsChange,
+	setFiles,
 	quizInputType,
+	quizFiles,
 	quizContent,
 	quizDifficulty,
 	quizAnswerOptions,
@@ -51,9 +55,7 @@ export default function Inputpage({
 				</h1>
 				<div className="input-types flex gap-2 w-full justify-center items-center">
 					<Button
-						className={`flex-1 ${
-							quizInputType === 'prompt' ? 'active-button' : ''
-						}`}
+						className="flex-1"
 						size="md"
 						variant={`${quizInputType === 'prompt' ? 'green' : 'minimal'}`}
 						onClick={() => {
@@ -64,9 +66,7 @@ export default function Inputpage({
 						Prompt
 					</Button>
 					<Button
-						className={`flex-1 ${
-							quizInputType === 'file' ? 'active-button' : ''
-						}`}
+						className="flex-1"
 						size="md"
 						variant={`${quizInputType === 'file' ? 'green' : 'minimal'}`}
 						onClick={() => onInputTypeChange('file')}
@@ -74,9 +74,7 @@ export default function Inputpage({
 						File
 					</Button>
 					<Button
-						className={`flex-1 ${
-							quizInputType === 'youtube_link' ? 'active-button' : ''
-						}`}
+						className="flex-1"
 						size="md"
 						variant={`${
 							quizInputType === 'youtube_link' ? 'green' : 'minimal'
@@ -103,7 +101,7 @@ export default function Inputpage({
 						onChange={(e) => onContentChange(e.target.value)}
 					/>
 				) : (
-					<FileUploadDropZone />
+					<FileUploadDropZone files={quizFiles} setFiles={setFiles} />
 				)}
 
 				<div className="flex flex-col w-full justify-center gap-3">

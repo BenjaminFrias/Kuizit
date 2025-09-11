@@ -20,6 +20,7 @@ function App() {
 		useState<AnswerOptions>('multiple_choice');
 	const [quizNumberQuestions, setNumberQuestions] =
 		useState<NumberQuestions>(10);
+	const [files, setFiles] = useState<File[]>([]);
 
 	const handleContentChange = (newContent: string) => {
 		setQuizContent(newContent);
@@ -47,8 +48,8 @@ function App() {
 
 	const quizData: QuizRequestBody = {
 		quizInputType: quizInputType,
-		content: quizContent,
-		numQuestions: String(quizNumberQuestions),
+		content: files.length > 0 ? files : quizContent,
+		numQuestions: quizNumberQuestions,
 		difficulty: quizDifficulty,
 		optionTypes: quizAnswerOptions,
 	};
@@ -65,6 +66,8 @@ function App() {
 					onAnswerOptionsChange={handleAnswerOptionsChange}
 					onNumberQuestionsChange={handleNumberQuestionsChange}
 					onContentChange={handleContentChange}
+					setFiles={setFiles}
+					quizFiles={files}
 					quizInputType={quizInputType}
 					quizContent={quizContent}
 					quizDifficulty={quizDifficulty}

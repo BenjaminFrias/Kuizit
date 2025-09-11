@@ -16,8 +16,13 @@ import {
 	FileUploadTrigger,
 } from '@/components/ui/file-upload';
 
-export function FileUploadDropZone() {
-	const [files, setFiles] = React.useState<File[]>([]);
+type FileUploadType = {
+	files: File[];
+	setFiles: (files: File[]) => void;
+};
+
+export function FileUploadDropZone({ files, setFiles }: FileUploadType) {
+	// const [files, setFiles] = React.useState<File[]>([]);
 
 	const onUpload: NonNullable<FileUploadProps['onUpload']> = React.useCallback(
 		async (files, { onProgress, onSuccess, onError }) => {
