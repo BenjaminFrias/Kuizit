@@ -2,6 +2,7 @@ import { useState } from 'react';
 import './App.css';
 import HomePage from './pages/HomePage';
 import Inputpage from './pages/InputPage';
+import LoadingAnimation from './pages/QuizLoadingPage';
 import type {
 	AnswerOptions,
 	Page,
@@ -13,6 +14,7 @@ import type {
 
 function App() {
 	const [currentPage, setCurrentPage] = useState('home');
+	const [isQuizLoading, setIsQuizLoading] = useState(false);
 	const [quizContent, setQuizContent] = useState('');
 	const [quizInputType, setSelectedInputType] = useState<InputOption>('prompt');
 	const [quizDifficulty, setSelectedDifficulty] = useState<Difficulty>('easy');
@@ -42,19 +44,37 @@ function App() {
 		setNumberQuestions(numberOfQuestions);
 	};
 
+	const handleGenerateQuiz = async () => {
+		setIsQuizLoading(true);
+		const contentToSend = quizInputType === 'file' ? files[0] : quizContent;
+
+		const quizData: QuizRequestBody = {
+			quizInputType: quizInputType,
+			content: contentToSend,
+			numQuestions: quizNumberQuestions,
+			difficulty: quizDifficulty,
+			optionTypes: quizAnswerOptions,
+		};
+
+		try {
+			const generatedQuizData = await getGeneratedQuiz(quizData);
+			console.log(generatedQuizData);
+
+			handlePageChange('home');
+		} catch (error) {
+			console.log('Error bro sorry: ', error);
+		} finally {
+			setIsQuizLoading(false);
+		}
+	};
+
 	const handlePageChange = (pageName: Page) => {
 		setCurrentPage(pageName);
 	};
 
-	const quizData: QuizRequestBody = {
-		quizInputType: quizInputType,
-		content: files.length > 0 ? files : quizContent,
-		numQuestions: quizNumberQuestions,
-		difficulty: quizDifficulty,
-		optionTypes: quizAnswerOptions,
-	};
-
-	console.log(quizData);
+	if (isQuizLoading) {
+		return <LoadingAnimation />;
+	}
 
 	switch (currentPage) {
 		case 'home':
@@ -68,6 +88,7 @@ function App() {
 					onAnswerOptionsChange={handleAnswerOptionsChange}
 					onNumberQuestionsChange={handleNumberQuestionsChange}
 					onContentChange={handleContentChange}
+					onQuizSubmit={handleGenerateQuiz}
 					setFiles={setFiles}
 					quizFiles={files}
 					quizInputType={quizInputType}
@@ -79,6 +100,41 @@ function App() {
 			);
 		default:
 			return <HomePage onPageChange={handlePageChange} />;
+	}
+}
+
+async function getGeneratedQuiz(quizData: QuizRequestBody) {
+	let response;
+
+	if (quizData.quizInputType === 'file') {
+		const formData = new FormData();
+		formData.append('quizInputType', quizData.quizInputType);
+		formData.append('numQuestions', quizData.numQuestions.toString());
+		formData.append('difficulty', quizData.difficulty);
+		formData.append('optionTypes', quizData.optionTypes);
+		formData.append('quizFile', quizData.content as File);
+
+		response = await fetch('http://localhost:3001/api/generate-quiz', {
+			method: 'POST',
+			body: formData,
+		});
+	} else {
+		response = await fetch('http://localhost:3001/api/generate-quiz', {
+			method: 'POST',
+			headers: {
+				'Content-type': 'application/json',
+			},
+			body: JSON.stringify(quizData),
+		});
+	}
+
+	if (response.ok) {
+		const result = await response.json();
+		return result;
+	} else {
+		const errorText = await response.text();
+		console.error('API Error:', errorText);
+		throw new Error('Failed to generate quiz. Please try again.');
 	}
 }
 

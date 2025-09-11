@@ -20,6 +20,7 @@ type inputPageParameters = {
 	onNumberQuestionsChange: (numberQuestions: NumberQuestions) => void;
 	onContentChange: (content: string) => void;
 	setFiles: (files: File[]) => void;
+	onQuizSubmit: () => void;
 	quizFiles: File[];
 	quizInputType: InputOption;
 	quizContent: string;
@@ -36,6 +37,7 @@ export default function Inputpage({
 	onContentChange,
 	onNumberQuestionsChange,
 	setFiles,
+	onQuizSubmit,
 	quizInputType,
 	quizFiles,
 	quizContent,
@@ -221,6 +223,7 @@ export default function Inputpage({
 				variant="green"
 				onClick={() => {
 					onPageChange('home');
+					onQuizSubmit();
 				}}
 			>
 				Generate quiz
