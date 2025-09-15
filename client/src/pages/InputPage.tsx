@@ -12,7 +12,7 @@ import type {
 import { faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-type inputPageParameters = {
+type inputPageParams = {
 	onPageChange: (pageName: Page) => void;
 	onInputTypeChange: (inputName: InputOption) => void;
 	onDifficultyChange: (diffName: Difficulty) => void;
@@ -44,7 +44,7 @@ export default function Inputpage({
 	quizDifficulty,
 	quizAnswerOptions,
 	quizNumberQuestions,
-}: inputPageParameters) {
+}: inputPageParams) {
 	return (
 		<div className="min-h-screen min-w-screen w-full px-8 py-5 flex flex-col items-center justify-between overflow-hidden bg-custom-white">
 			<h2 className="flex center font-logo text-custom-green text-lg uppercase">

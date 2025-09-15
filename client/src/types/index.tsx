@@ -11,6 +11,28 @@ export type QuizRequestBody = {
 	optionTypes: AnswerOptions;
 };
 
+type QuizResultOption = {
+	optionText: string;
+	answer: boolean;
+};
+
+type QuizResultQuestion = {
+	type: string;
+	question: string;
+	correctAnswerIndex: number;
+	options: QuizResultOption[];
+	explanation: string;
+};
+
+export type QuizData = QuizResultQuestion[];
+
+type QuizAnswer = {
+	isCorrect: boolean;
+	selectedIndex: number;
+};
+
+export type QuizResult = QuizAnswer[];
+
 export interface onPageChangeType {
 	onPageChange: (pageName: Page) => void;
 }

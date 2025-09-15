@@ -12,6 +12,8 @@
 	--color-custom-light-gray: #7e7e7e;
 	--color-custom-white: #ebe6dc;
 	--color-custom-green: #569d5b;
+	--color-correct: #569d5b;
+	--color-wrong: #f93b3b;
 	--text-shadow-title: 0px 0px 10px #cececeb7, 0px 0px 10px #cececeb7;
 	--inset-shadow-md: inset 0 10px 15px rgba(0, 0, 0, 0.25);
 }
