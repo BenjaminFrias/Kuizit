@@ -215,20 +215,19 @@ export default function Inputpage({
 						</div>
 					</div>
 				</div>
+				<Button
+					className="mt-5"
+					size="md"
+					variant="green"
+					onClick={() => {
+						onPageChange('home');
+						onQuizSubmit();
+					}}
+				>
+					Generate quiz
+					<FontAwesomeIcon icon={faWandMagicSparkles} />
+				</Button>
 			</div>
-
-			<Button
-				className="mb-4"
-				size="md"
-				variant="green"
-				onClick={() => {
-					onPageChange('home');
-					onQuizSubmit();
-				}}
-			>
-				Generate quiz
-				<FontAwesomeIcon icon={faWandMagicSparkles} />
-			</Button>
 		</div>
 	);
 }
