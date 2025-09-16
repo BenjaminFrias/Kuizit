@@ -26,12 +26,13 @@ export function QuizPage({
 	const totalQuestions = quizData.length;
 
 	const handleNextQuestionIndex = () => {
-		if (selectedAnswer !== null) {
+		if (selectedAnswer === null) {
 			return;
 		}
 
 		if (currentQuestionIndex < quizData.length - 1) {
 			setCurrentQuestionIndex(currentQuestionIndex + 1);
+			setSelectedAnswer(null);
 		} else {
 			onPageChange('home');
 		}
@@ -39,8 +40,6 @@ export function QuizPage({
 
 	const handleQuestionAnswer = (selectedIndex: number) => {
 		if (selectedAnswer !== null) {
-			console.log('Already selected');
-
 			return;
 		}
 
@@ -49,8 +48,6 @@ export function QuizPage({
 			...quizResultData,
 			{ isCorrect, selectedIndex: selectedIndex },
 		];
-
-		console.log(newQuizResultData);
 
 		setSelectedAnswer(selectedIndex);
 		onAnswerSubmittion(newQuizResultData);
@@ -121,13 +118,23 @@ export function QuizPage({
 						);
 					})}
 				</div>
-				<Button
-					size="lg"
-					variant="green"
-					onClick={() => handleNextQuestionIndex()}
-				>
-					<FontAwesomeIcon icon={faArrowRight} />
-				</Button>
+				{selectedAnswer !== null ? (
+					<Button
+						size="lg"
+						variant="green"
+						onClick={() => handleNextQuestionIndex()}
+					>
+						<FontAwesomeIcon icon={faArrowRight} />
+					</Button>
+				) : (
+					<Button
+						className="opacity-50 pointer-events-none"
+						size="lg"
+						variant="green"
+					>
+						<FontAwesomeIcon icon={faArrowRight} />
+					</Button>
+				)}
 				{/* TODO: Place explanation button after user answer */}
 			</div>
 		</div>
