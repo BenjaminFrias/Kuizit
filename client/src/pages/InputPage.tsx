@@ -46,7 +46,7 @@ export default function Inputpage({
 	quizNumberQuestions,
 }: inputPageParams) {
 	return (
-		<div className="min-h-screen min-w-screen w-screen h-screen px-3 py-5 flex flex-col items-center justify-around overflow-hidden bg-custom-white">
+		<div className="relative min-h-screen min-w-screen w-screen h-screen max-w-screen max-h-screen px-3 py-5 flex flex-col items-center justify-around bg-custom-white">
 			<h2 className="flex center font-logo text-custom-green text-lg uppercase">
 				Kuizit
 			</h2>
