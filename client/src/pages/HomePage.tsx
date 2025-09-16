@@ -8,7 +8,7 @@ import type { onPageChangeType } from '@/types';
 
 export default function HomePage({ onPageChange }: onPageChangeType) {
 	return (
-		<div className="min-h-screen min-w-screen p-6 md:p-8 flex flex-col items-center justify-center overflow-hidden bg-custom-gray">
+		<div className="relative min-h-screen min-w-screen p-6 md:p-8 flex flex-col items-center justify-center overflow-hidden bg-custom-gray">
 			<div className="absolute flex flex-col items-center w-full h-full z-999">
 				<h2 className="absolute z-999 top-10 center font-logo text-white text-lg uppercase">
 					Kuizit
