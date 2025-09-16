@@ -1,11 +1,21 @@
 import BlurryShape from '@/components/decorative/BlurryShape';
 import { Button } from '@/components/ui/button';
 import type { Page, QuizData, QuizResult } from '@/types';
-import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faQuestion } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
+import {
+	Dialog,
+	DialogClose,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from '@/components/ui/dialog';
 
-type quizPageParams = {
+type QuizPageParams = {
 	onPageChange: (pageName: Page) => void;
 	quizData: QuizData;
 	quizResultData: QuizResult;
@@ -17,7 +27,7 @@ export function QuizPage({
 	quizResultData,
 	onPageChange,
 	onAnswerSubmittion,
-}: quizPageParams) {
+}: QuizPageParams) {
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 	const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
 	const [isAnimating, setIsAnimating] = useState(false);
@@ -87,7 +97,7 @@ export function QuizPage({
 					{currentQuestion.question}
 				</h1>
 			</div>
-			<div className="relative flex flex-col flex-3 w-full px-5 gap-10 md:flex-1/3 justify-between items-center py-5">
+			<div className="relative flex flex-col flex-3 w-full px-5 gap-10 md:flex-1/3 justify-between items-center py-5 bg-custom-white">
 				<div className="flex w-full relative">
 					<div className="progress-bar absolute w-[100%] bg-custom-light-gray/15 h-1 rounded-full transition-all duration-300"></div>
 					<div
@@ -142,24 +152,53 @@ export function QuizPage({
 						);
 					})}
 				</div>
-				{selectedAnswer !== null ? (
-					<Button
-						size="lg"
-						variant="green"
-						onClick={() => handleNextQuestionIndex()}
-					>
-						<FontAwesomeIcon icon={faArrowRight} />
-					</Button>
-				) : (
-					<Button
-						className="opacity-50 pointer-events-none"
-						size="lg"
-						variant="green"
-					>
-						<FontAwesomeIcon icon={faArrowRight} />
-					</Button>
-				)}
-				{/* TODO: Place explanation button after user answer */}
+				<div className="flex gap-3">
+					{selectedAnswer !== null ? (
+						<Dialog>
+							<DialogTrigger asChild>
+								<Button
+									className={`transition-all duration-300 ${
+										isAnimating
+											? 'opacity-0 translate-y-20'
+											: 'opacity-100 translate-y-0'
+									}`}
+									size="lg"
+									variant="minimal"
+								>
+									<FontAwesomeIcon icon={faQuestion} />
+								</Button>
+							</DialogTrigger>
+							<DialogContent className="sm:max-w-md bg-custom-white">
+								<DialogHeader>
+									<DialogTitle className="text-custom-green mb-5">
+										Explanation
+									</DialogTitle>
+									<DialogDescription className="text-custom-gray text-md font-medium">
+										{currentQuestion.explanation}
+									</DialogDescription>
+								</DialogHeader>
+							</DialogContent>
+						</Dialog>
+					) : null}
+
+					{selectedAnswer !== null ? (
+						<Button
+							size="lg"
+							variant="green"
+							onClick={() => handleNextQuestionIndex()}
+						>
+							<FontAwesomeIcon icon={faArrowRight} />
+						</Button>
+					) : (
+						<Button
+							className="opacity-50 pointer-events-none"
+							size="lg"
+							variant="green"
+						>
+							<FontAwesomeIcon icon={faArrowRight} />
+						</Button>
+					)}
+				</div>
 			</div>
 		</div>
 	);
