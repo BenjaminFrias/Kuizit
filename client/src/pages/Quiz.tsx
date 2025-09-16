@@ -54,18 +54,24 @@ export function QuizPage({
 	};
 
 	return (
-		<div className="min-h-screen min-w-screen flex flex-col w-full items-center md:flex-row overflow-hidden">
-			<div className="relative flex flex-col w-full gap-6 px-8 py-8 justify-center items-center bg-custom-gray flex-4 md:flex-2/4 ">
+		<div className="min-h-screen min-w-screen flex flex-col w-full items-center md:flex-row md:items-stretch overflow-hidden">
+			<div
+				className="relative flex flex-col w-full gap-6 px-8 py-8 justify-center items-center
+			bg-custom-gray flex-4 md:flex-2/4 md:h-screen md:pl-13"
+			>
 				<div
 					className="absolute -top-50 w-90 h-90 left-0 right-0 md:w-140
-                                        md:h-140 md:-top-50 md:-left-70 lg:-top-100 lg:-left-110 lg:w-200 lg:h-200 opacity-80 "
+                                        md:h-140 md:top-0 md:bottom-0 md:-left-70 lg:-left-110 lg:w-200 lg:h-200 opacity-80 "
 				>
 					<BlurryShape />
 				</div>
-				<p className=" text-custom-white text-center font-medium z-1">
+				<p className=" text-custom-white text-center md:self-start font-medium z-1">
 					Question {questionNumber}
 				</p>
-				<h1 className="font-primary text-custom-white text-shadow-title/30  font-medium text-center text-3xl  w-full z-1">
+				<h1
+					className="font-primary text-custom-white text-shadow-title/30  font-medium text-center text-3xl  w-full z-1 
+				md:self-start md:text-start md:text-5xl"
+				>
 					{currentQuestion.question}
 				</h1>
 			</div>
