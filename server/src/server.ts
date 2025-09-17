@@ -11,11 +11,9 @@ import { QuizResultSchema } from './schemas/quiz';
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-const corsOptions = {
-	origin: 'https://kuizit-ai.netlify.app',
-};
+const corsOrigin = process.env.CORS_ORIGIN || 'http://localhost:3001';
 
-app.use(cors(corsOptions));
+app.use(cors({ origin: corsOrigin }));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
