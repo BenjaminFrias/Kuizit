@@ -151,33 +151,32 @@ export function QuizPage({
 					})}
 				</div>
 				<div className="flex gap-3">
-					{selectedAnswer !== null ? (
-						<Dialog>
-							<DialogTrigger asChild>
-								<Button
-									className={`transition-all duration-300 ${
-										isAnimating
-											? 'opacity-0 translate-y-20'
-											: 'opacity-100 translate-y-0'
-									}`}
-									size="lg"
-									variant="minimal"
-								>
-									<FontAwesomeIcon icon={faQuestion} />
-								</Button>
-							</DialogTrigger>
-							<DialogContent className="sm:max-w-md bg-custom-white">
-								<DialogHeader>
-									<DialogTitle className="text-custom-green mb-5">
-										Explanation
-									</DialogTitle>
-									<DialogDescription className="text-custom-gray text-md font-medium">
-										{currentQuestion.explanation}
-									</DialogDescription>
-								</DialogHeader>
-							</DialogContent>
-						</Dialog>
-					) : null}
+					<Dialog>
+						<DialogTrigger asChild>
+							<Button
+								className={`transition-all duration-500 ${
+									selectedAnswer === null
+										? 'absolute opacity-0 translate-y-20 border-0 -z-1'
+										: 'opacity-100 translate-y-0 '
+								}`}
+								size="lg"
+								variant="minimal"
+							>
+								<FontAwesomeIcon icon={faQuestion} />
+							</Button>
+						</DialogTrigger>
+
+						<DialogContent className="sm:max-w-md bg-custom-white">
+							<DialogHeader>
+								<DialogTitle className="text-custom-green mb-5">
+									Explanation
+								</DialogTitle>
+								<DialogDescription className="text-custom-gray text-md font-medium">
+									{selectedAnswer !== null ? currentQuestion.explanation : null}
+								</DialogDescription>
+							</DialogHeader>
+						</DialogContent>
+					</Dialog>
 
 					{selectedAnswer !== null ? (
 						<Button
