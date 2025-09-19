@@ -72,11 +72,11 @@ export function QuizResultsPage({
 				<Button
 					size="md"
 					variant="secondary"
-					onClick={() => onPageChange('quiz')}
+					onClick={() => onPageChange('review')}
 				>
 					Review answers
 				</Button>
-				<Button size="md" variant="green" onClick={() => onPageChange('quiz')}>
+				<Button size="md" variant="green" onClick={() => onPageChange('input')}>
 					Generate quiz
 				</Button>
 			</div>

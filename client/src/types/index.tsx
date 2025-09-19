@@ -1,6 +1,6 @@
 export type InputOption = 'prompt' | 'youtube_link' | 'file';
 export type AnswerOptions = 'multiple_choice' | 'true_false';
-export type Page = 'home' | 'input' | 'quiz' | 'results';
+export type Page = 'home' | 'input' | 'quiz' | 'results' | 'review';
 export type Difficulty = 'easy' | 'medium' | 'hard' | 'expert';
 export type NumberQuestions = 5 | 10 | 15 | 20;
 export type QuizRequestBody = {
