@@ -46,7 +46,7 @@ export function QuizPage({
 				setCurrentQuestionIndex(currentQuestionIndex + 1);
 				setSelectedAnswer(null);
 			} else {
-				onPageChange('home');
+				onPageChange('results');
 			}
 			setIsAnimating(false);
 		}, 500);

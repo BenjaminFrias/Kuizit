@@ -14,6 +14,7 @@ import type {
 	QuizResult,
 } from './types';
 import { QuizPage } from './pages/Quiz';
+import { QuizResultsPage } from './pages/QuizResultsPage';
 
 const API_BASE_URL: string = import.meta.env.VITE_API_URL;
 
@@ -116,6 +117,13 @@ function App() {
 					quizData={quizData}
 					quizResultData={quizResultData}
 					onAnswerSubmittion={handleOptionSubmittion}
+				/>
+			);
+		case 'results':
+			return (
+				<QuizResultsPage
+					quizResults={quizResultData}
+					onPageChange={handlePageChange}
 				/>
 			);
 		default:
