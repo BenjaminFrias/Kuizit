@@ -16,6 +16,7 @@ import type {
 import { QuizPage } from './pages/Quiz';
 import { QuizResultsPage } from './pages/QuizResultsPage';
 import { QuizReviewPage } from './pages/QuizReviewPage';
+import { AnimatePresence, motion } from 'framer-motion';
 
 const API_BASE_URL: string = import.meta.env.VITE_API_URL;
 
@@ -31,8 +32,12 @@ function App() {
 	const [quizNumberQuestions, setNumberQuestions] =
 		useState<NumberQuestions>(10);
 	const [files, setFiles] = useState<File[]>([]);
-
 	const [quizResultData, setQuizResultData] = useState<QuizResult>([]);
+	const [hasRendered, setHasRendered] = useState(false);
+
+	useEffect(() => {
+		setHasRendered(true);
+	}, []);
 
 	const handleContentChange = (newContent: string) => {
 		setQuizContent(newContent);
@@ -106,55 +111,74 @@ function App() {
 		return <LoadingAnimation />;
 	}
 
-	switch (currentPage) {
-		case 'home':
-			return <HomePage onPageChange={handlePageChange} />;
-		case 'input':
-			return (
-				<Inputpage
-					onPageChange={handlePageChange}
-					onInputTypeChange={handleInputTypeChange}
-					onDifficultyChange={handleDifficultyChange}
-					onAnswerOptionsChange={handleAnswerOptionsChange}
-					onNumberQuestionsChange={handleNumberQuestionsChange}
-					onContentChange={handleContentChange}
-					onQuizSubmit={handleGenerateQuiz}
-					setFiles={setFiles}
-					quizFiles={files}
-					quizInputType={quizInputType}
-					quizContent={quizContent}
-					quizDifficulty={quizDifficulty}
-					quizAnswerOptions={quizAnswerOptions}
-					quizNumberQuestions={quizNumberQuestions}
-				/>
-			);
-		case 'quiz':
-			return (
-				<QuizPage
-					onPageChange={handlePageChange}
-					quizData={quizData}
-					quizResultData={quizResultData}
-					onAnswerSubmittion={handleOptionSubmittion}
-				/>
-			);
-		case 'results':
-			return (
-				<QuizResultsPage
-					quizResults={quizResultData}
-					onPageChange={handlePageChange}
-				/>
-			);
-		case 'review':
-			return (
-				<QuizReviewPage
-					quizData={quizData}
-					quizResults={quizResultData}
-					onPageChange={handlePageChange}
-				/>
-			);
-		default:
-			return <HomePage onPageChange={handlePageChange} />;
-	}
+	const renderPage = () => {
+		switch (currentPage) {
+			case 'home':
+				return <HomePage onPageChange={handlePageChange} />;
+			case 'input':
+				return (
+					<Inputpage
+						onPageChange={handlePageChange}
+						onInputTypeChange={handleInputTypeChange}
+						onDifficultyChange={handleDifficultyChange}
+						onAnswerOptionsChange={handleAnswerOptionsChange}
+						onNumberQuestionsChange={handleNumberQuestionsChange}
+						onContentChange={handleContentChange}
+						onQuizSubmit={handleGenerateQuiz}
+						setFiles={setFiles}
+						quizFiles={files}
+						quizInputType={quizInputType}
+						quizContent={quizContent}
+						quizDifficulty={quizDifficulty}
+						quizAnswerOptions={quizAnswerOptions}
+						quizNumberQuestions={quizNumberQuestions}
+					/>
+				);
+			case 'quiz':
+				return (
+					<QuizPage
+						onPageChange={handlePageChange}
+						quizData={quizData}
+						quizResultData={quizResultData}
+						onAnswerSubmittion={handleOptionSubmittion}
+					/>
+				);
+			case 'results':
+				return (
+					<QuizResultsPage
+						quizResults={quizResultData}
+						onPageChange={handlePageChange}
+					/>
+				);
+			case 'review':
+				return (
+					<QuizReviewPage
+						quizData={quizData}
+						quizResults={quizResultData}
+						onPageChange={handlePageChange}
+					/>
+				);
+			default:
+				return <HomePage onPageChange={handlePageChange} />;
+		}
+	};
+
+	return (
+		<AnimatePresence mode="wait">
+			<motion.div
+				key={currentPage}
+				initial={hasRendered ? { opacity: 0, y: 15 } : false}
+				animate={{ opacity: 1, y: 0 }}
+				exit={{ opacity: 0, y: -15 }}
+				transition={{
+					duration: 0.15,
+				}}
+				className="page-transition-div"
+			>
+				{renderPage()}
+			</motion.div>
+		</AnimatePresence>
+	);
 }
 
 async function getGeneratedQuiz(quizData: QuizRequestBody) {
