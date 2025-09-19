@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import HomePage from './pages/HomePage';
 import Inputpage from './pages/InputPage';
@@ -84,6 +84,23 @@ function App() {
 	const handlePageChange = (pageName: Page) => {
 		setCurrentPage(pageName);
 	};
+
+	const resetQuizStates = () => {
+		setQuizContent('');
+		setSelectedInputType('prompt');
+		setSelectedDifficulty('easy');
+		setQuizAnswerOptions('multiple_choice');
+		setNumberQuestions(10);
+		setFiles([]);
+		setQuizData([]);
+		setQuizResultData([]);
+	};
+
+	useEffect(() => {
+		if (currentPage === 'input' || currentPage === 'home') {
+			resetQuizStates();
+		}
+	}, [currentPage]);
 
 	if (isQuizLoading) {
 		return <LoadingAnimation />;
