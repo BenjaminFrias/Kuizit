@@ -1,0 +1,18 @@
+.shortFadeIn {
+	animation: appear 500ms ease-in-out;
+}
+
+.longFadeIn {
+	animation: appear 800ms ease-in-out;
+}
+
+@keyframes appear {
+	0% {
+		opacity: 0;
+		transform: translateY(20%);
+	}
+	100% {
+		transform: translateY(0);
+		opacity: 1;
+	}
+}

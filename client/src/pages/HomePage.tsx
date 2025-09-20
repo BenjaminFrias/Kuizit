@@ -10,24 +10,25 @@ export default function HomePage({ onPageChange }: onPageChangeType) {
 	return (
 		<div className="relative min-h-screen min-w-screen p-6 md:p-8 flex flex-col items-center justify-center overflow-hidden bg-custom-gray">
 			<div className="absolute flex flex-col items-center w-full h-full z-999">
-				<h2 className="absolute z-999 top-10 center font-logo text-white text-lg uppercase">
+				<h2 className="shortFadeIn absolute z-999 top-10 center font-logo text-white text-lg uppercase">
 					Kuizit
 				</h2>
 
 				<div className="flex flex-col items-center justify-center flex-grow px-8 md:mt-14">
 					<h1
 						className="
-						font-primary font-medium text-white text-shadow-title text-center w-full text-7xl md:text-[6.5rem] tracking-wide max-w-200"
+						shortFadeIn font-primary font-medium text-white text-shadow-title text-center w-full text-7xl
+						md:text-[6.5rem] tracking-wide max-w-200"
 					>
 						Instantly create quizzes with AI
 					</h1>
 
-					<p className="font-primary text-white text-lg text-center md:max-w-120 mt-8 z-999 md:z-1">
+					<p className="shortFadeIn font-primary text-white text-lg text-center md:max-w-120 mt-8 z-999 md:z-1">
 						Turn any text, YouTube video, or content into an interactive quiz in
 						seconds!
 					</p>
 					<Button
-						className="mt-12 z-999"
+						className="shortFadeIn mt-12 z-999"
 						size="lg"
 						variant="green"
 						onClick={() => onPageChange('input')}
@@ -37,14 +38,14 @@ export default function HomePage({ onPageChange }: onPageChangeType) {
 					</Button>
 
 					<div
-						className="absolute -bottom-30 left-10 w-35 h-60 lg:w-65 lg:h-80 -rotate-25
+						className="longFadeIn absolute -bottom-30 left-10 w-35 h-60 lg:w-65 lg:h-80 -rotate-25
 					md:w-55 md:h-70 md: md:-left-5 md:-rotate-12 lg:left-30 z-4"
 					>
 						<OptionsCheckIllustration />
 					</div>
 
 					<div
-						className="absolute -bottom-30 right-10 w-35 h-60 rotate-25
+						className="longFadeIn absolute -bottom-30 right-10 w-35 h-60 rotate-25
 					md:w-55 md:h-70 md:right-2 lg:right-30 lg:w-65 lg:h-80 md:rotate-12 z-4"
 					>
 						<MagicTextIllustration />

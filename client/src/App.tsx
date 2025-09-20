@@ -16,7 +16,7 @@ import type {
 import { QuizPage } from './pages/Quiz';
 import { QuizResultsPage } from './pages/QuizResultsPage';
 import { QuizReviewPage } from './pages/QuizReviewPage';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const API_BASE_URL: string = import.meta.env.VITE_API_URL;
 
@@ -33,11 +33,6 @@ function App() {
 		useState<NumberQuestions>(10);
 	const [files, setFiles] = useState<File[]>([]);
 	const [quizResultData, setQuizResultData] = useState<QuizResult>([]);
-	const [hasRendered, setHasRendered] = useState(false);
-
-	useEffect(() => {
-		setHasRendered(true);
-	}, []);
 
 	const handleContentChange = (newContent: string) => {
 		setQuizContent(newContent);
@@ -163,22 +158,7 @@ function App() {
 		}
 	};
 
-	return (
-		<AnimatePresence mode="wait">
-			<motion.div
-				key={currentPage}
-				initial={hasRendered ? { opacity: 0, y: 15 } : false}
-				animate={{ opacity: 1, y: 0 }}
-				exit={{ opacity: 0, y: -15 }}
-				transition={{
-					duration: 0.15,
-				}}
-				className="page-transition-div"
-			>
-				{renderPage()}
-			</motion.div>
-		</AnimatePresence>
-	);
+	return renderPage();
 }
 
 async function getGeneratedQuiz(quizData: QuizRequestBody) {

@@ -26,7 +26,7 @@ export function QuizResultsPage({
 
 	return (
 		<div className="min-h-screen min-w-screen flex flex-col w-full justify-between items-center bg-custom-gray px-8 py-8 overflow-hidden">
-			<h2 className="text-custom-white text-3xl font-medium z-1">
+			<h2 className="text-custom-white text-3xl font-medium z-1 shortFadeIn">
 				Quiz Results
 			</h2>
 			<div className="relative flex flex-col w-full gap-2 justify-center ">
@@ -68,7 +68,7 @@ export function QuizResultsPage({
 					questions correctly
 				</p>
 			</div>
-			<div className="flex gap-3 z-1 mb-10">
+			<div className="flex gap-3 z-1 mb-10 shortFadeIn">
 				<Button
 					size="md"
 					variant="secondary"

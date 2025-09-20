@@ -47,11 +47,11 @@ export default function Inputpage({
 }: inputPageParams) {
 	return (
 		<div className="relative min-h-screen min-w-screen w-screen h-screen max-w-screen max-h-screen px-3 py-5 flex flex-col items-center justify-start gap-15 bg-custom-white">
-			<h2 className="flex center font-logo text-custom-green text-lg uppercase">
+			<h2 className="flex center font-logo text-custom-green text-lg uppercase shortFadeIn">
 				Kuizit
 			</h2>
 
-			<div className="flex flex-col w-full max-w-[600px] justify-self-center items-center gap-5">
+			<div className="flex flex-col w-full max-w-[600px] justify-self-center items-center gap-5 longFadeIn">
 				<h1 className="font-primary font-regular text-custom-gray text-[2.7rem]">
 					Generate Quiz
 				</h1>
