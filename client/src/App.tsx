@@ -16,7 +16,6 @@ import type {
 import { QuizPage } from './pages/Quiz';
 import { QuizResultsPage } from './pages/QuizResultsPage';
 import { QuizReviewPage } from './pages/QuizReviewPage';
-import { motion, AnimatePresence } from 'framer-motion';
 
 const API_BASE_URL: string = import.meta.env.VITE_API_URL;
 
