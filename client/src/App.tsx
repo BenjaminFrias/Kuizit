@@ -3,6 +3,7 @@ import './App.css';
 import HomePage from './pages/HomePage';
 import Inputpage from './pages/InputPage';
 import LoadingAnimation from './pages/QuizLoadingPage';
+import validateQuizContent from './validation/inputValidation';
 import type {
 	AnswerOptions,
 	Page,
@@ -32,6 +33,7 @@ function App() {
 		useState<NumberQuestions>(10);
 	const [files, setFiles] = useState<File[]>([]);
 	const [quizResultData, setQuizResultData] = useState<QuizResult>([]);
+	const [apiError, setApiError] = useState<string | null>(null);
 
 	const handleContentChange = (newContent: string) => {
 		setQuizContent(newContent);
@@ -54,7 +56,7 @@ function App() {
 	};
 
 	const handleGenerateQuiz = async () => {
-		setIsQuizLoading(true);
+		setApiError(null);
 		const contentToSend = quizInputType === 'file' ? files[0] : quizContent;
 
 		const inputQuizData: QuizRequestBody = {
@@ -66,11 +68,20 @@ function App() {
 		};
 
 		try {
+			validateQuizContent({ quizData: inputQuizData, quizFile: files }); // throw error when invalid data
+			setIsQuizLoading(true);
 			const generatedQuizData = await getGeneratedQuiz(inputQuizData);
 			setQuizData(generatedQuizData);
 			handlePageChange('quiz');
-		} catch (error) {
-			console.log('Error while getting quiz from API: ', error);
+		} catch (error: unknown) {
+			if (error instanceof Error) {
+				console.error('Error while getting quiz from API: ', error.message);
+				setApiError(`${error.message}. Please try again.`);
+			} else {
+				console.error('An unknown error occurred:', error);
+				setApiError('An unexpected error occurred. Please contact support.');
+			}
+			handlePageChange('input');
 		} finally {
 			setIsQuizLoading(false);
 		}
@@ -120,12 +131,14 @@ function App() {
 						onContentChange={handleContentChange}
 						onQuizSubmit={handleGenerateQuiz}
 						setFiles={setFiles}
+						setApiError={setApiError}
 						quizFiles={files}
 						quizInputType={quizInputType}
 						quizContent={quizContent}
 						quizDifficulty={quizDifficulty}
 						quizAnswerOptions={quizAnswerOptions}
 						quizNumberQuestions={quizNumberQuestions}
+						apiError={apiError}
 					/>
 				);
 			case 'quiz':
@@ -191,7 +204,7 @@ async function getGeneratedQuiz(quizData: QuizRequestBody) {
 	} else {
 		const errorText = await response.text();
 		console.error('API Error:', errorText);
-		throw new Error('Failed to generate quiz. Please try again.');
+		throw new Error(errorText);
 	}
 }
 

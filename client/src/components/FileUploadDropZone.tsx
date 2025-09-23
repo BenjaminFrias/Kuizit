@@ -78,19 +78,14 @@ export function FileUploadDropZone({ files, setFiles }: FileUploadType) {
 			multiple={false}
 		>
 			{files.length > 0 ? (
-				<FileUploadList className="-mt-3 -mb-7">
+				<FileUploadList>
 					{files.map((file, index) => (
 						<FileUploadItem key={index} value={file} className="flex-col">
 							<div className="flex w-full items-center gap-2">
 								<FileUploadItemPreview />
 								<FileUploadItemMetadata />
 								<FileUploadItemDelete asChild>
-									<Button
-										variant="ghost"
-										size="icon"
-										className="size-5"
-										onClick={() => {}}
-									>
+									<Button variant="ghost" size="icon" className="size-5">
 										<X />
 									</Button>
 								</FileUploadItemDelete>

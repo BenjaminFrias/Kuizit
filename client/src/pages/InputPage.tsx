@@ -9,7 +9,10 @@ import type {
 	NumberQuestions,
 	Page,
 } from '@/types';
-import { faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons';
+import {
+	faCircleExclamation,
+	faWandMagicSparkles,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 type inputPageParams = {
@@ -20,6 +23,7 @@ type inputPageParams = {
 	onNumberQuestionsChange: (numberQuestions: NumberQuestions) => void;
 	onContentChange: (content: string) => void;
 	setFiles: (files: File[]) => void;
+	setApiError: (error: string | null) => void;
 	onQuizSubmit: () => void;
 	quizFiles: File[];
 	quizInputType: InputOption;
@@ -27,6 +31,7 @@ type inputPageParams = {
 	quizDifficulty: Difficulty;
 	quizAnswerOptions: AnswerOptions;
 	quizNumberQuestions: NumberQuestions;
+	apiError: string | null;
 };
 
 export default function Inputpage({
@@ -37,6 +42,7 @@ export default function Inputpage({
 	onContentChange,
 	onNumberQuestionsChange,
 	setFiles,
+	setApiError,
 	onQuizSubmit,
 	quizInputType,
 	quizFiles,
@@ -44,6 +50,7 @@ export default function Inputpage({
 	quizDifficulty,
 	quizAnswerOptions,
 	quizNumberQuestions,
+	apiError,
 }: inputPageParams) {
 	return (
 		<div className="relative min-h-screen min-w-screen w-screen max-w-screen px-3 py-5 flex flex-col items-center justify-between gap-10 bg-custom-white">
@@ -63,6 +70,7 @@ export default function Inputpage({
 						onClick={() => {
 							onInputTypeChange('prompt');
 							onContentChange('');
+							setApiError(null);
 						}}
 					>
 						Prompt
@@ -71,7 +79,10 @@ export default function Inputpage({
 						className="flex-1"
 						size="md"
 						variant={`${quizInputType === 'file' ? 'green' : 'minimal'}`}
-						onClick={() => onInputTypeChange('file')}
+						onClick={() => {
+							setApiError(null);
+							onInputTypeChange('file');
+						}}
 					>
 						File
 					</Button>
@@ -82,6 +93,7 @@ export default function Inputpage({
 							quizInputType === 'youtube_link' ? 'green' : 'minimal'
 						}`}
 						onClick={() => {
+							setApiError(null);
 							onInputTypeChange('youtube_link');
 							onContentChange('');
 						}}
@@ -105,6 +117,16 @@ export default function Inputpage({
 				) : (
 					<FileUploadDropZone files={quizFiles} setFiles={setFiles} />
 				)}
+
+				{apiError ? (
+					<div className="flex gap-3 items-center w-full bg-red-200 border-1 font-medium border-red-500 rounded-2xl p-3">
+						<FontAwesomeIcon
+							icon={faCircleExclamation}
+							className="text-red-500"
+						/>
+						<p>{apiError}</p>
+					</div>
+				) : null}
 
 				<div className="flex flex-col w-full justify-center gap-2">
 					<div className=" w-full">
