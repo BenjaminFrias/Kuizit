@@ -13,8 +13,8 @@ import {
 	FileUploadItemProgress,
 	FileUploadList,
 	type FileUploadProps,
-	FileUploadTrigger,
 } from '@/components/ui/file-upload';
+import { useTranslation } from '@/hooks/useTranslation';
 
 type FileUploadType = {
 	files: File[];
@@ -23,6 +23,7 @@ type FileUploadType = {
 
 export function FileUploadDropZone({ files, setFiles }: FileUploadType) {
 	// const [files, setFiles] = React.useState<File[]>([]);
+	const t = useTranslation();
 
 	const onUpload: NonNullable<FileUploadProps['onUpload']> = React.useCallback(
 		async (files, { onProgress, onSuccess, onError }) => {
@@ -97,13 +98,7 @@ export function FileUploadDropZone({ files, setFiles }: FileUploadType) {
 			) : (
 				<FileUploadDropzone className="flex-row flex-wrap border-dotted border-2 text-custom-gray border-custom-light-gray text-center">
 					<CloudUpload className="size-4" />
-					Drag and drop or
-					<FileUploadTrigger asChild>
-						<Button variant="link" size="sm" className="p-0">
-							choose files
-						</Button>
-					</FileUploadTrigger>
-					to upload
+					{t.dragAndDrop}
 				</FileUploadDropzone>
 			)}
 		</FileUpload>

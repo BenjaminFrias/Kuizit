@@ -12,6 +12,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@/components/ui/dialog';
+import { useTranslation } from '@/hooks/useTranslation';
 
 type QuizPageParams = {
 	onPageChange: (pageName: Page) => void;
@@ -29,6 +30,7 @@ export function QuizPage({
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 	const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
 	const [isAnimating, setIsAnimating] = useState(false);
+	const t = useTranslation();
 
 	const currentQuestion = quizData[currentQuestionIndex];
 	const questionNumber = currentQuestionIndex + 1;
@@ -84,7 +86,7 @@ export function QuizPage({
 						${isAnimating ? 'opacity-0 translate-y-3' : 'opacity-100 translate-y-0'}
 						`}
 				>
-					Question {questionNumber}
+					{t.question} {questionNumber}
 				</p>
 				<h1
 					className={`font-primary text-custom-white text-shadow-title/30  font-medium text-center text-3xl  w-full z-1 
@@ -172,7 +174,7 @@ export function QuizPage({
 						<DialogContent className="sm:max-w-md bg-custom-white">
 							<DialogHeader>
 								<DialogTitle className="text-custom-green mb-5">
-									Explanation
+									{t.explanation}
 								</DialogTitle>
 								<DialogDescription className="text-custom-gray text-md font-medium">
 									{selectedAnswer !== null ? currentQuestion.explanation : null}

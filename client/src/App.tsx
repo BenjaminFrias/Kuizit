@@ -17,6 +17,7 @@ import type {
 import { QuizPage } from './pages/Quiz';
 import { QuizResultsPage } from './pages/QuizResultsPage';
 import { QuizReviewPage } from './pages/QuizReviewPage';
+import { useTranslation } from './hooks/useTranslation';
 
 const API_BASE_URL: string = import.meta.env.VITE_API_URL;
 
@@ -34,6 +35,8 @@ function App() {
 	const [files, setFiles] = useState<File[]>([]);
 	const [quizResultData, setQuizResultData] = useState<QuizResult>([]);
 	const [apiError, setApiError] = useState<string | null>(null);
+
+	const t = useTranslation();
 
 	const handleContentChange = (newContent: string) => {
 		setQuizContent(newContent);
@@ -68,7 +71,19 @@ function App() {
 		};
 
 		try {
-			validateQuizContent({ quizData: inputQuizData, quizFile: files }); // throw error when invalid data
+			const validationMessages = {
+				fileNotFoundErr: t.fileNotFoundErr,
+				fileTypeErr: t.fileTypeErr,
+				invalidPromptErr: t.invalidPromptErr,
+				invalidYoutubeLinkErr: t.invalidYoutubeLinkErr,
+			};
+
+			validateQuizContent({
+				quizData: inputQuizData,
+				quizFile: files,
+				validationMessages,
+			}); // throw error when invalid data
+
 			setIsQuizLoading(true);
 			const generatedQuizData = await getGeneratedQuiz(inputQuizData);
 			setQuizData(generatedQuizData);
@@ -76,10 +91,10 @@ function App() {
 		} catch (error: unknown) {
 			if (error instanceof Error) {
 				console.error('Error while getting quiz from API: ', error.message);
-				setApiError(`${error.message}. Please try again.`);
+				setApiError(`${error.message}. ${t.pleaseTryAgain}`);
 			} else {
 				console.error('An unknown error occurred:', error);
-				setApiError('An unexpected error occurred. Please contact support.');
+				setApiError(`${t.unexpectedErr}. ${t.pleaseTryAgain}.`);
 			}
 			handlePageChange('input');
 		} finally {

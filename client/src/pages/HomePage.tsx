@@ -5,8 +5,11 @@ import { Button } from '@/components/ui/button';
 import { faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { onPageChangeType } from '@/types';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function HomePage({ onPageChange }: onPageChangeType) {
+	const t = useTranslation();
+
 	return (
 		<div className="relative min-h-screen min-w-screen p-6 md:p-8 flex flex-col items-center justify-center overflow-hidden bg-custom-gray">
 			<div className="absolute flex flex-col items-center w-full h-full z-999">
@@ -20,12 +23,11 @@ export default function HomePage({ onPageChange }: onPageChangeType) {
 						shortFadeIn font-primary font-medium text-white text-shadow-title text-center w-full text-7xl
 						md:text-[6.5rem] tracking-wide max-w-200"
 					>
-						Instantly create quizzes with AI
+						{t.titleHome}
 					</h1>
 
 					<p className="shortFadeIn font-primary text-white text-lg text-center md:max-w-120 mt-8 z-999 md:z-1">
-						Turn any text, YouTube video, or content into an interactive quiz in
-						seconds!
+						{t.taglineHome}
 					</p>
 					<Button
 						className="shortFadeIn mt-12 z-999"
@@ -33,7 +35,7 @@ export default function HomePage({ onPageChange }: onPageChangeType) {
 						variant="green"
 						onClick={() => onPageChange('input')}
 					>
-						Generate quiz
+						{t.generateQuizBtn}
 						<FontAwesomeIcon icon={faWandMagicSparkles} />
 					</Button>
 

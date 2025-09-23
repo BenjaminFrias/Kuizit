@@ -1,6 +1,7 @@
 import { FileUploadDropZone } from '@/components/FileUploadDropZone';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { useTranslation } from '@/hooks/useTranslation';
 
 import type {
 	AnswerOptions,
@@ -52,6 +53,8 @@ export default function Inputpage({
 	quizNumberQuestions,
 	apiError,
 }: inputPageParams) {
+	const t = useTranslation();
+
 	return (
 		<div className="relative min-h-screen min-w-screen w-screen max-w-screen px-3 py-5 flex flex-col items-center justify-between gap-10 bg-custom-white">
 			<h2 className="flex center font-logo text-custom-green text-lg uppercase shortFadeIn">
@@ -60,7 +63,7 @@ export default function Inputpage({
 
 			<div className="flex flex-col max-w-[600px] w-full self-center md:w-400 md:max-h-screen justify-self-center items-center gap-5 longFadeIn">
 				<h1 className="font-primary font-regular text-custom-gray text-[2.7rem]">
-					Generate Quiz
+					{t.generateQuizBtn}
 				</h1>
 				<div className="input-types flex gap-2 w-full justify-center items-center">
 					<Button
@@ -73,7 +76,7 @@ export default function Inputpage({
 							setApiError(null);
 						}}
 					>
-						Prompt
+						{t.promptOption}
 					</Button>
 					<Button
 						className="flex-1"
@@ -84,7 +87,7 @@ export default function Inputpage({
 							onInputTypeChange('file');
 						}}
 					>
-						File
+						{t.fileOption}
 					</Button>
 					<Button
 						className="flex-1"
@@ -98,7 +101,7 @@ export default function Inputpage({
 							onContentChange('');
 						}}
 					>
-						Link
+						{t.linkOption}
 					</Button>
 				</div>
 
@@ -108,8 +111,8 @@ export default function Inputpage({
 						className="resize-none"
 						placeholder={`${
 							quizInputType === 'prompt'
-								? 'Create a quiz about the solar system...'
-								: 'Paste YouTube link...'
+								? t.quizPromptPlaceholder
+								: t.quizLinkPlaceholder
 						}`}
 						value={quizContent}
 						onChange={(e) => onContentChange(e.target.value)}
@@ -131,7 +134,7 @@ export default function Inputpage({
 				<div className="flex flex-col w-full justify-center gap-2">
 					<div className=" w-full">
 						<h3 className="text-center font-primary text-custom-light-gray font-medium">
-							Difficulty
+							{t.difficultyTitle}
 						</h3>
 						<div className="flex gap-2 mt-2 w-full">
 							<Button
@@ -140,7 +143,7 @@ export default function Inputpage({
 								variant={`${quizDifficulty === 'easy' ? 'green' : 'minimal'}`}
 								onClick={() => onDifficultyChange('easy')}
 							>
-								Easy
+								{t.easyOption}
 							</Button>
 							<Button
 								className="flex-1"
@@ -148,7 +151,7 @@ export default function Inputpage({
 								variant={`${quizDifficulty === 'medium' ? 'green' : 'minimal'}`}
 								onClick={() => onDifficultyChange('medium')}
 							>
-								Medium
+								{t.mediumOption}
 							</Button>
 							<Button
 								className="flex-1"
@@ -156,7 +159,7 @@ export default function Inputpage({
 								variant={`${quizDifficulty === 'hard' ? 'green' : 'minimal'}`}
 								onClick={() => onDifficultyChange('hard')}
 							>
-								Hard
+								{t.hardOption}
 							</Button>
 							<Button
 								className="flex-1"
@@ -164,14 +167,14 @@ export default function Inputpage({
 								variant={`${quizDifficulty === 'expert' ? 'green' : 'minimal'}`}
 								onClick={() => onDifficultyChange('expert')}
 							>
-								Expert
+								{t.expertOption}
 							</Button>
 						</div>
 					</div>
 
 					<div className="w-full">
 						<h3 className="text-center font-primary text-custom-light-gray font-medium">
-							Type of answers
+							{t.typeAnswersTitle}
 						</h3>
 						<div className="flex gap-2 mt-2 w-full">
 							<Button
@@ -182,7 +185,7 @@ export default function Inputpage({
 								}`}
 								onClick={() => onAnswerOptionsChange('multiple_choice')}
 							>
-								Multiple choice
+								{t.multipleChoiceOption}
 							</Button>
 							<Button
 								className="flex-1"
@@ -192,14 +195,14 @@ export default function Inputpage({
 								}`}
 								onClick={() => onAnswerOptionsChange('true_false')}
 							>
-								True or False
+								{t.trueFalseOption}
 							</Button>
 						</div>
 					</div>
 
 					<div className="w-full">
 						<h3 className="text-center font-primary text-custom-light-gray font-medium">
-							Number of questions
+							{t.numberQuestionsTitle}
 						</h3>
 						<div className="flex gap-2 mt-2 w-full">
 							<Button
@@ -247,7 +250,7 @@ export default function Inputpage({
 					onQuizSubmit();
 				}}
 			>
-				Generate quiz
+				{t.generateQuizBtn}
 				<FontAwesomeIcon icon={faWandMagicSparkles} />
 			</Button>
 		</div>

@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCrown } from '@fortawesome/free-solid-svg-icons';
+import { useTranslation } from '@/hooks/useTranslation';
 
 type QuizResultsPageParams = {
 	quizResults: QuizResult;
@@ -15,6 +16,21 @@ export function QuizResultsPage({
 	onPageChange,
 }: QuizResultsPageParams) {
 	const [isAnimating, setIsAnimating] = useState(true);
+	const t = useTranslation();
+
+	const replacePlaceholders = (
+		text: string,
+		values: { [key: string]: string | number }
+	) => {
+		let result = text;
+		for (const key in values) {
+			result = result.replace(
+				new RegExp(`\\{${key}\\}`, 'g'),
+				String(values[key])
+			);
+		}
+		return result;
+	};
 
 	setTimeout(() => {
 		setIsAnimating(false);
@@ -24,10 +40,15 @@ export function QuizResultsPage({
 	const score = quizResults.filter((answer) => answer.isCorrect == true).length;
 	const percentageScore = Math.floor((score / totalQuestions) * 100);
 
+	const scoreText = replacePlaceholders(t.quizScoreText, {
+		correctCount: score,
+		totalCount: totalQuestions,
+	});
+
 	return (
 		<div className="relative min-h-screen min-w-screen max-h-screen flex flex-col w-full justify-between items-center bg-custom-gray px-8 py-8 overflow-hidden">
 			<h2 className="text-custom-white text-3xl font-medium z-1 shortFadeIn">
-				Quiz Results
+				{t.quizResultsTitle}
 			</h2>
 			<div className="relative flex flex-col w-full gap-2 justify-center ">
 				<div className="text-custom-white text-center">
@@ -38,14 +59,14 @@ export function QuizResultsPage({
 									${isAnimating ? 'opacity-0 translate-y-3' : 'opacity-100 translate-y-0'}
 									`}
 				>
-					Congratulations!
+					{t.congratulations}
 				</p>
 				<p
 					className={`text-custom-white text-center font-medium z-1 transition-all duration-300
 							${isAnimating ? 'opacity-0 translate-y-3' : 'opacity-100 translate-y-0'}
 							`}
 				>
-					Your score is..
+					{t.yourScoreIs}...
 				</p>
 				<h1
 					className={`font-primary text-custom-white text-shadow-title/30  font-medium text-center text-8xl  w-full z-1 
@@ -62,10 +83,7 @@ export function QuizResultsPage({
 							${isAnimating ? 'opacity-0 translate-y-3' : 'opacity-100 translate-y-0'}
 							`}
 				>
-					You got <span className="text-custom-green font-bold">{score}</span>{' '}
-					out of{' '}
-					<span className="text-custom-green font-bold">{totalQuestions}</span>{' '}
-					questions correctly
+					{scoreText}
 				</p>
 			</div>
 			<div className="flex gap-3 z-1 mb-10 shortFadeIn">
@@ -74,10 +92,10 @@ export function QuizResultsPage({
 					variant="secondary"
 					onClick={() => onPageChange('review')}
 				>
-					Review answers
+					{t.reviewAnswers}
 				</Button>
 				<Button size="md" variant="green" onClick={() => onPageChange('input')}>
-					Generate quiz
+					{t.generateQuizBtn}
 				</Button>
 			</div>
 			<div
