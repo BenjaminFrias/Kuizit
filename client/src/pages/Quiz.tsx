@@ -68,10 +68,10 @@ export function QuizPage({
 	};
 
 	return (
-		<div className="min-h-screen min-w-screen flex flex-col w-full items-center md:flex-row md:items-stretch overflow-hidden">
+		<div className="min-h-screen min-w-screen flex flex-col w-full items-center md:flex-row md:items-stretch md:overflow-hidden">
 			<div
 				className="relative flex flex-col w-full gap-6 px-8 py-8 justify-center items-center
-			bg-custom-gray flex-4 md:flex-2/4 md:h-screen md:pl-13"
+			bg-custom-gray flex-4 md:flex-2/4 md:h-screen md:pl-13 overflow-hidden"
 			>
 				<div
 					className="absolute -top-50 w-90 h-90 left-0 right-0 md:w-140
@@ -152,7 +152,10 @@ export function QuizPage({
 				</div>
 				<div className="flex gap-3">
 					<Dialog>
-						<DialogTrigger asChild>
+						<DialogTrigger
+							asChild
+							className={selectedAnswer === null ? 'hidden' : ''}
+						>
 							<Button
 								className={`transition-all duration-500 ${
 									selectedAnswer === null

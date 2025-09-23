@@ -46,12 +46,12 @@ export default function Inputpage({
 	quizNumberQuestions,
 }: inputPageParams) {
 	return (
-		<div className="relative min-h-screen min-w-screen w-screen h-screen max-w-screen max-h-screen px-3 py-5 flex flex-col items-center justify-start gap-15 bg-custom-white">
+		<div className="relative min-h-screen min-w-screen w-screen max-w-screen px-3 py-5 flex flex-col items-center justify-between gap-10 bg-custom-white">
 			<h2 className="flex center font-logo text-custom-green text-lg uppercase shortFadeIn">
 				Kuizit
 			</h2>
 
-			<div className="flex flex-col w-full max-w-[600px] justify-self-center items-center gap-5 longFadeIn">
+			<div className="flex flex-col max-w-[600px] w-full self-center md:w-400 md:max-h-screen justify-self-center items-center gap-5 longFadeIn">
 				<h1 className="font-primary font-regular text-custom-gray text-[2.7rem]">
 					Generate Quiz
 				</h1>
@@ -215,19 +215,19 @@ export default function Inputpage({
 						</div>
 					</div>
 				</div>
-				<Button
-					className="mt-2"
-					size="md"
-					variant="green"
-					onClick={() => {
-						onPageChange('home');
-						onQuizSubmit();
-					}}
-				>
-					Generate quiz
-					<FontAwesomeIcon icon={faWandMagicSparkles} />
-				</Button>
 			</div>
+			<Button
+				className="longFadeIn mb-5"
+				size="md"
+				variant="green"
+				onClick={() => {
+					onPageChange('home');
+					onQuizSubmit();
+				}}
+			>
+				Generate quiz
+				<FontAwesomeIcon icon={faWandMagicSparkles} />
+			</Button>
 		</div>
 	);
 }
