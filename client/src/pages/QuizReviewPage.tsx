@@ -66,7 +66,7 @@ export function QuizReviewPage({
 		<div className="min-h-screen min-w-screen flex flex-col w-full items-center md:flex-row md:items-stretch overflow-x-hidden">
 			<div
 				className="relative flex flex-col w-full gap-6 px-8 py-8 justify-center items-center
-                bg-custom-gray flex-4 md:flex-2/4 md:h-screen md:pl-13"
+                bg-custom-gray flex-4 md:flex-2/4 md:overflow-hidden md:max-h-screen md:pl-13"
 			>
 				<div
 					className="absolute -top-50 w-90 h-90 left-0 right-0 md:w-140
@@ -96,7 +96,7 @@ export function QuizReviewPage({
 					{currentQuestion.question}
 				</h1>
 			</div>
-			<div className="relative flex flex-col flex-3 w-full px-5 gap-10 md:flex-1/3 justify-between items-center py-5 bg-custom-white">
+			<div className="relative flex flex-col flex-3 w-full px-5 pb-8 gap-10 md:flex-1/3 justify-between items-center py-5 bg-custom-white">
 				<div className="flex w-full relative">
 					<div className="progress-bar absolute w-[100%] bg-custom-light-gray/15 h-1 rounded-full transition-all duration-300"></div>
 					<div
@@ -145,7 +145,7 @@ export function QuizReviewPage({
 				</div>
 				<div className="flex gap-2">
 					<Button
-						size="lg"
+						size="responsive"
 						variant="minimal"
 						onClick={() => onPageChange('home')}
 					>
@@ -155,7 +155,7 @@ export function QuizReviewPage({
 						<DialogTrigger asChild>
 							<Button
 								className={`transition-all duration-500`}
-								size="lg"
+								size="responsive"
 								variant="minimal"
 							>
 								<FontAwesomeIcon icon={faQuestion} />
@@ -176,7 +176,7 @@ export function QuizReviewPage({
 
 					{currentQuestionIndex > 0 ? (
 						<Button
-							size="lg"
+							size="responsive"
 							variant="minimal"
 							onClick={() => handlePrevQuestionIndex()}
 						>
@@ -185,7 +185,7 @@ export function QuizReviewPage({
 					) : null}
 
 					<Button
-						size="lg"
+						size="responsive"
 						variant="minimal"
 						onClick={() => handleNextQuestionIndex()}
 					>
