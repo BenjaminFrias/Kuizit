@@ -1,4 +1,5 @@
 import { FileUploadDropZone } from '@/components/FileUploadDropZone';
+import Logo from '@/components/Logo';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -56,10 +57,13 @@ export default function Inputpage({
 	const t = useTranslation();
 
 	return (
-		<div className="relative min-h-screen min-w-screen w-screen max-w-screen px-3 py-5 flex flex-col items-center justify-between gap-10 bg-custom-white">
-			<h2 className="flex center font-logo text-custom-green text-lg uppercase shortFadeIn">
-				Kuizit
-			</h2>
+		<div
+			className="relative min-h-screen min-w-screen w-screen max-w-screen px-3 py-5 flex flex-col items-center
+		justify-between gap-10 bg-custom-white"
+		>
+			<div className="longFadeIn">
+				<Logo width="50" height="50" color="#569d5b" />
+			</div>
 
 			<div className="flex flex-col max-w-[600px] w-full self-center md:w-400 md:max-h-screen justify-self-center items-center gap-5 longFadeIn">
 				<h1 className="font-primary font-regular text-custom-gray text-center text-[2.7rem]">

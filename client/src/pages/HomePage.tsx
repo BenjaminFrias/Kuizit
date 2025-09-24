@@ -6,6 +6,7 @@ import { faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { onPageChangeType } from '@/types';
 import { useTranslation } from '@/hooks/useTranslation';
+import Logo from '@/components/Logo';
 
 export default function HomePage({ onPageChange }: onPageChangeType) {
 	const t = useTranslation();
@@ -13,9 +14,12 @@ export default function HomePage({ onPageChange }: onPageChangeType) {
 	return (
 		<div className="relative min-h-screen min-w-screen p-6 md:p-8 flex flex-col items-center justify-center overflow-hidden bg-custom-gray">
 			<div className="absolute flex flex-col items-center w-full h-full z-999">
-				<h2 className="shortFadeIn absolute z-999 top-10 center font-logo text-white text-lg uppercase">
-					Kuizit
-				</h2>
+				<div className="flex justify-center items-center gap-2 shortFadeIn absolute z-999 top-5 center">
+					<Logo width="40" height="40" />
+					<h2 className=" font-primary text-white font-extrabold text-2xl uppercase">
+						Kuizit
+					</h2>
+				</div>
 
 				<div className="flex flex-col items-center justify-center flex-grow px-8 md:mt-14">
 					<h1
