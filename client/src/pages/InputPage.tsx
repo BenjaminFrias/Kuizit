@@ -62,7 +62,7 @@ export default function Inputpage({
 			</h2>
 
 			<div className="flex flex-col max-w-[600px] w-full self-center md:w-400 md:max-h-screen justify-self-center items-center gap-5 longFadeIn">
-				<h1 className="font-primary font-regular text-custom-gray text-[2.7rem]">
+				<h1 className="font-primary font-regular text-custom-gray text-center text-[2.7rem]">
 					{t.generateQuizBtn}
 				</h1>
 				<div className="input-types flex gap-2 w-full justify-center items-center">

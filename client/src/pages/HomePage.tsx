@@ -20,8 +20,8 @@ export default function HomePage({ onPageChange }: onPageChangeType) {
 				<div className="flex flex-col items-center justify-center flex-grow px-8 md:mt-14">
 					<h1
 						className="
-						shortFadeIn font-primary font-medium text-white text-shadow-title text-center w-full text-7xl
-						md:text-[6.5rem] tracking-wide max-w-200"
+						shortFadeIn font-primary font-medium text-white text-shadow-title text-center w-full text-6xl
+						md:text-[6.5rem] mt-3 tracking-wide max-w-200"
 					>
 						{t.titleHome}
 					</h1>
