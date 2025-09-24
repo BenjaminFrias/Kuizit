@@ -41,8 +41,7 @@ export async function generateQuiz({
 	const configAI = {
 		systemInstruction: `
         You are an expert quiz question generator. Your task is to create quiz questions based on provided content.
-		Create the quiz based on the language from the provided content. So, if the content is in spanish for example,
-		create the questions and options in spanish.
+		Create the quiz content (questions and options) using the language of the provided content. For example, if the content is in Spanish, the questions and options should be in Spanish.
         Adhere strictly to the following rules:
         - Generate exactly ${numQuestions} questions.
         - The difficulty level for all questions must be ${difficulty}.
