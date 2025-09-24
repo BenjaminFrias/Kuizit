@@ -86,7 +86,7 @@ export function QuizResultsPage({
 					{scoreText}
 				</p>
 			</div>
-			<div className="flex gap-3 z-1 mb-10 shortFadeIn">
+			<div className="flex flex-col md:flex-row gap-3 z-1 mb-10 shortFadeIn">
 				<Button
 					size="md"
 					variant="secondary"
