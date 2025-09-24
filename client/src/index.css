@@ -18,14 +18,6 @@
 	--inset-shadow-md: inset 0 10px 15px rgba(0, 0, 0, 0.25);
 }
 
-@font-face {
-	font-family: 'Panchang';
-	src: url('./assets/fonts/Panchang-Extrabold.woff2') format('woff2'),
-		url('./assets/fonts/Panchang-Extrabold.woff') format('woff');
-	font-weight: bold;
-	font-style: normal;
-}
-
 .active-button {
 	background-color: var(--primary);
 	color: white;
