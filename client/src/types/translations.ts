@@ -17,6 +17,7 @@ export type Translations = {
 	multipleChoiceOption: string;
 	trueFalseOption: string;
 	numberQuestionsTitle: string;
+	generating: string;
 	invalidPromptErr: string;
 	fileNotFoundErr: string;
 	fileTypeErr: string;

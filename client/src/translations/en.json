@@ -17,6 +17,7 @@
 	"multipleChoiceOption": "Multiple choice",
 	"trueFalseOption": "True or false",
 	"numberQuestionsTitle": "Number of questions",
+	"generating": "Generating quiz",
 	"invalidPromptErr": "Invalid prompt",
 	"fileNotFoundErr": "File not found",
 	"fileTypeErr": "Invalid file type. Please upload a supported document",

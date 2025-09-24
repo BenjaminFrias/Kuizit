@@ -17,6 +17,7 @@
 	"multipleChoiceOption": "Opción múltiple",
 	"trueFalseOption": "Verdadero o falso",
 	"numberQuestionsTitle": "Número de preguntas",
+	"generating": "Generando cuestionario",
 	"invalidPromptErr": "Texto inválido",
 	"fileNotFoundErr": "Archivo no encontrado",
 	"fileTypeErr": "Tipo de archivo inválido. Por favor, sube un documento compatible",
