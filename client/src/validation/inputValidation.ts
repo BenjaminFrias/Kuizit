@@ -43,7 +43,7 @@ export default function validateQuizContent({
 		}
 
 		if (inputType === 'youtube_link') {
-			if (!isYoutubeLink(inputType)) {
+			if (!isYoutubeLink(quizContent)) {
 				throw new Error(validationMessages.invalidYoutubeLinkErr);
 			}
 		}
@@ -51,10 +51,10 @@ export default function validateQuizContent({
 }
 
 function isYoutubeLink(link: string) {
-	const regex =
-		/^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})(&.*)?$/;
+	const youtubeRegex =
+		/^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=|embed\/|v\/|shorts\/)?([a-zA-Z0-9_-]{11})(&.*)?$/;
 
-	return regex.test(link);
+	return youtubeRegex.test(link);
 }
 
 function validateFileType(file: File): boolean {
