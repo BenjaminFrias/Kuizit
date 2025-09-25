@@ -2,6 +2,7 @@ export default function BlurryShape() {
 	return (
 		<div
 			className="w-full h-full rounded-full bg-gradient-to-br blur-sm opacity-80"
+			data-testid="blurry-shape"
 			style={{
 				filter: 'blur(60px) contrast(1)',
 				background: `

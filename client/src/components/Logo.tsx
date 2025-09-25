@@ -5,6 +5,8 @@ export const Logo = ({
 	...props
 }) => (
 	<svg
+		role="img"
+		aria-label="Kuizit logo"
 		width={width}
 		height={height}
 		viewBox="0 0 317.5 317.5"
