@@ -3,14 +3,18 @@ import HomePage from '@/pages/HomePage';
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import enTranslations from '../translations/en.json';
 
 const mockOnPageChange = vi.fn();
+vi.mock('@/hooks/useTranslation', () => ({
+	useTranslation: () => enTranslations,
+}));
 
 beforeEach(() => {
 	render(<HomePage onPageChange={mockOnPageChange} />);
 });
 
-describe('Render HomePage component', () => {
+describe('Render HomePage components', () => {
 	it('Renders Logo Component', () => {
 		const logoComponent = screen.getByRole('img', {
 			name: /Kuizit logo/i,
@@ -24,22 +28,17 @@ describe('Render HomePage component', () => {
 	});
 
 	it('Renders main header', () => {
-		expect(
-			screen.getByText('Instantly create quizzes with AI')
-		).toBeInTheDocument();
+		expect(screen.getByText(enTranslations.titleHome)).toBeInTheDocument();
 	});
 
 	it('Renders tagline', () => {
-		expect(
-			screen.getByText(
-				'Turn any text, YouTube video, or content into an interactive quiz in seconds!'
-			)
-		).toBeInTheDocument();
+		expect(screen.getByText(enTranslations.taglineHome)).toBeInTheDocument();
 	});
 
 	it('Renders generate quiz button', () => {
+		const generateBtnRegex = new RegExp(enTranslations.generateQuizBtn, 'i');
 		const generateQuizBtn = screen.getByRole('button', {
-			name: /Generate quiz/i,
+			name: generateBtnRegex,
 		});
 		expect(generateQuizBtn).toBeInTheDocument();
 	});
@@ -64,8 +63,9 @@ describe('Interaction in HomePage', async () => {
 	it('onPageChange called with generate quiz button', async () => {
 		const user = userEvent.setup();
 
+		const generateBtnRegex = new RegExp(enTranslations.generateQuizBtn, 'i');
 		const generateQuizBtn = screen.getByRole('button', {
-			name: /Generate quiz/i,
+			name: generateBtnRegex,
 		});
 
 		await user.click(generateQuizBtn);
