@@ -2,7 +2,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const LoadingAnimation = () => {
+export default function QuizLoadingPage() {
 	const t = useTranslation();
 
 	return (
@@ -16,6 +16,4 @@ const LoadingAnimation = () => {
 			</p>
 		</div>
 	);
-};
-
-export default LoadingAnimation;
+}

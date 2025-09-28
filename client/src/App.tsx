@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import HomePage from './pages/HomePage';
 import Inputpage from './pages/InputPage';
-import LoadingAnimation from './pages/QuizLoadingPage';
+import QuizLoadingPage from './pages/QuizLoadingPage';
 import validateQuizContent from './validation/inputValidation';
 import type {
 	AnswerOptions,
@@ -128,7 +128,7 @@ function App() {
 	}, [currentPage]);
 
 	if (isQuizLoading) {
-		return <LoadingAnimation />;
+		return <QuizLoadingPage />;
 	}
 
 	const renderPage = () => {
