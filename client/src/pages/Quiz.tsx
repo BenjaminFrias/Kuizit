@@ -102,6 +102,7 @@ export function QuizPage({
 					<div className="progress-bar absolute w-[100%] bg-custom-light-gray/15 h-1 rounded-full transition-all duration-300"></div>
 					<div
 						className="progress-bar absolute max-w-full bg-custom-green h-1 rounded-full transition-all duration-300"
+						data-testid="progress-bar"
 						style={{ width: `${(questionNumber / totalQuestions) * 100}%` }}
 					></div>
 				</div>
@@ -115,7 +116,7 @@ export function QuizPage({
 						}
 
 						return (
-							<div
+							<button
 								key={index}
 								className={`w-full py-3 flex justify-center items-center font-primary text-center
 								font-medium text-custom-gray/80 cursor-pointer select-none border-1 border-custom-light-gray/50
@@ -148,7 +149,7 @@ export function QuizPage({
 								}}
 							>
 								{option.optionText}
-							</div>
+							</button>
 						);
 					})}
 				</div>
@@ -188,6 +189,7 @@ export function QuizPage({
 							size="lg"
 							variant="green"
 							onClick={() => handleNextQuestionIndex()}
+							aria-label="Next question"
 						>
 							<FontAwesomeIcon icon={faArrowRight} />
 						</Button>
@@ -196,6 +198,7 @@ export function QuizPage({
 							className="opacity-50 pointer-events-none"
 							size="lg"
 							variant="green"
+							aria-label="Next question blocked"
 						>
 							<FontAwesomeIcon icon={faArrowRight} />
 						</Button>
