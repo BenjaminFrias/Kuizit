@@ -166,6 +166,7 @@ export function QuizPage({
 										: 'opacity-100 translate-y-0 '
 								}`}
 								size="lg"
+								aria-label="explanation"
 								variant="minimal"
 							>
 								<FontAwesomeIcon icon={faQuestion} />
@@ -189,7 +190,7 @@ export function QuizPage({
 							size="lg"
 							variant="green"
 							onClick={() => handleNextQuestionIndex()}
-							aria-label="Next question"
+							aria-label="next question"
 						>
 							<FontAwesomeIcon icon={faArrowRight} />
 						</Button>
@@ -198,7 +199,7 @@ export function QuizPage({
 							className="opacity-50 pointer-events-none"
 							size="lg"
 							variant="green"
-							aria-label="Next question blocked"
+							aria-label="next question blocked"
 						>
 							<FontAwesomeIcon icon={faArrowRight} />
 						</Button>
