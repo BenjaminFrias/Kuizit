@@ -215,3 +215,19 @@ button:focus-visible {
 		@apply bg-background text-foreground;
 	}
 }
+
+button,
+[role='button'],
+a,
+input[type='submit'],
+input[type='reset'] {
+	&:focus {
+		outline: none;
+		box-shadow: none;
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--primary);
+		outline-offset: 2px;
+	}
+}
