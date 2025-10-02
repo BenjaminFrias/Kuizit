@@ -185,39 +185,114 @@ describe('Conditional rendering', () => {
 		await user.click(correctOptionBtn);
 		expect(mockOnAnswerSubmittion).toBeCalled();
 	});
+});
 
-	// TODO: test complete quiz, testing fake timeout to get next question correctly
-	it('should set correct quiz result data when quiz is finished', async () => {
-		vi.useFakeTimers();
+describe('UI Integration tests', () => {
+	it('should call onPageChange after clicking next question button with last question index', async () => {
 		const user = userEvent.setup();
 		render(<QuizPage {...defaultQuizPageProps} />);
+		const mockOnPageChange = defaultQuizPageProps.onPageChange;
 
-		// Select correct option in 1st question
-		const correctOptionBtn1 = screen.getByRole('button', {
+		const correctOptionBtn = screen.getByRole('button', {
 			name: new RegExp('A superset of Javascript', 'i'),
 		});
 
-		await user.click(correctOptionBtn1);
+		await user.click(correctOptionBtn);
 
-		// Expect unlocked next question button and click it
 		const nextQuestionBtn = screen.getByRole('button', {
 			name: /^next question$/i,
 		});
 
-		expect(nextQuestionBtn).toBeInTheDocument();
-
 		await user.click(nextQuestionBtn);
 
-		vi.advanceTimersByTime(500);
-
-		// Should Call onAnswerSubmittion after clicking next question button
-		const wrongOptionBtn2 = await screen.findByRole('button', {
+		const nextQuestionWrongOption = await screen.findByRole('button', {
 			name: new RegExp('Automatic memory management', 'i'),
 		});
 
-		expect(wrongOptionBtn2).toBeInTheDocument();
-		vi.useRealTimers();
+		expect(nextQuestionWrongOption).toBeInTheDocument();
+
+		await user.click(nextQuestionWrongOption);
+
+		const nextQuestionBtn2 = screen.getByRole('button', {
+			name: /^next question$/i,
+		});
+
+		await user.click(nextQuestionBtn2);
+
+		// Wait for timeout to call onPageChange
+		await new Promise((resolve) => {
+			setTimeout(() => {
+				resolve(true);
+			}, 500);
+		});
+
+		expect(mockOnPageChange).toHaveBeenCalled();
 	});
 
-	it('should call onPageChange after clicking next question button with last question index', () => {});
+	it('verify quizResultData after completing quiz', async () => {
+		const user = userEvent.setup();
+		render(<QuizPage {...defaultQuizPageProps} />);
+		const mockOnAnswerSubmittion =
+			defaultQuizPageProps.onAnswerSubmittion as Mock;
+		const mockOnPageChange = defaultQuizPageProps.onPageChange as Mock;
+
+		const expectedQuizResults: QuizResult = [
+			{
+				selectedIndex: 0,
+				isCorrect: true,
+			},
+			{
+				selectedIndex: 3,
+				isCorrect: false,
+			},
+		];
+
+		const correctOptionBtn = screen.getByRole('button', {
+			name: new RegExp('A superset of Javascript', 'i'),
+		});
+
+		mockOnAnswerSubmittion.mockClear();
+		await user.click(correctOptionBtn);
+
+		const nextQuestionBtn = screen.getByRole('button', {
+			name: /^next question$/i,
+		});
+
+		await user.click(nextQuestionBtn);
+
+		// Verify that onAnswerSubmittion has been called with correct data
+		expect(mockOnAnswerSubmittion).toHaveBeenCalledTimes(1);
+		expect(mockOnAnswerSubmittion).toHaveBeenCalledWith([
+			expectedQuizResults[0],
+		]);
+
+		const nextQuestionWrongOption = await screen.findByRole('button', {
+			name: new RegExp('Automatic memory management', 'i'),
+		});
+
+		// Verify existence of next question option button
+		expect(nextQuestionWrongOption).toBeInTheDocument();
+
+		mockOnAnswerSubmittion.mockClear();
+		await user.click(nextQuestionWrongOption);
+		expect(mockOnAnswerSubmittion).toHaveBeenCalledTimes(1);
+		expect(mockOnAnswerSubmittion).toHaveBeenCalledWith([
+			expectedQuizResults[1],
+		]);
+
+		const nextQuestionBtn2 = screen.getByRole('button', {
+			name: /^next question$/i,
+		});
+
+		await user.click(nextQuestionBtn2);
+
+		// Wait for timeout to call onPageChange
+		await new Promise((resolve) => {
+			setTimeout(() => {
+				resolve(true);
+			}, 500);
+		});
+
+		expect(mockOnPageChange).toHaveBeenCalled();
+	});
 });
