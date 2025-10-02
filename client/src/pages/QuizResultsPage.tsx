@@ -52,7 +52,7 @@ export function QuizResultsPage({
 			</h2>
 			<div className="relative flex flex-col w-full gap-2 justify-center ">
 				<div className="text-custom-white text-center">
-					<FontAwesomeIcon icon={faCrown} size="2x" />
+					<FontAwesomeIcon icon={faCrown} size="2x" data-testid="crown-icon" />
 				</div>
 				<p
 					className={`text-custom-white text-2xl text-center font-semibold z-1 transition-all duration-300 mb-5
