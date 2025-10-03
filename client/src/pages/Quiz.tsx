@@ -1,6 +1,6 @@
 import BlurryShape from '@/components/decorative/BlurryShape';
 import { Button } from '@/components/ui/button';
-import type { Page, QuizData, QuizResult } from '@/types';
+import type { QuizPageParams } from '@/types';
 import { faArrowRight, faQuestion } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
@@ -13,13 +13,6 @@ import {
 	DialogTrigger,
 } from '@/components/ui/dialog';
 import { useTranslation } from '@/hooks/useTranslation';
-
-type QuizPageParams = {
-	onPageChange: (pageName: Page) => void;
-	quizData: QuizData;
-	quizResultData: QuizResult;
-	onAnswerSubmittion: (newQuizResult: QuizResult) => void;
-};
 
 export function QuizPage({
 	quizData,

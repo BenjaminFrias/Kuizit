@@ -2,38 +2,12 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { describe, it, expect, vi, type Mock } from 'vitest';
 import Inputpage from '@/pages/InputPage';
-import type {
-	InputOption,
-	Difficulty,
-	AnswerOptions,
-	NumberQuestions,
-	Page,
-} from '@/types';
+import type { InputPageParams } from '@/types';
 import enTranslations from '../translations/en.json';
 import type { Translations as TranslationType } from '@/types/translations';
 import userEvent from '@testing-library/user-event';
 
-// MOCKS
-type inputPageParams = {
-	onPageChange: (pageName: Page) => void;
-	onInputTypeChange: (inputName: InputOption) => void;
-	onDifficultyChange: (diffName: Difficulty) => void;
-	onAnswerOptionsChange: (optionName: AnswerOptions) => void;
-	onNumberQuestionsChange: (numberQuestions: NumberQuestions) => void;
-	onContentChange: (content: string) => void;
-	setFiles: (files: File[]) => void;
-	setApiError: (error: string | null) => void;
-	onQuizSubmit: () => void;
-	quizFiles: File[];
-	quizInputType: InputOption;
-	quizContent: string;
-	quizDifficulty: Difficulty;
-	quizAnswerOptions: AnswerOptions;
-	quizNumberQuestions: NumberQuestions;
-	apiError: string | null;
-};
-
-const defaultInputPageProps: inputPageParams = {
+const defaultInputPageProps: InputPageParams = {
 	onPageChange: vi.fn(),
 	onInputTypeChange: vi.fn(),
 	onDifficultyChange: vi.fn(),

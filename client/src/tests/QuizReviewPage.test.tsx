@@ -1,14 +1,8 @@
 import { QuizReviewPage } from '@/pages/QuizReviewPage';
-import type { Page, QuizData, QuizResult } from '@/types';
+import type { QuizReviewPageParams } from '@/types';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, vi, it, expect } from 'vitest';
-
-type QuizReviewPageParams = {
-	quizData: QuizData;
-	quizResults: QuizResult;
-	onPageChange: (page: Page) => void;
-};
 
 const defaultQuizReviewParams: QuizReviewPageParams = {
 	onPageChange: vi.fn(),

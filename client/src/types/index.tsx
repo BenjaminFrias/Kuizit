@@ -11,6 +11,43 @@ export type QuizRequestBody = {
 	optionTypes: AnswerOptions;
 };
 
+export type InputPageParams = {
+	onPageChange: (pageName: Page) => void;
+	onInputTypeChange: (inputName: InputOption) => void;
+	onDifficultyChange: (diffName: Difficulty) => void;
+	onAnswerOptionsChange: (optionName: AnswerOptions) => void;
+	onNumberQuestionsChange: (numberQuestions: NumberQuestions) => void;
+	onContentChange: (content: string) => void;
+	setFiles: (files: File[]) => void;
+	setApiError: (error: string | null) => void;
+	onQuizSubmit: () => void;
+	quizFiles: File[];
+	quizInputType: InputOption;
+	quizContent: string;
+	quizDifficulty: Difficulty;
+	quizAnswerOptions: AnswerOptions;
+	quizNumberQuestions: NumberQuestions;
+	apiError: string | null;
+};
+
+export type QuizPageParams = {
+	onPageChange: (pageName: Page) => void;
+	quizData: QuizData;
+	quizResultData: QuizResult;
+	onAnswerSubmittion: (newQuizResult: QuizResult) => void;
+};
+
+export type QuizResultsPageParams = {
+	quizResults: QuizResult;
+	onPageChange: (page: Page) => void;
+};
+
+export type QuizReviewPageParams = {
+	quizData: QuizData;
+	quizResults: QuizResult;
+	onPageChange: (page: Page) => void;
+};
+
 type QuizResultOption = {
 	optionText: string;
 	answer: boolean;

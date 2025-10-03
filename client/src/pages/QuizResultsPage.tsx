@@ -1,15 +1,10 @@
-import type { Page, QuizResult } from '@/types';
+import type { QuizResultsPageParams } from '@/types';
 import BlurryShape from '@/components/decorative/BlurryShape';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCrown } from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from '@/hooks/useTranslation';
-
-type QuizResultsPageParams = {
-	quizResults: QuizResult;
-	onPageChange: (page: Page) => void;
-};
 
 export function QuizResultsPage({
 	quizResults,

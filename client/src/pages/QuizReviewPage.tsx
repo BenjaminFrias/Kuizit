@@ -1,4 +1,4 @@
-import type { Page, QuizData, QuizResult } from '@/types';
+import type { QuizReviewPageParams } from '@/types';
 import BlurryShape from '@/components/decorative/BlurryShape';
 import { Button } from '@/components/ui/button';
 import {
@@ -20,17 +20,11 @@ import {
 } from '@/components/ui/dialog';
 import { useTranslation } from '@/hooks/useTranslation';
 
-type QuizResultsPageParams = {
-	quizData: QuizData;
-	quizResults: QuizResult;
-	onPageChange: (page: Page) => void;
-};
-
 export function QuizReviewPage({
 	quizData,
 	quizResults,
 	onPageChange,
-}: QuizResultsPageParams) {
+}: QuizReviewPageParams) {
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 	const [isAnimating, setIsAnimating] = useState(false);
 

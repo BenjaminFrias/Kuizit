@@ -3,38 +3,12 @@ import Logo from '@/components/Logo';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useTranslation } from '@/hooks/useTranslation';
-
-import type {
-	AnswerOptions,
-	Difficulty,
-	InputOption,
-	NumberQuestions,
-	Page,
-} from '@/types';
+import type { InputPageParams } from '@/types';
 import {
 	faCircleExclamation,
 	faWandMagicSparkles,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
-type inputPageParams = {
-	onPageChange: (pageName: Page) => void;
-	onInputTypeChange: (inputName: InputOption) => void;
-	onDifficultyChange: (diffName: Difficulty) => void;
-	onAnswerOptionsChange: (optionName: AnswerOptions) => void;
-	onNumberQuestionsChange: (numberQuestions: NumberQuestions) => void;
-	onContentChange: (content: string) => void;
-	setFiles: (files: File[]) => void;
-	setApiError: (error: string | null) => void;
-	onQuizSubmit: () => void;
-	quizFiles: File[];
-	quizInputType: InputOption;
-	quizContent: string;
-	quizDifficulty: Difficulty;
-	quizAnswerOptions: AnswerOptions;
-	quizNumberQuestions: NumberQuestions;
-	apiError: string | null;
-};
 
 export default function Inputpage({
 	onPageChange,
@@ -53,7 +27,7 @@ export default function Inputpage({
 	quizAnswerOptions,
 	quizNumberQuestions,
 	apiError,
-}: inputPageParams) {
+}: InputPageParams) {
 	const t = useTranslation();
 
 	return (

@@ -1,5 +1,5 @@
 import { QuizResultsPage } from '@/pages/QuizResultsPage';
-import type { Page, QuizResult } from '@/types';
+import type { QuizResultsPageParams } from '@/types';
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import enTranslations from '../translations/en.json';
@@ -8,11 +8,6 @@ import userEvent from '@testing-library/user-event';
 vi.mock('@/hooks/useTranslation', () => ({
 	useTranslation: () => enTranslations,
 }));
-
-type QuizResultsPageParams = {
-	quizResults: QuizResult;
-	onPageChange: (page: Page) => void;
-};
 
 const defaultQuizResultsPageProps: QuizResultsPageParams = {
 	quizResults: [

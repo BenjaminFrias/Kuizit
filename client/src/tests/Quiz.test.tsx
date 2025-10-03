@@ -3,19 +3,12 @@ import '@testing-library/jest-dom';
 import { describe, it, expect, vi, type Mock } from 'vitest';
 import { QuizPage } from '@/pages/Quiz';
 import enTranslations from '../translations/en.json';
-import type { Page, QuizData, QuizResult } from '@/types';
+import type { QuizPageParams, QuizResult } from '@/types';
 import userEvent from '@testing-library/user-event';
 
 vi.mock('@/hooks/useTranslation', () => ({
 	useTranslation: () => enTranslations,
 }));
-
-type QuizPageParams = {
-	onPageChange: (pageName: Page) => void;
-	onAnswerSubmittion: (newQuizResult: QuizResult) => void;
-	quizData: QuizData;
-	quizResultData: QuizResult;
-};
 
 const defaultQuizPageProps: QuizPageParams = {
 	onPageChange: vi.fn(),
