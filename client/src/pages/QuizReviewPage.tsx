@@ -105,6 +105,7 @@ export function QuizReviewPage({
 					<div
 						className="progress-bar absolute max-w-full bg-custom-green h-1 rounded-full transition-all duration-300"
 						style={{ width: `${(questionNumber / totalQuestions) * 100}%` }}
+						data-testid="progress-bar"
 					></div>
 				</div>
 				<div className="answerOptions flex-1 flex flex-col justify-center items-center w-full gap-3">
@@ -115,7 +116,7 @@ export function QuizReviewPage({
 						}
 
 						return (
-							<div
+							<button
 								key={index}
 								className={`w-full py-3 flex justify-center items-center font-primary text-center
                                     font-medium text-custom-gray/80 cursor-pointer select-none border-1 border-custom-light-gray/50
@@ -142,7 +143,7 @@ export function QuizReviewPage({
                                     `}
 							>
 								{option.optionText}
-							</div>
+							</button>
 						);
 					})}
 				</div>
@@ -151,6 +152,7 @@ export function QuizReviewPage({
 						size="responsive"
 						variant="minimal"
 						onClick={() => onPageChange('home')}
+						aria-label="end review"
 					>
 						<FontAwesomeIcon icon={faX} />
 					</Button>
@@ -160,6 +162,7 @@ export function QuizReviewPage({
 								className={`transition-all duration-500`}
 								size="responsive"
 								variant="minimal"
+								aria-label="explanation"
 							>
 								<FontAwesomeIcon icon={faQuestion} />
 							</Button>
@@ -182,6 +185,7 @@ export function QuizReviewPage({
 							size="responsive"
 							variant="minimal"
 							onClick={() => handlePrevQuestionIndex()}
+							aria-label="previous question"
 						>
 							<FontAwesomeIcon icon={faArrowLeft} />
 						</Button>
@@ -191,6 +195,7 @@ export function QuizReviewPage({
 						size="responsive"
 						variant="minimal"
 						onClick={() => handleNextQuestionIndex()}
+						aria-label="next question"
 					>
 						<FontAwesomeIcon icon={faArrowRight} />
 					</Button>
