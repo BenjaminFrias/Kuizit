@@ -22,8 +22,8 @@ export function QuizPage({
 }: QuizPageParams) {
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 	const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-	const [isAnimating, setIsAnimating] = useState(false);
 	const t = useTranslation();
+	const [isExiting, setIsExiting] = useState(false);
 
 	const currentQuestion = quizData[currentQuestionIndex];
 	const questionNumber = currentQuestionIndex + 1;
@@ -34,17 +34,19 @@ export function QuizPage({
 			return;
 		}
 
-		setIsAnimating(true);
+		if (currentQuestionIndex < quizData.length - 1) {
+			setIsExiting(true);
+		} else {
+			onPageChange('results');
+		}
+	};
 
-		setTimeout(() => {
-			if (currentQuestionIndex < quizData.length - 1) {
-				setCurrentQuestionIndex(currentQuestionIndex + 1);
-				setSelectedAnswer(null);
-			} else {
-				onPageChange('results');
-			}
-			setIsAnimating(false);
-		}, 500);
+	const onQuestionTransitionEnd = () => {
+		if (isExiting) {
+			setCurrentQuestionIndex(currentQuestionIndex + 1);
+			setSelectedAnswer(null);
+			setIsExiting(false);
+		}
 	};
 
 	const handleQuestionAnswer = (selectedIndex: number) => {
@@ -76,16 +78,18 @@ export function QuizPage({
 				</div>
 				<p
 					className={`text-custom-white text-center md:self-start font-medium z-1 transition-all duration-300
-						${isAnimating ? 'opacity-0 translate-y-3' : 'opacity-100 translate-y-0'}
+						${isExiting ? 'opacity-0 translate-y-3' : 'opacity-100 translate-y-0'}
 						`}
+					onTransitionEnd={onQuestionTransitionEnd}
 				>
 					{t.question} {questionNumber}
 				</p>
 				<h1
 					className={`font-primary text-custom-white text-shadow-title/30  font-medium text-center text-3xl  w-full z-1 
 				md:self-start md:text-start md:text-5xl transition-all duration-300 ${
-					isAnimating ? 'opacity-0 translate-y-3' : 'opacity-100 translate-y-0'
+					isExiting ? 'opacity-0 translate-y-3' : 'opacity-100 translate-y-0'
 				}`}
+					onTransitionEnd={onQuestionTransitionEnd}
 				>
 					{currentQuestion.question}
 				</h1>
@@ -111,10 +115,11 @@ export function QuizPage({
 						return (
 							<button
 								key={index}
+								onTransitionEnd={onQuestionTransitionEnd}
 								className={`w-full py-3 flex justify-center items-center font-primary text-center
 								font-medium text-custom-gray/80 cursor-pointer select-none border-1 border-custom-light-gray/50
 								rounded-full transition-all duration-300 ${
-									isAnimating
+									isExiting
 										? 'opacity-0 translate-y-20'
 										: 'opacity-100 translate-y-0'
 								}
