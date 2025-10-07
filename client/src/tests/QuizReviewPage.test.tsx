@@ -1,6 +1,6 @@
 import { QuizReviewPage } from '@/pages/QuizReviewPage';
 import type { QuizReviewPageParams } from '@/types';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, vi, it, expect } from 'vitest';
 
@@ -142,11 +142,16 @@ describe('Conditional render', () => {
 		const user = userEvent.setup();
 		render(<QuizReviewPage {...defaultQuizReviewParams} />);
 
+		const correctOptionBtn = screen.getByRole('button', {
+			name: /A superset of Javascript/i,
+		});
+
 		const nextQuestionBtn = screen.getByRole('button', {
 			name: /next question/i,
 		});
 
 		await user.click(nextQuestionBtn);
+		fireEvent.transitionEnd(correctOptionBtn);
 
 		const previousQuestionBtn = await screen.findByRole('button', {
 			name: /previous question/i,
@@ -186,12 +191,6 @@ describe('Conditional render', () => {
 		});
 
 		await user.click(finalNextQuestionBtn);
-
-		await new Promise((resolve) => {
-			setTimeout(() => {
-				resolve(true);
-			}, 500);
-		});
 
 		expect(mockOnPageChange).toHaveBeenCalled();
 	});
