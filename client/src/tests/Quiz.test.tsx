@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { describe, it, expect, vi, type Mock } from 'vitest';
 import { QuizPage } from '@/pages/Quiz';
@@ -197,8 +197,9 @@ describe('UI Integration tests', () => {
 		});
 
 		await user.click(nextQuestionBtn);
+		fireEvent.transitionEnd(correctOptionBtn);
 
-		const nextQuestionWrongOption = await screen.findByRole('button', {
+		const nextQuestionWrongOption = screen.getByRole('button', {
 			name: new RegExp('Automatic memory management', 'i'),
 		});
 
@@ -211,13 +212,6 @@ describe('UI Integration tests', () => {
 		});
 
 		await user.click(nextQuestionBtn2);
-
-		// Wait for timeout to call onPageChange
-		await new Promise((resolve) => {
-			setTimeout(() => {
-				resolve(true);
-			}, 500);
-		});
 
 		expect(mockOnPageChange).toHaveBeenCalled();
 	});
@@ -252,6 +246,7 @@ describe('UI Integration tests', () => {
 		});
 
 		await user.click(nextQuestionBtn);
+		fireEvent.transitionEnd(correctOptionBtn);
 
 		// Verify that onAnswerSubmittion has been called with correct data
 		expect(mockOnAnswerSubmittion).toHaveBeenCalledTimes(1);
@@ -278,13 +273,6 @@ describe('UI Integration tests', () => {
 		});
 
 		await user.click(nextQuestionBtn2);
-
-		// Wait for timeout to call onPageChange
-		await new Promise((resolve) => {
-			setTimeout(() => {
-				resolve(true);
-			}, 500);
-		});
 
 		expect(mockOnPageChange).toHaveBeenCalled();
 	});
