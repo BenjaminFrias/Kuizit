@@ -26,7 +26,8 @@ export function QuizReviewPage({
 	onPageChange,
 }: QuizReviewPageParams) {
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-	const [isAnimating, setIsAnimating] = useState(false);
+	const [isExiting, setIsExiting] = useState(false);
+	const [isNext, setIsNext] = useState(false);
 
 	const currentQuestion = quizData[currentQuestionIndex];
 	const questionNumber = currentQuestionIndex + 1;
@@ -36,27 +37,30 @@ export function QuizReviewPage({
 	const t = useTranslation();
 
 	const handleNextQuestionIndex = () => {
-		setIsAnimating(true);
-
-		setTimeout(() => {
-			if (currentQuestionIndex < quizData.length - 1) {
-				setCurrentQuestionIndex(currentQuestionIndex + 1);
-			} else {
-				onPageChange('results');
-			}
-			setIsAnimating(false);
-		}, 500);
+		if (currentQuestionIndex < quizData.length - 1) {
+			setIsNext(true);
+			setIsExiting(true);
+		} else {
+			onPageChange('results');
+		}
 	};
 
 	const handlePrevQuestionIndex = () => {
-		setIsAnimating(true);
+		if (currentQuestionIndex > 0) {
+			setIsNext(false);
+			setIsExiting(true);
+		}
+	};
 
-		setTimeout(() => {
-			if (currentQuestionIndex > 0) {
+	const onQuestionTransitionEnd = () => {
+		if (isExiting) {
+			if (isNext) {
+				setCurrentQuestionIndex(currentQuestionIndex + 1);
+			} else {
 				setCurrentQuestionIndex(currentQuestionIndex - 1);
 			}
-			setIsAnimating(false);
-		}, 500);
+			setIsExiting(false);
+		}
 	};
 
 	return (
@@ -74,21 +78,23 @@ export function QuizReviewPage({
 				<p
 					className={`text-custom-white text-center md:self-start font-medium z-1 transition-all duration-300
                     ${
-											isAnimating
+											isExiting
 												? 'opacity-0 translate-y-3'
 												: 'opacity-100 translate-y-0'
 										}
                     `}
+					onTransitionEnd={onQuestionTransitionEnd}
 				>
 					{t.question} {questionNumber}
 				</p>
 				<h1
 					className={`font-primary text-custom-white text-shadow-title/30  font-medium text-center text-3xl  w-full z-1 
                     md:self-start md:text-start md:text-5xl transition-all duration-300 ${
-											isAnimating
+											isExiting
 												? 'opacity-0 translate-y-3'
 												: 'opacity-100 translate-y-0'
 										}`}
+					onTransitionEnd={onQuestionTransitionEnd}
 				>
 					{currentQuestion.question}
 				</h1>
@@ -115,7 +121,7 @@ export function QuizReviewPage({
 								className={`w-full py-3 flex justify-center items-center font-primary text-center
                                     font-medium text-custom-gray/80 cursor-pointer select-none border-1 border-custom-light-gray/50
                                     rounded-full transition-all duration-300 ${
-																			isAnimating
+																			isExiting
 																				? 'opacity-0 translate-y-20'
 																				: 'opacity-100 translate-y-0'
 																		}
@@ -135,6 +141,7 @@ export function QuizReviewPage({
 																				: ''
 																		}
                                     `}
+								onTransitionEnd={onQuestionTransitionEnd}
 							>
 								{option.optionText}
 							</button>
