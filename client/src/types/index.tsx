@@ -1,9 +1,10 @@
-export type InputOption = 'prompt' | 'youtube_link' | 'file';
-export type AnswerOptions = 'multiple_choice' | 'true_false';
 export type Page = 'home' | 'input' | 'quiz' | 'results' | 'review';
-export type Difficulty = 'easy' | 'medium' | 'hard' | 'expert';
-export type NumberQuestions = 5 | 10 | 15 | 20;
-export type QuizRequestBody = {
+
+type InputOption = 'prompt' | 'youtube_link' | 'file';
+type AnswerOptions = 'multiple_choice' | 'true_false';
+type Difficulty = 'easy' | 'medium' | 'hard' | 'expert';
+type NumberQuestions = 5 | 10 | 15 | 20;
+export type QuizSettings = {
 	quizInputType: InputOption;
 	content?: string | File | File[];
 	numQuestions: NumberQuestions;
@@ -13,20 +14,15 @@ export type QuizRequestBody = {
 
 export type InputPageParams = {
 	onPageChange: (pageName: Page) => void;
-	onInputTypeChange: (inputName: InputOption) => void;
-	onDifficultyChange: (diffName: Difficulty) => void;
-	onAnswerOptionsChange: (optionName: AnswerOptions) => void;
-	onNumberQuestionsChange: (numberQuestions: NumberQuestions) => void;
-	onContentChange: (content: string) => void;
+	onQuizSettingsChange: <K extends keyof QuizSettings>(
+		key: K,
+		value: QuizSettings[K]
+	) => void;
 	setFiles: (files: File[]) => void;
 	setApiError: (error: string | null) => void;
 	onQuizSubmit: () => void;
+	quizSettings: QuizSettings;
 	quizFiles: File[];
-	quizInputType: InputOption;
-	quizContent: string;
-	quizDifficulty: Difficulty;
-	quizAnswerOptions: AnswerOptions;
-	quizNumberQuestions: NumberQuestions;
 	apiError: string | null;
 };
 
