@@ -12,23 +12,18 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export default function Inputpage({
 	onPageChange,
-	onInputTypeChange,
-	onDifficultyChange,
-	onAnswerOptionsChange,
-	onContentChange,
-	onNumberQuestionsChange,
+	onQuizSettingsChange,
 	setFiles,
 	setApiError,
 	onQuizSubmit,
-	quizInputType,
 	quizFiles,
-	quizContent,
-	quizDifficulty,
-	quizAnswerOptions,
-	quizNumberQuestions,
+	quizSettings,
 	apiError,
 }: InputPageParams) {
 	const t = useTranslation();
+
+	const { quizInputType, content, difficulty, optionTypes, numQuestions } =
+		quizSettings;
 
 	return (
 		<div
@@ -49,8 +44,8 @@ export default function Inputpage({
 						size="md"
 						variant={`${quizInputType === 'prompt' ? 'green' : 'minimal'}`}
 						onClick={() => {
-							onInputTypeChange('prompt');
-							onContentChange('');
+							onQuizSettingsChange('quizInputType', 'prompt');
+							onQuizSettingsChange('content', '');
 							setApiError(null);
 						}}
 					>
@@ -62,7 +57,7 @@ export default function Inputpage({
 						variant={`${quizInputType === 'file' ? 'green' : 'minimal'}`}
 						onClick={() => {
 							setApiError(null);
-							onInputTypeChange('file');
+							onQuizSettingsChange('quizInputType', 'file');
 						}}
 					>
 						{t.fileOption}
@@ -75,8 +70,8 @@ export default function Inputpage({
 						}`}
 						onClick={() => {
 							setApiError(null);
-							onInputTypeChange('youtube_link');
-							onContentChange('');
+							onQuizSettingsChange('quizInputType', 'youtube_link');
+							onQuizSettingsChange('content', '');
 						}}
 					>
 						{t.linkOption}
@@ -92,8 +87,8 @@ export default function Inputpage({
 								? t.quizPromptPlaceholder
 								: t.quizLinkPlaceholder
 						}`}
-						value={quizContent}
-						onChange={(e) => onContentChange(e.target.value)}
+						value={typeof content === 'string' ? content : ''}
+						onChange={(e) => onQuizSettingsChange('content', e.target.value)}
 					/>
 				) : (
 					<FileUploadDropZone files={quizFiles} setFiles={setFiles} />
@@ -118,32 +113,32 @@ export default function Inputpage({
 							<Button
 								className="flex-1"
 								size="sm"
-								variant={`${quizDifficulty === 'easy' ? 'green' : 'minimal'}`}
-								onClick={() => onDifficultyChange('easy')}
+								variant={`${difficulty === 'easy' ? 'green' : 'minimal'}`}
+								onClick={() => onQuizSettingsChange('difficulty', 'easy')}
 							>
 								{t.easyOption}
 							</Button>
 							<Button
 								className="flex-1"
 								size="sm"
-								variant={`${quizDifficulty === 'medium' ? 'green' : 'minimal'}`}
-								onClick={() => onDifficultyChange('medium')}
+								variant={`${difficulty === 'medium' ? 'green' : 'minimal'}`}
+								onClick={() => onQuizSettingsChange('difficulty', 'medium')}
 							>
 								{t.mediumOption}
 							</Button>
 							<Button
 								className="flex-1"
 								size="sm"
-								variant={`${quizDifficulty === 'hard' ? 'green' : 'minimal'}`}
-								onClick={() => onDifficultyChange('hard')}
+								variant={`${difficulty === 'hard' ? 'green' : 'minimal'}`}
+								onClick={() => onQuizSettingsChange('difficulty', 'hard')}
 							>
 								{t.hardOption}
 							</Button>
 							<Button
 								className="flex-1"
 								size="sm"
-								variant={`${quizDifficulty === 'expert' ? 'green' : 'minimal'}`}
-								onClick={() => onDifficultyChange('expert')}
+								variant={`${difficulty === 'expert' ? 'green' : 'minimal'}`}
+								onClick={() => onQuizSettingsChange('difficulty', 'expert')}
 							>
 								{t.expertOption}
 							</Button>
@@ -159,9 +154,11 @@ export default function Inputpage({
 								className="flex-1"
 								size="sm"
 								variant={`${
-									quizAnswerOptions === 'multiple_choice' ? 'green' : 'minimal'
+									optionTypes === 'multiple_choice' ? 'green' : 'minimal'
 								}`}
-								onClick={() => onAnswerOptionsChange('multiple_choice')}
+								onClick={() =>
+									onQuizSettingsChange('optionTypes', 'multiple_choice')
+								}
 							>
 								{t.multipleChoiceOption}
 							</Button>
@@ -169,9 +166,11 @@ export default function Inputpage({
 								className="flex-1"
 								size="sm"
 								variant={`${
-									quizAnswerOptions === 'true_false' ? 'green' : 'minimal'
+									optionTypes === 'true_false' ? 'green' : 'minimal'
 								}`}
-								onClick={() => onAnswerOptionsChange('true_false')}
+								onClick={() =>
+									onQuizSettingsChange('optionTypes', 'true_false')
+								}
 							>
 								{t.trueFalseOption}
 							</Button>
@@ -186,32 +185,32 @@ export default function Inputpage({
 							<Button
 								className="flex-1"
 								size="sm"
-								variant={`${quizNumberQuestions === 5 ? 'green' : 'minimal'}`}
-								onClick={() => onNumberQuestionsChange(5)}
+								variant={`${numQuestions === 5 ? 'green' : 'minimal'}`}
+								onClick={() => onQuizSettingsChange('numQuestions', 5)}
 							>
 								5
 							</Button>
 							<Button
 								className="flex-1"
 								size="sm"
-								variant={`${quizNumberQuestions === 10 ? 'green' : 'minimal'}`}
-								onClick={() => onNumberQuestionsChange(10)}
+								variant={`${numQuestions === 10 ? 'green' : 'minimal'}`}
+								onClick={() => onQuizSettingsChange('numQuestions', 10)}
 							>
 								10
 							</Button>
 							<Button
 								className="flex-1"
 								size="sm"
-								variant={`${quizNumberQuestions === 15 ? 'green' : 'minimal'}`}
-								onClick={() => onNumberQuestionsChange(15)}
+								variant={`${numQuestions === 15 ? 'green' : 'minimal'}`}
+								onClick={() => onQuizSettingsChange('numQuestions', 15)}
 							>
 								15
 							</Button>
 							<Button
 								className="flex-1"
 								size="sm"
-								variant={`${quizNumberQuestions === 20 ? 'green' : 'minimal'}`}
-								onClick={() => onNumberQuestionsChange(20)}
+								variant={`${numQuestions === 20 ? 'green' : 'minimal'}`}
+								onClick={() => onQuizSettingsChange('numQuestions', 20)}
 							>
 								20
 							</Button>

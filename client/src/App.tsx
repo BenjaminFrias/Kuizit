@@ -4,16 +4,7 @@ import HomePage from './pages/HomePage';
 import Inputpage from './pages/InputPage';
 import QuizLoadingPage from './pages/QuizLoadingPage';
 import validateQuizContent from './validation/inputValidation';
-import type {
-	AnswerOptions,
-	Page,
-	NumberQuestions,
-	QuizRequestBody,
-	InputOption,
-	Difficulty,
-	QuizData,
-	QuizResult,
-} from './types';
+import type { Page, QuizSettings, QuizData, QuizResult } from './types';
 import { QuizPage } from './pages/Quiz';
 import { QuizResultsPage } from './pages/QuizResultsPage';
 import { QuizReviewPage } from './pages/QuizReviewPage';
@@ -25,49 +16,36 @@ function App() {
 	const [currentPage, setCurrentPage] = useState('home');
 	const [quizData, setQuizData] = useState<QuizData>([]);
 	const [isQuizLoading, setIsQuizLoading] = useState(false);
-	const [quizContent, setQuizContent] = useState('');
-	const [quizInputType, setSelectedInputType] = useState<InputOption>('prompt');
-	const [quizDifficulty, setSelectedDifficulty] = useState<Difficulty>('easy');
-	const [quizAnswerOptions, setQuizAnswerOptions] =
-		useState<AnswerOptions>('multiple_choice');
-	const [quizNumberQuestions, setNumberQuestions] =
-		useState<NumberQuestions>(10);
 	const [files, setFiles] = useState<File[]>([]);
 	const [quizResultData, setQuizResultData] = useState<QuizResult>([]);
 	const [apiError, setApiError] = useState<string | null>(null);
-
 	const t = useTranslation();
+	const [quizSettings, setQuizSettings] = useState<QuizSettings>({
+		quizInputType: 'prompt',
+		content: '',
+		numQuestions: 10,
+		difficulty: 'easy',
+		optionTypes: 'multiple_choice',
+	});
 
-	const handleContentChange = (newContent: string) => {
-		setQuizContent(newContent);
-	};
-
-	const handleInputTypeChange = (inputTypeName: InputOption) => {
-		setSelectedInputType(inputTypeName);
-	};
-
-	const handleDifficultyChange = (diffName: Difficulty) => {
-		setSelectedDifficulty(diffName);
-	};
-
-	const handleAnswerOptionsChange = (option: AnswerOptions) => {
-		setQuizAnswerOptions(option);
-	};
-
-	const handleNumberQuestionsChange = (numberOfQuestions: NumberQuestions) => {
-		setNumberQuestions(numberOfQuestions);
+	const handleSettingsChange = <K extends keyof QuizSettings>(
+		key: K,
+		value: QuizSettings[K]
+	) => {
+		setQuizSettings((prevSettings) => ({
+			...prevSettings,
+			[key]: value,
+		}));
 	};
 
 	const handleGenerateQuiz = async () => {
 		setApiError(null);
-		const contentToSend = quizInputType === 'file' ? files[0] : quizContent;
+		const contentToSend =
+			quizSettings.quizInputType === 'file' ? files[0] : quizSettings.content;
 
-		const inputQuizData: QuizRequestBody = {
-			quizInputType: quizInputType,
+		const inputQuizData: QuizSettings = {
+			...quizSettings,
 			content: contentToSend,
-			numQuestions: quizNumberQuestions,
-			difficulty: quizDifficulty,
-			optionTypes: quizAnswerOptions,
 		};
 
 		try {
@@ -111,12 +89,14 @@ function App() {
 	};
 
 	const resetQuizStates = () => {
-		setQuizContent('');
-		setSelectedInputType('prompt');
-		setSelectedDifficulty('easy');
-		setQuizAnswerOptions('multiple_choice');
-		setNumberQuestions(10);
 		setFiles([]);
+		setQuizSettings({
+			quizInputType: 'prompt',
+			content: '',
+			numQuestions: 10,
+			difficulty: 'easy',
+			optionTypes: 'multiple_choice',
+		});
 		setQuizData([]);
 		setQuizResultData([]);
 	};
@@ -139,20 +119,12 @@ function App() {
 				return (
 					<Inputpage
 						onPageChange={handlePageChange}
-						onInputTypeChange={handleInputTypeChange}
-						onDifficultyChange={handleDifficultyChange}
-						onAnswerOptionsChange={handleAnswerOptionsChange}
-						onNumberQuestionsChange={handleNumberQuestionsChange}
-						onContentChange={handleContentChange}
 						onQuizSubmit={handleGenerateQuiz}
+						onQuizSettingsChange={handleSettingsChange}
+						quizSettings={quizSettings}
 						setFiles={setFiles}
 						setApiError={setApiError}
 						quizFiles={files}
-						quizInputType={quizInputType}
-						quizContent={quizContent}
-						quizDifficulty={quizDifficulty}
-						quizAnswerOptions={quizAnswerOptions}
-						quizNumberQuestions={quizNumberQuestions}
 						apiError={apiError}
 					/>
 				);
@@ -188,7 +160,7 @@ function App() {
 	return renderPage();
 }
 
-async function getGeneratedQuiz(quizData: QuizRequestBody) {
+async function getGeneratedQuiz(quizData: QuizSettings) {
 	let response;
 
 	if (quizData.quizInputType === 'file') {
