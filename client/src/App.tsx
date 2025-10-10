@@ -68,13 +68,20 @@ function App() {
 			setQuizData(generatedQuizData);
 			handlePageChange('quiz');
 		} catch (error: unknown) {
+			const errorMessage =
+				apiError || (error instanceof Error ? error.message : t.unexpectedErr);
+
+			console.error('Error while fetching quiz in App: ', errorMessage);
+
+			let finalErrorMessage = `${t.unexpectedErr}, ${t.pleaseTryAgain}.`;
+
 			if (error instanceof Error) {
-				console.error('Error while getting quiz from API: ', error.message);
-				setApiError(`${error.message}. ${t.pleaseTryAgain}.`);
-			} else {
-				console.error('An unknown error occurred:', error);
-				setApiError(`${t.unexpectedErr}. ${t.pleaseTryAgain}.`);
+				finalErrorMessage = `${error.message}, ${t.pleaseTryAgain}.`;
+			} else if (apiError) {
+				finalErrorMessage = `${t.unexpectedErr}, ${t.pleaseTryAgain}.`;
 			}
+
+			setApiError(finalErrorMessage);
 			handlePageChange('input');
 		} finally {
 			setIsQuizLoading(false);

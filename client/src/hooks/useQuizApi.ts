@@ -33,9 +33,9 @@ async function fetchGeneratedQuiz(
 		const result: QuizData = await response.json();
 		return result;
 	} else {
-		const errorText = await response.text();
-		console.error('API Error:', errorText);
-		throw new Error(errorText);
+		const jsonError = await response.json();
+		console.error('API Error:', jsonError.error);
+		throw new Error(jsonError.error);
 	}
 }
 
