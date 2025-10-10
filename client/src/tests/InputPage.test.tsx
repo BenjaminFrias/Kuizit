@@ -9,21 +9,19 @@ import userEvent from '@testing-library/user-event';
 
 const defaultInputPageProps: InputPageParams = {
 	onPageChange: vi.fn(),
-	onInputTypeChange: vi.fn(),
-	onDifficultyChange: vi.fn(),
-	onAnswerOptionsChange: vi.fn(),
-	onNumberQuestionsChange: vi.fn(),
-	onContentChange: vi.fn(),
 	setFiles: vi.fn(),
+	onQuizSettingsChange: vi.fn(),
 	setApiError: vi.fn(),
 	onQuizSubmit: vi.fn(),
 	quizFiles: [],
-	quizInputType: 'prompt',
-	quizContent: '',
-	quizDifficulty: 'easy',
-	quizAnswerOptions: 'multiple_choice',
-	quizNumberQuestions: 10,
 	apiError: null,
+	quizSettings: {
+		quizInputType: 'prompt',
+		content: '',
+		numQuestions: 10,
+		difficulty: 'easy',
+		optionTypes: 'multiple_choice',
+	},
 };
 
 vi.mock('@/hooks/useTranslation', () => ({
@@ -143,7 +141,10 @@ describe('Conditional rendering', () => {
 			<Inputpage
 				{...{
 					...defaultInputPageProps,
-					...{ quizInputType: 'youtube_link' },
+					quizSettings: {
+						...defaultInputPageProps.quizSettings,
+						quizInputType: 'youtube_link',
+					},
 				}}
 			/>
 		);
@@ -158,7 +159,13 @@ describe('Conditional rendering', () => {
 	it('should render file upload component when file option is selected', () => {
 		render(
 			<Inputpage
-				{...{ ...defaultInputPageProps, ...{ quizInputType: 'file' } }}
+				{...{
+					...defaultInputPageProps,
+					quizSettings: {
+						...defaultInputPageProps.quizSettings,
+						quizInputType: 'file',
+					},
+				}}
 			/>
 		);
 
@@ -169,7 +176,13 @@ describe('Conditional rendering', () => {
 	it('should not render file upload component when prompt option is selected', () => {
 		render(
 			<Inputpage
-				{...{ ...defaultInputPageProps, ...{ quizInputType: 'prompt' } }}
+				{...{
+					...defaultInputPageProps,
+					quizSettings: {
+						...defaultInputPageProps.quizSettings,
+						quizInputType: 'prompt',
+					},
+				}}
 			/>
 		);
 
@@ -180,7 +193,13 @@ describe('Conditional rendering', () => {
 	it('should not render file upload component when link option is selected', () => {
 		render(
 			<Inputpage
-				{...{ ...defaultInputPageProps, ...{ quizInputType: 'prompt' } }}
+				{...{
+					...defaultInputPageProps,
+					quizSettings: {
+						...defaultInputPageProps.quizSettings,
+						quizInputType: 'youtube_link',
+					},
+				}}
 			/>
 		);
 
@@ -198,9 +217,12 @@ describe('Conditional rendering', () => {
 			<Inputpage
 				{...{
 					...defaultInputPageProps,
-					...{ quizFiles: [file] },
-					...{ quizInputType: 'file' },
+					quizSettings: {
+						...defaultInputPageProps.quizSettings,
+						quizInputType: 'file',
+					},
 				}}
+				quizFiles={[file]}
 			/>
 		);
 
@@ -225,6 +247,8 @@ describe('Interaction and states', () => {
 		expectedValue: string;
 	}>;
 
+	const mockOnQuizSettingsChange = defaultInputPageProps.onQuizSettingsChange;
+
 	// Test cases objects
 	const inputOptionTestCases: TestCase = [
 		{ nameKey: 'promptOption', expectedValue: 'prompt' },
@@ -247,10 +271,9 @@ describe('Interaction and states', () => {
 	const numberQuestionTestCases = [5, 10, 15, 20];
 	// Tests
 	it.each(inputOptionTestCases)(
-		'should call onInputTypeChange with $expectedValue when the $nameKey button is clicked',
+		'should call onQuizSettingsChange with $expectedValue when the $nameKey button is clicked',
 		async ({ nameKey, expectedValue }) => {
 			const user = userEvent.setup();
-			const mockOnInputTypeChange = defaultInputPageProps.onInputTypeChange;
 			render(<Inputpage {...defaultInputPageProps} />);
 
 			const buttonName = enTranslations[nameKey];
@@ -260,15 +283,17 @@ describe('Interaction and states', () => {
 
 			await user.click(optionBtn);
 
-			expect(mockOnInputTypeChange).toHaveBeenCalledWith(expectedValue);
+			expect(mockOnQuizSettingsChange).toHaveBeenCalledWith(
+				'quizInputType',
+				expectedValue
+			);
 		}
 	);
 
 	it.each(difficultyOptionTestCases)(
-		'should call onDifficultyChange with $expectedValue when the $nameKey button is clicked',
+		'should call onQuizSettingsChange with $expectedValue when the $nameKey button is clicked',
 		async ({ nameKey, expectedValue }) => {
 			const user = userEvent.setup();
-			const mockOnDifficultyChange = defaultInputPageProps.onDifficultyChange;
 			render(<Inputpage {...defaultInputPageProps} />);
 
 			const buttonName = enTranslations[nameKey];
@@ -278,16 +303,17 @@ describe('Interaction and states', () => {
 
 			await user.click(optionBtn);
 
-			expect(mockOnDifficultyChange).toHaveBeenCalledWith(expectedValue);
+			expect(mockOnQuizSettingsChange).toHaveBeenCalledWith(
+				'difficulty',
+				expectedValue
+			);
 		}
 	);
 
 	it.each(answerOptionTestCases)(
-		'should call onAnswerOptionsChange with $expectedValue when the $nameKey button is clicked',
+		'should call onQuizSettingsChange with $expectedValue when the $nameKey button is clicked',
 		async ({ nameKey, expectedValue }) => {
 			const user = userEvent.setup();
-			const mockOnAnswerOptionsChange =
-				defaultInputPageProps.onAnswerOptionsChange;
 			render(<Inputpage {...defaultInputPageProps} />);
 
 			const buttonName = enTranslations[nameKey];
@@ -297,16 +323,16 @@ describe('Interaction and states', () => {
 
 			await user.click(optionBtn);
 
-			expect(mockOnAnswerOptionsChange).toHaveBeenCalledWith(expectedValue);
+			expect(mockOnQuizSettingsChange).toHaveBeenCalledWith(
+				'optionTypes',
+				expectedValue
+			);
 		}
 	);
-
 	it.each(numberQuestionTestCases)(
-		'should call onNumberQuestionsChange with %d when the button is clicked',
+		'should call onQuizSettingsChange with %d when the button is clicked',
 		async (number) => {
 			const user = userEvent.setup();
-			const mockOnNumberQuestionsChange =
-				defaultInputPageProps.onNumberQuestionsChange;
 			render(<Inputpage {...defaultInputPageProps} />);
 
 			const buttonName = String(number);
@@ -316,53 +342,57 @@ describe('Interaction and states', () => {
 
 			await user.click(optionBtn);
 
-			expect(mockOnNumberQuestionsChange).toHaveBeenCalledWith(number);
+			expect(mockOnQuizSettingsChange).toHaveBeenCalledWith(
+				'numQuestions',
+				number
+			);
 		}
 	);
 
-	it('should call onContentChange correctly for input in textarea (prompt option)', async () => {
+	it('should call onQuizSettingsChange correctly for input in textarea (prompt option)', async () => {
 		const user = userEvent.setup();
 
-		const mockOnContentChange = defaultInputPageProps.onContentChange as Mock;
 		render(<Inputpage {...defaultInputPageProps} />);
 
 		const textarea = screen.getByPlaceholderText(
 			enTranslations.quizPromptPlaceholder
 		);
 
-		mockOnContentChange.mockClear();
+		(mockOnQuizSettingsChange as Mock).mockClear();
 		await user.type(textarea, 'create');
 
-		expect(mockOnContentChange).toHaveBeenCalledTimes(6);
+		expect(mockOnQuizSettingsChange).toHaveBeenCalledTimes(6);
 
-		// onContentChange is meant to receive the full, accumulated content of the textarea, not last character
-		// todo: The last argument is 'e' instead of 'create', fix bug and test onContentChange correctly
-		expect(mockOnContentChange).toHaveBeenLastCalledWith('e');
+		expect(mockOnQuizSettingsChange).toHaveBeenLastCalledWith('content', 'e');
 	});
 
-	it('should call onContentChange correctly for input in textarea (link option)', async () => {
+	it('should call onQuizSettingsChange correctly for input in textarea (link option)', async () => {
 		const user = userEvent.setup();
 
-		const mockOnContentChange = defaultInputPageProps.onContentChange as Mock;
 		render(
-			<Inputpage {...defaultInputPageProps} quizInputType="youtube_link" />
+			<Inputpage
+				{...{
+					...defaultInputPageProps,
+					quizSettings: {
+						...defaultInputPageProps.quizSettings,
+						quizInputType: 'youtube_link',
+					},
+				}}
+			/>
 		);
 
 		const textarea = screen.getByPlaceholderText(
 			enTranslations.quizLinkPlaceholder
 		);
 
-		mockOnContentChange.mockClear();
+		(mockOnQuizSettingsChange as Mock).mockClear();
 		await user.type(textarea, 'https://www.youtube.com/watch?v=4qGdPFIVVQU');
 
-		expect(mockOnContentChange).toHaveBeenCalledTimes(43);
-
-		// onContentChange is meant to receive the full, accumulated content of the textarea, not last character
-		// todo: The last argument is 'e' instead of 'create', fix bug and test onContentChange correctly
-		expect(mockOnContentChange).toHaveBeenLastCalledWith('U');
+		expect(mockOnQuizSettingsChange).toHaveBeenCalledTimes(43);
+		expect(mockOnQuizSettingsChange).toHaveBeenLastCalledWith('content', 'U');
 	});
 
-	it('should call onPageChange with home and onQuizSubmit when generate quiz button is clicked', async () => {
+	it('should call onQuizSettingsChange with home and onQuizSubmit when generate quiz button is clicked', async () => {
 		const user = userEvent.setup();
 		render(<Inputpage {...defaultInputPageProps} />);
 		const mockOnPageChange = defaultInputPageProps.onPageChange;
