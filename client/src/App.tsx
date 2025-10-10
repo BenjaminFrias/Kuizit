@@ -9,8 +9,7 @@ import { QuizPage } from './pages/Quiz';
 import { QuizResultsPage } from './pages/QuizResultsPage';
 import { QuizReviewPage } from './pages/QuizReviewPage';
 import { useTranslation } from './hooks/useTranslation';
-
-const API_BASE_URL: string = import.meta.env.VITE_API_URL;
+import { useQuizApi } from './hooks/useQuizApi';
 
 function App() {
 	const [currentPage, setCurrentPage] = useState('home');
@@ -18,7 +17,6 @@ function App() {
 	const [isQuizLoading, setIsQuizLoading] = useState(false);
 	const [files, setFiles] = useState<File[]>([]);
 	const [quizResultData, setQuizResultData] = useState<QuizResult>([]);
-	const [apiError, setApiError] = useState<string | null>(null);
 	const t = useTranslation();
 	const [quizSettings, setQuizSettings] = useState<QuizSettings>({
 		quizInputType: 'prompt',
@@ -37,6 +35,8 @@ function App() {
 			[key]: value,
 		}));
 	};
+
+	const { generateQuiz, apiError, setApiError } = useQuizApi();
 
 	const handleGenerateQuiz = async () => {
 		setApiError(null);
@@ -63,13 +63,14 @@ function App() {
 			}); // throw error when invalid data
 
 			setIsQuizLoading(true);
-			const generatedQuizData = await getGeneratedQuiz(inputQuizData);
+
+			const generatedQuizData = await generateQuiz(inputQuizData);
 			setQuizData(generatedQuizData);
 			handlePageChange('quiz');
 		} catch (error: unknown) {
 			if (error instanceof Error) {
 				console.error('Error while getting quiz from API: ', error.message);
-				setApiError(`${error.message}. ${t.pleaseTryAgain}`);
+				setApiError(`${error.message}. ${t.pleaseTryAgain}.`);
 			} else {
 				console.error('An unknown error occurred:', error);
 				setApiError(`${t.unexpectedErr}. ${t.pleaseTryAgain}.`);
@@ -158,41 +159,6 @@ function App() {
 	};
 
 	return renderPage();
-}
-
-async function getGeneratedQuiz(quizData: QuizSettings) {
-	let response;
-
-	if (quizData.quizInputType === 'file') {
-		const formData = new FormData();
-		formData.append('quizInputType', quizData.quizInputType);
-		formData.append('numQuestions', quizData.numQuestions.toString());
-		formData.append('difficulty', quizData.difficulty);
-		formData.append('optionTypes', quizData.optionTypes);
-		formData.append('quizFile', quizData.content as File);
-
-		response = await fetch(`${API_BASE_URL}/api/generate-quiz`, {
-			method: 'POST',
-			body: formData,
-		});
-	} else {
-		response = await fetch(`${API_BASE_URL}/api/generate-quiz`, {
-			method: 'POST',
-			headers: {
-				'Content-type': 'application/json',
-			},
-			body: JSON.stringify(quizData),
-		});
-	}
-
-	if (response.ok) {
-		const result = await response.json();
-		return result;
-	} else {
-		const errorText = await response.text();
-		console.error('API Error:', errorText);
-		throw new Error(errorText);
-	}
 }
 
 export default App;
