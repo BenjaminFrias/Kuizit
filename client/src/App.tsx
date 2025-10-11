@@ -26,25 +26,17 @@ function App() {
 		optionTypes: 'multiple_choice',
 	});
 
-	const handleSettingsChange = <K extends keyof QuizSettings>(
-		key: K,
-		value: QuizSettings[K]
-	) => {
-		setQuizSettings((prevSettings) => ({
-			...prevSettings,
-			[key]: value,
-		}));
-	};
-
 	const { generateQuiz, apiError, setApiError } = useQuizApi();
 
-	const handleGenerateQuiz = async () => {
+	const handleGenerateQuiz = async (newSettings: QuizSettings) => {
 		setApiError(null);
+		setQuizSettings(newSettings);
+
 		const contentToSend =
-			quizSettings.quizInputType === 'file' ? files[0] : quizSettings.content;
+			newSettings.quizInputType === 'file' ? files[0] : newSettings.content;
 
 		const inputQuizData: QuizSettings = {
-			...quizSettings,
+			...newSettings,
 			content: contentToSend,
 		};
 
@@ -98,13 +90,6 @@ function App() {
 
 	const resetQuizStates = () => {
 		setFiles([]);
-		setQuizSettings({
-			quizInputType: 'prompt',
-			content: '',
-			numQuestions: 10,
-			difficulty: 'easy',
-			optionTypes: 'multiple_choice',
-		});
 		setQuizData([]);
 		setQuizResultData([]);
 	};
@@ -128,8 +113,7 @@ function App() {
 					<Inputpage
 						onPageChange={handlePageChange}
 						onQuizSubmit={handleGenerateQuiz}
-						onQuizSettingsChange={handleSettingsChange}
-						quizSettings={quizSettings}
+						initialSettings={quizSettings}
 						setFiles={setFiles}
 						setApiError={setApiError}
 						quizFiles={files}

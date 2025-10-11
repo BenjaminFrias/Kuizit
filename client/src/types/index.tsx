@@ -14,14 +14,10 @@ export type QuizSettings = {
 
 export type InputPageParams = {
 	onPageChange: (pageName: Page) => void;
-	onQuizSettingsChange: <K extends keyof QuizSettings>(
-		key: K,
-		value: QuizSettings[K]
-	) => void;
 	setFiles: (files: File[]) => void;
 	setApiError: (error: string | null) => void;
-	onQuizSubmit: () => void;
-	quizSettings: QuizSettings;
+	onQuizSubmit: (QuizSettings: QuizSettings) => void;
+	initialSettings: QuizSettings;
 	quizFiles: File[];
 	apiError: string | null;
 };

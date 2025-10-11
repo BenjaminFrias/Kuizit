@@ -3,24 +3,37 @@ import Logo from '@/components/Logo';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useTranslation } from '@/hooks/useTranslation';
-import type { InputPageParams } from '@/types';
+import type { InputPageParams, QuizSettings } from '@/types';
 import {
 	faCircleExclamation,
 	faWandMagicSparkles,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useState } from 'react';
 
 export default function Inputpage({
 	onPageChange,
-	onQuizSettingsChange,
 	setFiles,
 	setApiError,
 	onQuizSubmit,
+	initialSettings,
 	quizFiles,
-	quizSettings,
 	apiError,
 }: InputPageParams) {
 	const t = useTranslation();
+
+	const [quizSettings, setQuizSettings] =
+		useState<QuizSettings>(initialSettings);
+
+	const handleSettingsChange = <K extends keyof QuizSettings>(
+		key: K,
+		value: QuizSettings[K]
+	) => {
+		setQuizSettings((prevSettings) => ({
+			...prevSettings,
+			[key]: value,
+		}));
+	};
 
 	const { quizInputType, content, difficulty, optionTypes, numQuestions } =
 		quizSettings;
@@ -44,8 +57,8 @@ export default function Inputpage({
 						size="md"
 						variant={`${quizInputType === 'prompt' ? 'green' : 'minimal'}`}
 						onClick={() => {
-							onQuizSettingsChange('quizInputType', 'prompt');
-							onQuizSettingsChange('content', '');
+							handleSettingsChange('quizInputType', 'prompt');
+							handleSettingsChange('content', '');
 							setApiError(null);
 						}}
 					>
@@ -57,7 +70,7 @@ export default function Inputpage({
 						variant={`${quizInputType === 'file' ? 'green' : 'minimal'}`}
 						onClick={() => {
 							setApiError(null);
-							onQuizSettingsChange('quizInputType', 'file');
+							handleSettingsChange('quizInputType', 'file');
 						}}
 					>
 						{t.fileOption}
@@ -70,8 +83,8 @@ export default function Inputpage({
 						}`}
 						onClick={() => {
 							setApiError(null);
-							onQuizSettingsChange('quizInputType', 'youtube_link');
-							onQuizSettingsChange('content', '');
+							handleSettingsChange('quizInputType', 'youtube_link');
+							handleSettingsChange('content', '');
 						}}
 					>
 						{t.linkOption}
@@ -88,7 +101,7 @@ export default function Inputpage({
 								: t.quizLinkPlaceholder
 						}`}
 						value={typeof content === 'string' ? content : ''}
-						onChange={(e) => onQuizSettingsChange('content', e.target.value)}
+						onChange={(e) => handleSettingsChange('content', e.target.value)}
 					/>
 				) : (
 					<FileUploadDropZone files={quizFiles} setFiles={setFiles} />
@@ -114,7 +127,7 @@ export default function Inputpage({
 								className="flex-1"
 								size="sm"
 								variant={`${difficulty === 'easy' ? 'green' : 'minimal'}`}
-								onClick={() => onQuizSettingsChange('difficulty', 'easy')}
+								onClick={() => handleSettingsChange('difficulty', 'easy')}
 							>
 								{t.easyOption}
 							</Button>
@@ -122,7 +135,7 @@ export default function Inputpage({
 								className="flex-1"
 								size="sm"
 								variant={`${difficulty === 'medium' ? 'green' : 'minimal'}`}
-								onClick={() => onQuizSettingsChange('difficulty', 'medium')}
+								onClick={() => handleSettingsChange('difficulty', 'medium')}
 							>
 								{t.mediumOption}
 							</Button>
@@ -130,7 +143,7 @@ export default function Inputpage({
 								className="flex-1"
 								size="sm"
 								variant={`${difficulty === 'hard' ? 'green' : 'minimal'}`}
-								onClick={() => onQuizSettingsChange('difficulty', 'hard')}
+								onClick={() => handleSettingsChange('difficulty', 'hard')}
 							>
 								{t.hardOption}
 							</Button>
@@ -138,7 +151,7 @@ export default function Inputpage({
 								className="flex-1"
 								size="sm"
 								variant={`${difficulty === 'expert' ? 'green' : 'minimal'}`}
-								onClick={() => onQuizSettingsChange('difficulty', 'expert')}
+								onClick={() => handleSettingsChange('difficulty', 'expert')}
 							>
 								{t.expertOption}
 							</Button>
@@ -157,7 +170,7 @@ export default function Inputpage({
 									optionTypes === 'multiple_choice' ? 'green' : 'minimal'
 								}`}
 								onClick={() =>
-									onQuizSettingsChange('optionTypes', 'multiple_choice')
+									handleSettingsChange('optionTypes', 'multiple_choice')
 								}
 							>
 								{t.multipleChoiceOption}
@@ -169,7 +182,7 @@ export default function Inputpage({
 									optionTypes === 'true_false' ? 'green' : 'minimal'
 								}`}
 								onClick={() =>
-									onQuizSettingsChange('optionTypes', 'true_false')
+									handleSettingsChange('optionTypes', 'true_false')
 								}
 							>
 								{t.trueFalseOption}
@@ -186,7 +199,7 @@ export default function Inputpage({
 								className="flex-1"
 								size="sm"
 								variant={`${numQuestions === 5 ? 'green' : 'minimal'}`}
-								onClick={() => onQuizSettingsChange('numQuestions', 5)}
+								onClick={() => handleSettingsChange('numQuestions', 5)}
 							>
 								5
 							</Button>
@@ -194,7 +207,7 @@ export default function Inputpage({
 								className="flex-1"
 								size="sm"
 								variant={`${numQuestions === 10 ? 'green' : 'minimal'}`}
-								onClick={() => onQuizSettingsChange('numQuestions', 10)}
+								onClick={() => handleSettingsChange('numQuestions', 10)}
 							>
 								10
 							</Button>
@@ -202,7 +215,7 @@ export default function Inputpage({
 								className="flex-1"
 								size="sm"
 								variant={`${numQuestions === 15 ? 'green' : 'minimal'}`}
-								onClick={() => onQuizSettingsChange('numQuestions', 15)}
+								onClick={() => handleSettingsChange('numQuestions', 15)}
 							>
 								15
 							</Button>
@@ -210,7 +223,7 @@ export default function Inputpage({
 								className="flex-1"
 								size="sm"
 								variant={`${numQuestions === 20 ? 'green' : 'minimal'}`}
-								onClick={() => onQuizSettingsChange('numQuestions', 20)}
+								onClick={() => handleSettingsChange('numQuestions', 20)}
 							>
 								20
 							</Button>
@@ -223,8 +236,8 @@ export default function Inputpage({
 				size="md"
 				variant="green"
 				onClick={() => {
+					onQuizSubmit(quizSettings);
 					onPageChange('home');
-					onQuizSubmit();
 				}}
 			>
 				{t.generateQuizBtn}
