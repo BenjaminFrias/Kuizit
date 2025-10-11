@@ -1,4 +1,4 @@
-import type { QuizRequestBody } from '@/types';
+import type { QuizSettings } from '@/types';
 
 type ValidationMessages = {
 	fileNotFoundErr: string;
@@ -8,7 +8,7 @@ type ValidationMessages = {
 };
 
 type validateQuizParams = {
-	quizData: QuizRequestBody;
+	quizData: QuizSettings;
 	quizFile: File | File[];
 	validationMessages: ValidationMessages;
 };

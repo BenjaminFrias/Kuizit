@@ -3,7 +3,6 @@ import './App.css';
 import HomePage from './pages/HomePage';
 import Inputpage from './pages/InputPage';
 import QuizLoadingPage from './pages/QuizLoadingPage';
-import validateQuizContent from './validation/inputValidation';
 import type { Page, QuizSettings, QuizData, QuizResult } from './types';
 import { QuizPage } from './pages/Quiz';
 import { QuizResultsPage } from './pages/QuizResultsPage';
@@ -41,19 +40,6 @@ function App() {
 		};
 
 		try {
-			const validationMessages = {
-				fileNotFoundErr: t.fileNotFoundErr,
-				fileTypeErr: t.fileTypeErr,
-				invalidPromptErr: t.invalidPromptErr,
-				invalidYoutubeLinkErr: t.invalidYoutubeLinkErr,
-			};
-
-			validateQuizContent({
-				quizData: inputQuizData,
-				quizFile: files,
-				validationMessages,
-			}); // throw error when invalid data
-
 			setIsQuizLoading(true);
 
 			const generatedQuizData = await generateQuiz(inputQuizData);

@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { InputPageParams, QuizSettings } from '@/types';
+import validateQuizContent from '@/validation/inputValidation';
 import {
 	faCircleExclamation,
 	faWandMagicSparkles,
@@ -21,6 +22,7 @@ export default function Inputpage({
 	apiError,
 }: InputPageParams) {
 	const t = useTranslation();
+	const [localError, setLocalError] = useState<null | string>(apiError);
 
 	const [quizSettings, setQuizSettings] =
 		useState<QuizSettings>(initialSettings);
@@ -33,6 +35,31 @@ export default function Inputpage({
 			...prevSettings,
 			[key]: value,
 		}));
+	};
+
+	const handleLocalSubmit = () => {
+		setLocalError(null);
+
+		try {
+			const validationMessages = {
+				fileNotFoundErr: t.fileNotFoundErr,
+				fileTypeErr: t.fileTypeErr,
+				invalidPromptErr: t.invalidPromptErr,
+				invalidYoutubeLinkErr: t.invalidYoutubeLinkErr,
+			};
+
+			validateQuizContent({
+				quizData: quizSettings,
+				quizFile: quizFiles,
+				validationMessages,
+			}); // throw error when invalid data
+
+			onQuizSubmit(quizSettings);
+		} catch (error: unknown) {
+			if (error instanceof Error) {
+				setLocalError(error.message);
+			}
+		}
 	};
 
 	const { quizInputType, content, difficulty, optionTypes, numQuestions } =
@@ -107,13 +134,13 @@ export default function Inputpage({
 					<FileUploadDropZone files={quizFiles} setFiles={setFiles} />
 				)}
 
-				{apiError ? (
+				{localError || apiError ? (
 					<div className="flex gap-3 items-center w-full bg-red-200 border-1 font-medium border-red-500 rounded-2xl p-3">
 						<FontAwesomeIcon
 							icon={faCircleExclamation}
 							className="text-red-500"
 						/>
-						<p>{apiError}</p>
+						<p>{localError || apiError}</p>
 					</div>
 				) : null}
 
@@ -235,10 +262,7 @@ export default function Inputpage({
 				className="longFadeIn mb-5"
 				size="md"
 				variant="green"
-				onClick={() => {
-					onQuizSubmit(quizSettings);
-					onPageChange('home');
-				}}
+				onClick={handleLocalSubmit}
 			>
 				{t.generateQuizBtn}
 				<FontAwesomeIcon icon={faWandMagicSparkles} />
