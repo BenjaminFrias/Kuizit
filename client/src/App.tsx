@@ -97,7 +97,6 @@ function App() {
 			case 'input':
 				return (
 					<Inputpage
-						onPageChange={handlePageChange}
 						onQuizSubmit={handleGenerateQuiz}
 						initialSettings={quizSettings}
 						setFiles={setFiles}

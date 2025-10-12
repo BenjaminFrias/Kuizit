@@ -13,7 +13,6 @@ export type QuizSettings = {
 };
 
 export type InputPageParams = {
-	onPageChange: (pageName: Page) => void;
 	setFiles: (files: File[]) => void;
 	setApiError: (error: string | null) => void;
 	onQuizSubmit: (QuizSettings: QuizSettings) => void;
