@@ -134,7 +134,11 @@ export default function Inputpage({
 				)}
 
 				{localError || apiError ? (
-					<div className="flex gap-3 items-center w-full bg-red-200 border-1 font-medium border-red-500 rounded-2xl p-3">
+					<div
+						className="flex gap-3 items-center w-full bg-red-200 border-1
+						font-medium border-red-500 rounded-2xl p-3"
+						data-testid="input-error"
+					>
 						<FontAwesomeIcon
 							icon={faCircleExclamation}
 							className="text-red-500"

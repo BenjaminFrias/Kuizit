@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { describe, it, expect, vi, type Mock } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import Inputpage from '@/pages/InputPage';
 import type { InputPageParams } from '@/types';
 import enTranslations from '../translations/en.json';
@@ -8,14 +8,12 @@ import type { Translations as TranslationType } from '@/types/translations';
 import userEvent from '@testing-library/user-event';
 
 const defaultInputPageProps: InputPageParams = {
-	onPageChange: vi.fn(),
 	setFiles: vi.fn(),
-	onQuizSettingsChange: vi.fn(),
 	setApiError: vi.fn(),
 	onQuizSubmit: vi.fn(),
 	quizFiles: [],
 	apiError: null,
-	quizSettings: {
+	initialSettings: {
 		quizInputType: 'prompt',
 		content: '',
 		numQuestions: 10,
@@ -136,18 +134,15 @@ describe('Conditional rendering', () => {
 		expect(promptTextarea).toBeInTheDocument();
 	});
 
-	it('should display correct textarea when link option selected', () => {
-		render(
-			<Inputpage
-				{...{
-					...defaultInputPageProps,
-					quizSettings: {
-						...defaultInputPageProps.quizSettings,
-						quizInputType: 'youtube_link',
-					},
-				}}
-			/>
-		);
+	it('should display correct textarea when link option selected', async () => {
+		const user = userEvent.setup();
+		render(<Inputpage {...defaultInputPageProps} />);
+
+		const linkOptionBtn = screen.getByRole('button', {
+			name: new RegExp(enTranslations.linkOption, 'i'),
+		});
+
+		await user.click(linkOptionBtn);
 
 		const ytLinkTextarea = screen.getByPlaceholderText(
 			enTranslations.quizLinkPlaceholder
@@ -156,75 +151,55 @@ describe('Conditional rendering', () => {
 		expect(ytLinkTextarea).toBeInTheDocument();
 	});
 
-	it('should render file upload component when file option is selected', () => {
-		render(
-			<Inputpage
-				{...{
-					...defaultInputPageProps,
-					quizSettings: {
-						...defaultInputPageProps.quizSettings,
-						quizInputType: 'file',
-					},
-				}}
-			/>
-		);
+	it('should render file upload component when file option is selected', async () => {
+		const user = userEvent.setup();
+		render(<Inputpage {...defaultInputPageProps} />);
+
+		const fileOptionBtn = screen.getByRole('button', {
+			name: new RegExp(enTranslations.fileOption, 'i'),
+		});
+
+		await user.click(fileOptionBtn);
 
 		const fileUploadComponent = screen.getByText(enTranslations.dragAndDrop);
 		expect(fileUploadComponent).toBeInTheDocument();
 	});
 
 	it('should not render file upload component when prompt option is selected', () => {
-		render(
-			<Inputpage
-				{...{
-					...defaultInputPageProps,
-					quizSettings: {
-						...defaultInputPageProps.quizSettings,
-						quizInputType: 'prompt',
-					},
-				}}
-			/>
-		);
+		render(<Inputpage {...defaultInputPageProps} />);
 
 		const fileUploadComponent = screen.queryByText(enTranslations.dragAndDrop);
 		expect(fileUploadComponent).toBeNull();
 	});
 
-	it('should not render file upload component when link option is selected', () => {
-		render(
-			<Inputpage
-				{...{
-					...defaultInputPageProps,
-					quizSettings: {
-						...defaultInputPageProps.quizSettings,
-						quizInputType: 'youtube_link',
-					},
-				}}
-			/>
-		);
+	it('should not render file upload component when link option is selected', async () => {
+		const user = userEvent.setup();
+		render(<Inputpage {...defaultInputPageProps} />);
+
+		const linkOptionBtn = screen.getByRole('button', {
+			name: new RegExp(enTranslations.linkOption, 'i'),
+		});
+
+		await user.click(linkOptionBtn);
 
 		const fileUploadComponent = screen.queryByText(enTranslations.dragAndDrop);
 		expect(fileUploadComponent).toBeNull();
 	});
 
 	it('should render file component after uploading file', async () => {
+		const user = userEvent.setup();
 		const file = new File(['mock content'], 'quizFile.pdf', {
 			type: 'application/pdf',
 		});
 		Object.defineProperty(file, 'size', { value: 1024 * 100 });
 
-		render(
-			<Inputpage
-				{...{
-					...defaultInputPageProps,
-					quizSettings: {
-						...defaultInputPageProps.quizSettings,
-						quizInputType: 'file',
-					},
-				}}
-				quizFiles={[file]}
-			/>
-		);
+		render(<Inputpage {...defaultInputPageProps} quizFiles={[file]} />);
+
+		const fileOptionBtn = screen.getByRole('button', {
+			name: new RegExp(enTranslations.fileOption, 'i'),
+		});
+
+		await user.click(fileOptionBtn);
 
 		const fileUploadComponent = screen.getByText('quizFile.pdf');
 		expect(fileUploadComponent).toBeInTheDocument();
@@ -242,37 +217,29 @@ describe('Conditional rendering', () => {
 
 describe('Interaction and states', () => {
 	type TranslationKeys = keyof TranslationType;
-	type TestCase = Array<{
-		nameKey: TranslationKeys;
-		expectedValue: string;
-	}>;
-
-	const mockOnQuizSettingsChange = defaultInputPageProps.onQuizSettingsChange;
 
 	// Test cases objects
-	const inputOptionTestCases: TestCase = [
-		{ nameKey: 'promptOption', expectedValue: 'prompt' },
-		{ nameKey: 'fileOption', expectedValue: 'file' },
-		{ nameKey: 'linkOption', expectedValue: 'youtube_link' },
+	const inputOptionTestCases: Array<TranslationKeys> = [
+		'promptOption',
+		'fileOption',
+		'linkOption',
 	];
-
-	const difficultyOptionTestCases: TestCase = [
-		{ nameKey: 'easyOption', expectedValue: 'easy' },
-		{ nameKey: 'mediumOption', expectedValue: 'medium' },
-		{ nameKey: 'hardOption', expectedValue: 'hard' },
-		{ nameKey: 'expertOption', expectedValue: 'expert' },
+	const difficultyOptionTestCases: Array<TranslationKeys> = [
+		'easyOption',
+		'mediumOption',
+		'hardOption',
+		'expertOption',
 	];
-
-	const answerOptionTestCases: TestCase = [
-		{ nameKey: 'multipleChoiceOption', expectedValue: 'multiple_choice' },
-		{ nameKey: 'trueFalseOption', expectedValue: 'true_false' },
+	const answerOptionTestCases: Array<TranslationKeys> = [
+		'multipleChoiceOption',
+		'trueFalseOption',
 	];
 
 	const numberQuestionTestCases = [5, 10, 15, 20];
 	// Tests
 	it.each(inputOptionTestCases)(
-		'should call onQuizSettingsChange with $expectedValue when the $nameKey button is clicked',
-		async ({ nameKey, expectedValue }) => {
+		'should have bg-primary class when the $nameKey button is clicked',
+		async (nameKey) => {
 			const user = userEvent.setup();
 			render(<Inputpage {...defaultInputPageProps} />);
 
@@ -283,16 +250,13 @@ describe('Interaction and states', () => {
 
 			await user.click(optionBtn);
 
-			expect(mockOnQuizSettingsChange).toHaveBeenCalledWith(
-				'quizInputType',
-				expectedValue
-			);
+			expect(optionBtn).toHaveClass('bg-primary');
 		}
 	);
 
 	it.each(difficultyOptionTestCases)(
-		'should call onQuizSettingsChange with $expectedValue when the $nameKey button is clicked',
-		async ({ nameKey, expectedValue }) => {
+		'should have bg-primary class when the $nameKey button is clicked',
+		async (nameKey) => {
 			const user = userEvent.setup();
 			render(<Inputpage {...defaultInputPageProps} />);
 
@@ -303,16 +267,13 @@ describe('Interaction and states', () => {
 
 			await user.click(optionBtn);
 
-			expect(mockOnQuizSettingsChange).toHaveBeenCalledWith(
-				'difficulty',
-				expectedValue
-			);
+			expect(optionBtn).toHaveClass('bg-primary');
 		}
 	);
 
 	it.each(answerOptionTestCases)(
-		'should call onQuizSettingsChange with $expectedValue when the $nameKey button is clicked',
-		async ({ nameKey, expectedValue }) => {
+		'should have bg-primary class when the $nameKey button is clicked',
+		async (nameKey) => {
 			const user = userEvent.setup();
 			render(<Inputpage {...defaultInputPageProps} />);
 
@@ -323,14 +284,12 @@ describe('Interaction and states', () => {
 
 			await user.click(optionBtn);
 
-			expect(mockOnQuizSettingsChange).toHaveBeenCalledWith(
-				'optionTypes',
-				expectedValue
-			);
+			expect(optionBtn).toHaveClass('bg-primary');
 		}
 	);
+
 	it.each(numberQuestionTestCases)(
-		'should call onQuizSettingsChange with %d when the button is clicked',
+		'should have bg-primary class when the "%d" button is clicked',
 		async (number) => {
 			const user = userEvent.setup();
 			render(<Inputpage {...defaultInputPageProps} />);
@@ -342,14 +301,11 @@ describe('Interaction and states', () => {
 
 			await user.click(optionBtn);
 
-			expect(mockOnQuizSettingsChange).toHaveBeenCalledWith(
-				'numQuestions',
-				number
-			);
+			expect(optionBtn).toHaveClass('bg-primary');
 		}
 	);
 
-	it('should call onQuizSettingsChange correctly for input in textarea (prompt option)', async () => {
+	it('should display text correctly in textarea when user type text (prompt option)', async () => {
 		const user = userEvent.setup();
 
 		render(<Inputpage {...defaultInputPageProps} />);
@@ -358,45 +314,38 @@ describe('Interaction and states', () => {
 			enTranslations.quizPromptPlaceholder
 		);
 
-		(mockOnQuizSettingsChange as Mock).mockClear();
-		await user.type(textarea, 'create');
+		await user.type(textarea, 'create quiz about programming');
 
-		expect(mockOnQuizSettingsChange).toHaveBeenCalledTimes(6);
-
-		expect(mockOnQuizSettingsChange).toHaveBeenLastCalledWith('content', 'e');
+		const inputTextarea = screen.getByText('create quiz about programming');
+		expect(inputTextarea).toBeVisible();
 	});
 
-	it('should call onQuizSettingsChange correctly for input in textarea (link option)', async () => {
+	it('should display text correctly in textarea when user type link (link option)', async () => {
 		const user = userEvent.setup();
+		render(<Inputpage {...defaultInputPageProps} />);
 
-		render(
-			<Inputpage
-				{...{
-					...defaultInputPageProps,
-					quizSettings: {
-						...defaultInputPageProps.quizSettings,
-						quizInputType: 'youtube_link',
-					},
-				}}
-			/>
-		);
+		const linkOptionBtn = screen.getByRole('button', {
+			name: new RegExp(enTranslations.linkOption, 'i'),
+		});
+
+		await user.click(linkOptionBtn);
 
 		const textarea = screen.getByPlaceholderText(
 			enTranslations.quizLinkPlaceholder
 		);
 
-		(mockOnQuizSettingsChange as Mock).mockClear();
 		await user.type(textarea, 'https://www.youtube.com/watch?v=4qGdPFIVVQU');
 
-		expect(mockOnQuizSettingsChange).toHaveBeenCalledTimes(43);
-		expect(mockOnQuizSettingsChange).toHaveBeenLastCalledWith('content', 'U');
+		const textareaWithLink = screen.getByText(
+			'https://www.youtube.com/watch?v=4qGdPFIVVQU'
+		);
+
+		expect(textareaWithLink).toBeVisible();
 	});
 
-	it('should call onQuizSettingsChange with home and onQuizSubmit when generate quiz button is clicked', async () => {
+	it('should display error when generate quiz button is clicked without content', async () => {
 		const user = userEvent.setup();
 		render(<Inputpage {...defaultInputPageProps} />);
-		const mockOnPageChange = defaultInputPageProps.onPageChange;
-		const mockOnQuizSubmit = defaultInputPageProps.onQuizSubmit;
 
 		const generateBtnRegex = new RegExp(enTranslations.generateQuizBtn, 'i');
 
@@ -406,7 +355,29 @@ describe('Interaction and states', () => {
 
 		await user.click(generateQuizBtn);
 
-		expect(mockOnPageChange).toBeCalledTimes(1);
+		const errorMessage = screen.getByTestId('input-error');
+		expect(errorMessage).toBeVisible();
+	});
+
+	it('should call onQuizSubmit when generate quiz button is clicked with correct data', async () => {
+		const user = userEvent.setup();
+		render(<Inputpage {...defaultInputPageProps} />);
+		const mockOnQuizSubmit = defaultInputPageProps.onQuizSubmit;
+
+		const generateBtnRegex = new RegExp(enTranslations.generateQuizBtn, 'i');
+
+		const generateQuizBtn = screen.getByRole('button', {
+			name: generateBtnRegex,
+		});
+
+		const textarea = screen.getByPlaceholderText(
+			enTranslations.quizPromptPlaceholder
+		);
+
+		await user.type(textarea, 'create quiz about programming');
+
+		await user.click(generateQuizBtn);
+
 		expect(mockOnQuizSubmit).toBeCalledTimes(1);
 	});
 });
