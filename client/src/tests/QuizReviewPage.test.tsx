@@ -172,7 +172,7 @@ describe('Conditional render', () => {
 		await user.click(endReviewBtn);
 
 		expect(mockOnPageChange).toHaveBeenCalled();
-		expect(mockOnPageChange).toHaveBeenCalledWith('home');
+		expect(mockOnPageChange).toHaveBeenCalledWith('results');
 	});
 
 	it('should call onPageChange after clicking next answered button in the final question ', async () => {

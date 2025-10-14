@@ -64,7 +64,10 @@ export function QuizReviewPage({
 	};
 
 	return (
-		<div className="min-h-screen min-w-screen flex flex-col w-full items-center md:flex-row md:items-stretch overflow-x-hidden">
+		<div
+			className="min-h-screen min-w-screen flex flex-col w-full items-center md:flex-row md:items-stretch overflow-x-hidden"
+			data-testid="review-page"
+		>
 			<div
 				className="relative flex flex-col w-full gap-6 px-8 py-8 justify-center items-center
                 bg-custom-gray flex-4 md:flex-2/4 md:overflow-hidden md:max-h-screen md:pl-13"
@@ -152,7 +155,7 @@ export function QuizReviewPage({
 					<Button
 						size="responsive"
 						variant="minimal"
-						onClick={() => onPageChange('home')}
+						onClick={() => onPageChange('results')}
 						aria-label="end review"
 					>
 						<FontAwesomeIcon icon={faX} />
