@@ -41,7 +41,10 @@ export function QuizResultsPage({
 	});
 
 	return (
-		<div className="relative min-h-screen min-w-screen max-h-screen flex flex-col w-full justify-between items-center bg-custom-gray px-8 py-8 overflow-hidden">
+		<div
+			className="relative min-h-screen min-w-screen max-h-screen flex flex-col w-full justify-between items-center bg-custom-gray px-8 py-8 overflow-hidden"
+			data-testid="results-page"
+		>
 			<h2 className="text-custom-white text-3xl font-medium z-1 shortFadeIn">
 				{t.quizResultsTitle}
 			</h2>

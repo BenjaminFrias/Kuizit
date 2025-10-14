@@ -12,7 +12,10 @@ export default function HomePage({ onPageChange }: onPageChangeType) {
 	const t = useTranslation();
 
 	return (
-		<div className="relative min-h-screen min-w-screen p-6 md:p-8 flex flex-col items-center justify-center overflow-hidden bg-custom-gray">
+		<div
+			className="relative min-h-screen min-w-screen p-6 md:p-8 flex flex-col items-center justify-center overflow-hidden bg-custom-gray"
+			data-testid="home-page"
+		>
 			<div className="absolute flex flex-col items-center w-full h-full z-999">
 				<div className="flex justify-center items-center gap-2 shortFadeIn absolute z-999 top-5 center">
 					<Logo width="40" height="40" />

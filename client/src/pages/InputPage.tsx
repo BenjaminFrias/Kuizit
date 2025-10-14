@@ -67,7 +67,8 @@ export default function Inputpage({
 	return (
 		<div
 			className="relative min-h-screen min-w-screen w-screen max-w-screen px-3 py-5 flex flex-col items-center
-		justify-between gap-10 bg-custom-white"
+			justify-between gap-10 bg-custom-white"
+			data-testid="input-page"
 		>
 			<div className="longFadeIn">
 				<Logo width="50" height="50" color="#569d5b" />
