@@ -481,4 +481,83 @@ describe('App tests', () => {
 		const inputPage = screen.getByTestId('input-page');
 		expect(inputPage).toBeVisible();
 	});
+	it('Should reset quiz settings when generate quiz btn(results page) is clicked', async () => {
+		const user = userEvent.setup();
+
+		let resolveMockPromise: (value: QuizData) => void;
+		const controlledPromise = new Promise<QuizData>((resolve) => {
+			resolveMockPromise = resolve;
+		});
+
+		mockGenerateQuiz.mockReturnValue(controlledPromise);
+
+		render(<App />);
+
+		// Go to input page
+		const btnToInputPage = screen.getByRole('button', {
+			name: new RegExp(enTranslations.generateQuizBtn, 'i'),
+		});
+
+		await user.click(btnToInputPage);
+
+		// Enter prompt
+		const textarea = screen.getByPlaceholderText(
+			enTranslations.quizPromptPlaceholder
+		);
+
+		await user.type(textarea, 'create quiz about programming');
+
+		// Click generate quiz
+		const generateQuizBtn = screen.getByRole('button', {
+			name: new RegExp(enTranslations.generateQuizBtn, 'i'),
+		});
+
+		await user.click(generateQuizBtn);
+
+		// Solve generated quiz promise to stop loading page
+		resolveMockPromise!(mockQuizData);
+
+		// Check if loading page disappears after promise is resolved
+		await waitForElementToBeRemoved(() => screen.queryByTestId('loading-page'));
+
+		// Select correct option in question 1
+		const correctOptionBtn1 = screen.getByRole('button', {
+			name: new RegExp('A superset of Javascript'),
+		});
+
+		await user.click(correctOptionBtn1);
+
+		// Click next question btn
+		const nextQuestionBtn = screen.getByRole('button', {
+			name: /^next question$/i,
+		});
+
+		await user.click(nextQuestionBtn);
+		fireEvent.transitionEnd(correctOptionBtn1);
+
+		// Select wrong option final question
+		const wrongOptionBtn2 = await screen.findByRole('button', {
+			name: new RegExp('Automatic memory management'),
+		});
+
+		await user.click(wrongOptionBtn2);
+
+		const nextQuestionBtn2 = screen.getByRole('button', {
+			name: /^next question$/i,
+		});
+
+		await user.click(nextQuestionBtn2);
+		fireEvent.transitionEnd(wrongOptionBtn2);
+
+		const generateQuizBtnResults = screen.getByRole('button', {
+			name: new RegExp(enTranslations.generateQuizBtn, 'i'),
+		});
+		await user.click(generateQuizBtnResults);
+
+		const textareaAfterSubmittion = screen.getByPlaceholderText(
+			enTranslations.quizPromptPlaceholder
+		);
+
+		expect(textareaAfterSubmittion.textContent).toBe('');
+	});
 });

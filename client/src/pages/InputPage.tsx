@@ -10,7 +10,7 @@ import {
 	faWandMagicSparkles,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Inputpage({
 	setFiles,
@@ -25,6 +25,11 @@ export default function Inputpage({
 
 	const [quizSettings, setQuizSettings] =
 		useState<QuizSettings>(initialSettings);
+
+	useEffect(() => {
+		setQuizSettings(initialSettings);
+		setLocalError(apiError);
+	}, [initialSettings, apiError]);
 
 	const handleSettingsChange = <K extends keyof QuizSettings>(
 		key: K,

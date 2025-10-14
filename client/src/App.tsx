@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import './App.css';
 import HomePage from './pages/HomePage';
 import Inputpage from './pages/InputPage';
@@ -10,19 +10,23 @@ import { QuizReviewPage } from './pages/QuizReviewPage';
 import { useTranslation } from './hooks/useTranslation';
 import { useQuizApi } from './hooks/useQuizApi';
 
+const DEFAULT_QUIZ_SETTINGS: QuizSettings = {
+	quizInputType: 'prompt',
+	content: '',
+	numQuestions: 10,
+	difficulty: 'easy',
+	optionTypes: 'multiple_choice',
+};
+
 function App() {
-	const [currentPage, setCurrentPage] = useState('home');
+	const [currentPage, setCurrentPage] = useState<Page>('home');
 	const [quizData, setQuizData] = useState<QuizData>([]);
 	const [isQuizLoading, setIsQuizLoading] = useState(false);
 	const [files, setFiles] = useState<File[]>([]);
 	const [quizResultData, setQuizResultData] = useState<QuizResult>([]);
 	const t = useTranslation();
 	const [quizSettings, setQuizSettings] = useState<QuizSettings>({
-		quizInputType: 'prompt',
-		content: '',
-		numQuestions: 10,
-		difficulty: 'easy',
-		optionTypes: 'multiple_choice',
+		...DEFAULT_QUIZ_SETTINGS,
 	});
 
 	const { generateQuiz, apiError, setApiError } = useQuizApi();
@@ -74,17 +78,17 @@ function App() {
 		setCurrentPage(pageName);
 	};
 
-	const resetQuizStates = () => {
+	const resetQuizStates = useCallback(() => {
+		setQuizSettings({ ...DEFAULT_QUIZ_SETTINGS });
 		setFiles([]);
-		setQuizData([]);
 		setQuizResultData([]);
-	};
+	}, [setFiles, setQuizSettings, setQuizResultData]);
 
 	useEffect(() => {
-		if (currentPage === 'input' || currentPage === 'home') {
+		if (currentPage === 'input') {
 			resetQuizStates();
 		}
-	}, [currentPage]);
+	}, [currentPage, resetQuizStates]);
 
 	if (isQuizLoading) {
 		return <QuizLoadingPage />;
