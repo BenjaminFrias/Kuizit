@@ -6,18 +6,16 @@ type Difficulty = 'easy' | 'medium' | 'hard' | 'expert';
 type NumberQuestions = 5 | 10 | 15 | 20;
 export type QuizSettings = {
 	quizInputType: InputOption;
-	content?: string | File | File[];
+	content?: string | File | File[] | undefined;
 	numQuestions: NumberQuestions;
 	difficulty: Difficulty;
 	optionTypes: AnswerOptions;
 };
 
 export type InputPageParams = {
-	setFiles: (files: File[]) => void;
 	setApiError: (error: string | null) => void;
 	onQuizSubmit: (QuizSettings: QuizSettings) => void;
 	initialSettings: QuizSettings;
-	quizFiles: File[];
 	apiError: string | null;
 };
 

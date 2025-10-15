@@ -9,29 +9,27 @@ type ValidationMessages = {
 
 type validateQuizParams = {
 	quizData: QuizSettings;
-	quizFile: File | File[];
 	validationMessages: ValidationMessages;
 };
 
 export default function validateQuizContent({
 	quizData,
-	quizFile,
 	validationMessages,
 }: validateQuizParams) {
 	const inputType = quizData.quizInputType;
 	const quizContent = quizData.content;
 
 	if (inputType === 'file') {
-		if (!quizFile) {
+		if (!quizContent) {
 			throw new Error(validationMessages.fileNotFoundErr);
 		}
 
-		if (Array.isArray(quizFile)) {
-			if (quizFile.length === 0) {
+		if (Array.isArray(quizContent)) {
+			if (quizContent.length === 0) {
 				throw new Error(validationMessages.fileNotFoundErr);
 			}
 
-			if (!validateFileType(quizFile[0])) {
+			if (!validateFileType(quizContent[0])) {
 				throw new Error(validationMessages.fileTypeErr);
 			}
 		}

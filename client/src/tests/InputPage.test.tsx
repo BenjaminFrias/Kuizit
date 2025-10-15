@@ -8,10 +8,8 @@ import type { Translations as TranslationType } from '@/types/translations';
 import userEvent from '@testing-library/user-event';
 
 const defaultInputPageProps: InputPageParams = {
-	setFiles: vi.fn(),
 	setApiError: vi.fn(),
 	onQuizSubmit: vi.fn(),
-	quizFiles: [],
 	apiError: null,
 	initialSettings: {
 		quizInputType: 'prompt',
@@ -193,13 +191,19 @@ describe('Conditional rendering', () => {
 		});
 		Object.defineProperty(file, 'size', { value: 1024 * 100 });
 
-		render(<Inputpage {...defaultInputPageProps} quizFiles={[file]} />);
+		render(<Inputpage {...defaultInputPageProps} />);
 
 		const fileOptionBtn = screen.getByRole('button', {
 			name: new RegExp(enTranslations.fileOption, 'i'),
 		});
 
 		await user.click(fileOptionBtn);
+
+		const fileInput = screen.getByLabelText('File upload', {
+			selector: 'input[type="file"]',
+		});
+
+		await user.upload(fileInput, file);
 
 		const fileUploadComponent = screen.getByText('quizFile.pdf');
 		expect(fileUploadComponent).toBeInTheDocument();

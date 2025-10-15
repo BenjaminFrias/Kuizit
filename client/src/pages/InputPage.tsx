@@ -13,15 +13,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState } from 'react';
 
 export default function Inputpage({
-	setFiles,
 	setApiError,
 	onQuizSubmit,
 	initialSettings,
-	quizFiles,
 	apiError,
 }: InputPageParams) {
 	const t = useTranslation();
 	const [localError, setLocalError] = useState<null | string>(apiError);
+	const [files, setFiles] = useState<File[]>([]);
 
 	const [quizSettings, setQuizSettings] =
 		useState<QuizSettings>(initialSettings);
@@ -52,13 +51,19 @@ export default function Inputpage({
 				invalidYoutubeLinkErr: t.invalidYoutubeLinkErr,
 			};
 
+			let newSettings: QuizSettings = quizSettings;
+
+			// Change content to be files
+			if (quizSettings.quizInputType === 'file' && files && files.length > 0) {
+				newSettings = { ...quizSettings, content: files[0] };
+			}
+
 			validateQuizContent({
-				quizData: quizSettings,
-				quizFile: quizFiles,
+				quizData: newSettings,
 				validationMessages,
 			}); // throw error when invalid data
 
-			onQuizSubmit(quizSettings);
+			onQuizSubmit(newSettings);
 		} catch (error: unknown) {
 			if (error instanceof Error) {
 				setLocalError(error.message);
@@ -136,7 +141,7 @@ export default function Inputpage({
 						onChange={(e) => handleSettingsChange('content', e.target.value)}
 					/>
 				) : (
-					<FileUploadDropZone files={quizFiles} setFiles={setFiles} />
+					<FileUploadDropZone files={files} setFiles={setFiles} />
 				)}
 
 				{localError || apiError ? (

@@ -12,7 +12,7 @@ import { useQuizApi } from './hooks/useQuizApi';
 
 const DEFAULT_QUIZ_SETTINGS: QuizSettings = {
 	quizInputType: 'prompt',
-	content: '',
+	content: undefined,
 	numQuestions: 10,
 	difficulty: 'easy',
 	optionTypes: 'multiple_choice',
@@ -22,7 +22,6 @@ function App() {
 	const [currentPage, setCurrentPage] = useState<Page>('home');
 	const [quizData, setQuizData] = useState<QuizData>([]);
 	const [isQuizLoading, setIsQuizLoading] = useState(false);
-	const [files, setFiles] = useState<File[]>([]);
 	const [quizResultData, setQuizResultData] = useState<QuizResult>([]);
 	const t = useTranslation();
 	const [quizSettings, setQuizSettings] = useState<QuizSettings>({
@@ -35,12 +34,8 @@ function App() {
 		setApiError(null);
 		setQuizSettings(newSettings);
 
-		const contentToSend =
-			newSettings.quizInputType === 'file' ? files[0] : newSettings.content;
-
 		const inputQuizData: QuizSettings = {
 			...newSettings,
-			content: contentToSend,
 		};
 
 		try {
@@ -80,9 +75,8 @@ function App() {
 
 	const resetQuizStates = useCallback(() => {
 		setQuizSettings({ ...DEFAULT_QUIZ_SETTINGS });
-		setFiles([]);
 		setQuizResultData([]);
-	}, [setFiles, setQuizSettings, setQuizResultData]);
+	}, [setQuizSettings, setQuizResultData]);
 
 	useEffect(() => {
 		if (currentPage === 'input') {
@@ -103,9 +97,7 @@ function App() {
 					<Inputpage
 						onQuizSubmit={handleGenerateQuiz}
 						initialSettings={quizSettings}
-						setFiles={setFiles}
 						setApiError={setApiError}
-						quizFiles={files}
 						apiError={apiError}
 					/>
 				);
