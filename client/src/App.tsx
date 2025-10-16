@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, type ReactElement } from 'react';
 import './App.css';
 import HomePage from './pages/HomePage';
 import Inputpage from './pages/InputPage';
@@ -88,46 +88,42 @@ function App() {
 		return <QuizLoadingPage />;
 	}
 
+	type PageComponentsMap = Record<Page, ReactElement>;
+	const pageComponents: PageComponentsMap = {
+		home: <HomePage onPageChange={handlePageChange} />,
+		input: (
+			<Inputpage
+				onQuizSubmit={handleGenerateQuiz}
+				initialSettings={quizSettings}
+				setApiError={setApiError}
+				apiError={apiError}
+			/>
+		),
+		quiz: (
+			<QuizPage
+				onPageChange={handlePageChange}
+				quizData={quizData}
+				quizResultData={quizResultData}
+				onAnswerSubmittion={handleOptionSubmittion}
+			/>
+		),
+		results: (
+			<QuizResultsPage
+				quizResults={quizResultData}
+				onPageChange={handlePageChange}
+			/>
+		),
+		review: (
+			<QuizReviewPage
+				quizData={quizData}
+				quizResults={quizResultData}
+				onPageChange={handlePageChange}
+			/>
+		),
+	};
+
 	const renderPage = () => {
-		switch (currentPage) {
-			case 'home':
-				return <HomePage onPageChange={handlePageChange} />;
-			case 'input':
-				return (
-					<Inputpage
-						onQuizSubmit={handleGenerateQuiz}
-						initialSettings={quizSettings}
-						setApiError={setApiError}
-						apiError={apiError}
-					/>
-				);
-			case 'quiz':
-				return (
-					<QuizPage
-						onPageChange={handlePageChange}
-						quizData={quizData}
-						quizResultData={quizResultData}
-						onAnswerSubmittion={handleOptionSubmittion}
-					/>
-				);
-			case 'results':
-				return (
-					<QuizResultsPage
-						quizResults={quizResultData}
-						onPageChange={handlePageChange}
-					/>
-				);
-			case 'review':
-				return (
-					<QuizReviewPage
-						quizData={quizData}
-						quizResults={quizResultData}
-						onPageChange={handlePageChange}
-					/>
-				);
-			default:
-				return <HomePage onPageChange={handlePageChange} />;
-		}
+		return pageComponents[currentPage];
 	};
 
 	return renderPage();
