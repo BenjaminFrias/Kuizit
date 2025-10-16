@@ -1,6 +1,6 @@
 import BlurryShape from '@/components/decorative/BlurryShape';
 import { Button } from '@/components/ui/button';
-import type { QuizPageParams } from '@/types';
+import type { QuizPageParams, QuizResult } from '@/types';
 import { faArrowRight, faQuestion } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
@@ -16,10 +16,10 @@ import { useTranslation } from '@/hooks/useTranslation';
 
 export function QuizPage({
 	quizData,
-	quizResultData,
 	onPageChange,
-	onAnswerSubmittion,
+	onQuizSubmittion,
 }: QuizPageParams) {
+	const [quizResultData, setQuizResultData] = useState<QuizResult>([]);
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 	const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
 	const t = useTranslation();
@@ -37,6 +37,7 @@ export function QuizPage({
 		if (currentQuestionIndex < quizData.length - 1) {
 			setIsExiting(true);
 		} else {
+			onQuizSubmittion(quizResultData);
 			onPageChange('results');
 		}
 	};
@@ -55,13 +56,12 @@ export function QuizPage({
 		}
 
 		const isCorrect = currentQuestion.correctAnswerIndex === selectedIndex;
-		const newQuizResultData = [
-			...quizResultData,
+		setQuizResultData((prevResults) => [
+			...prevResults,
 			{ isCorrect, selectedIndex: selectedIndex },
-		];
+		]);
 
 		setSelectedAnswer(selectedIndex);
-		onAnswerSubmittion(newQuizResultData);
 	};
 
 	return (

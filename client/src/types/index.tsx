@@ -22,8 +22,7 @@ export type InputPageParams = {
 export type QuizPageParams = {
 	onPageChange: (pageName: Page) => void;
 	quizData: QuizData;
-	quizResultData: QuizResult;
-	onAnswerSubmittion: (newQuizResult: QuizResult) => void;
+	onQuizSubmittion: (newQuizResult: QuizResult) => void;
 };
 
 export type QuizResultsPageParams = {

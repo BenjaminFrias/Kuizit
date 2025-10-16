@@ -57,8 +57,8 @@ function App() {
 		}
 	};
 
-	const handleOptionSubmittion = (quizData: QuizResult) => {
-		setQuizResultData(quizData);
+	const handleOptionSubmittion = (quizResults: QuizResult) => {
+		setQuizResultData(quizResults);
 	};
 
 	const handlePageChange = (pageName: Page) => {
@@ -95,8 +95,7 @@ function App() {
 			<QuizPage
 				onPageChange={handlePageChange}
 				quizData={quizData}
-				quizResultData={quizResultData}
-				onAnswerSubmittion={handleOptionSubmittion}
+				onQuizSubmittion={handleOptionSubmittion}
 			/>
 		),
 		results: (
