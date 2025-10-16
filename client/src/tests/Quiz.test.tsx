@@ -12,7 +12,7 @@ vi.mock('@/hooks/useTranslation', () => ({
 
 const defaultQuizPageProps: QuizPageParams = {
 	onPageChange: vi.fn(),
-	onAnswerSubmittion: vi.fn(),
+	onQuizSubmittion: vi.fn(),
 	quizData: [
 		{
 			type: 'multiple_choice',
@@ -41,7 +41,6 @@ const defaultQuizPageProps: QuizPageParams = {
 				"TypeScript's primary feature is introducing static typing, which allows developers to catch type-related errors during compilation (before the code runs).",
 		},
 	],
-	quizResultData: [],
 };
 
 describe('Initial render', () => {
@@ -159,25 +158,6 @@ describe('Conditional rendering', () => {
 
 		expect(nextQuestionBtn).toBeInTheDocument();
 	});
-
-	it('should call onAnswerSubmittion after clicking option', async () => {
-		const user = userEvent.setup();
-		render(<QuizPage {...defaultQuizPageProps} />);
-
-		const mockOnAnswerSubmittion =
-			defaultQuizPageProps.onAnswerSubmittion as Mock;
-
-		const correctOptionBtn = screen.getByRole('button', {
-			name: new RegExp('A superset of Javascript', 'i'),
-		});
-
-		mockOnAnswerSubmittion.mockClear();
-
-		expect(mockOnAnswerSubmittion).not.toBeCalled();
-
-		await user.click(correctOptionBtn);
-		expect(mockOnAnswerSubmittion).toBeCalled();
-	});
 });
 
 describe('UI Integration tests', () => {
@@ -216,13 +196,37 @@ describe('UI Integration tests', () => {
 		expect(mockOnPageChange).toHaveBeenCalled();
 	});
 
-	it('verify quizResultData after completing quiz', async () => {
+	it('should call onAnswerSubmittion with correct data after completing quiz', async () => {
 		const user = userEvent.setup();
 		render(<QuizPage {...defaultQuizPageProps} />);
-		const mockOnAnswerSubmittion =
-			defaultQuizPageProps.onAnswerSubmittion as Mock;
-		const mockOnPageChange = defaultQuizPageProps.onPageChange as Mock;
+		const mockOnQuizSubmittion = defaultQuizPageProps.onQuizSubmittion;
 
+		const correctOptionBtn = screen.getByRole('button', {
+			name: new RegExp('A superset of Javascript', 'i'),
+		});
+
+		await user.click(correctOptionBtn);
+
+		const nextQuestionBtn = screen.getByRole('button', {
+			name: /^next question$/i,
+		});
+
+		await user.click(nextQuestionBtn);
+		fireEvent.transitionEnd(correctOptionBtn);
+
+		const nextQuestionWrongOption = screen.getByRole('button', {
+			name: new RegExp('Automatic memory management', 'i'),
+		});
+
+		expect(nextQuestionWrongOption).toBeInTheDocument();
+
+		await user.click(nextQuestionWrongOption);
+
+		const nextQuestionBtn2 = screen.getByRole('button', {
+			name: /^next question$/i,
+		});
+
+		await user.click(nextQuestionBtn2);
 		const expectedQuizResults: QuizResult = [
 			{
 				selectedIndex: 0,
@@ -234,46 +238,6 @@ describe('UI Integration tests', () => {
 			},
 		];
 
-		const correctOptionBtn = screen.getByRole('button', {
-			name: new RegExp('A superset of Javascript', 'i'),
-		});
-
-		mockOnAnswerSubmittion.mockClear();
-		await user.click(correctOptionBtn);
-
-		const nextQuestionBtn = screen.getByRole('button', {
-			name: /^next question$/i,
-		});
-
-		await user.click(nextQuestionBtn);
-		fireEvent.transitionEnd(correctOptionBtn);
-
-		// Verify that onAnswerSubmittion has been called with correct data
-		expect(mockOnAnswerSubmittion).toHaveBeenCalledTimes(1);
-		expect(mockOnAnswerSubmittion).toHaveBeenCalledWith([
-			expectedQuizResults[0],
-		]);
-
-		const nextQuestionWrongOption = await screen.findByRole('button', {
-			name: new RegExp('Automatic memory management', 'i'),
-		});
-
-		// Verify existence of next question option button
-		expect(nextQuestionWrongOption).toBeInTheDocument();
-
-		mockOnAnswerSubmittion.mockClear();
-		await user.click(nextQuestionWrongOption);
-		expect(mockOnAnswerSubmittion).toHaveBeenCalledTimes(1);
-		expect(mockOnAnswerSubmittion).toHaveBeenCalledWith([
-			expectedQuizResults[1],
-		]);
-
-		const nextQuestionBtn2 = screen.getByRole('button', {
-			name: /^next question$/i,
-		});
-
-		await user.click(nextQuestionBtn2);
-
-		expect(mockOnPageChange).toHaveBeenCalled();
+		expect(mockOnQuizSubmittion).toHaveBeenCalledWith(expectedQuizResults);
 	});
 });

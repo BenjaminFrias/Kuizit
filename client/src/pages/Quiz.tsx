@@ -80,7 +80,6 @@ export function QuizPage({
 					className={`text-custom-white text-center md:self-start font-medium z-1 transition-all duration-300
 						${isExiting ? 'opacity-0 translate-y-3' : 'opacity-100 translate-y-0'}
 						`}
-					onTransitionEnd={onQuestionTransitionEnd}
 				>
 					{t.question} {questionNumber}
 				</p>
@@ -89,7 +88,6 @@ export function QuizPage({
 				md:self-start md:text-start md:text-5xl transition-all duration-300 ${
 					isExiting ? 'opacity-0 translate-y-3' : 'opacity-100 translate-y-0'
 				}`}
-					onTransitionEnd={onQuestionTransitionEnd}
 				>
 					{currentQuestion.question}
 				</h1>
