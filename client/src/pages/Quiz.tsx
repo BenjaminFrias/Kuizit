@@ -181,25 +181,15 @@ export function QuizPage({
 						</DialogContent>
 					</Dialog>
 
-					{selectedAnswer !== null ? (
-						<Button
-							size="lg"
-							variant="green"
-							onClick={() => handleNextQuestionIndex()}
-							aria-label="next question"
-						>
-							<FontAwesomeIcon icon={faArrowRight} />
-						</Button>
-					) : (
-						<Button
-							className="opacity-50 pointer-events-none"
-							size="lg"
-							variant="green"
-							aria-label="next question blocked"
-						>
-							<FontAwesomeIcon icon={faArrowRight} />
-						</Button>
-					)}
+					<Button
+						size="lg"
+						variant="green"
+						onClick={() => handleNextQuestionIndex()}
+						aria-label="next question"
+						disabled={selectedAnswer === null}
+					>
+						<FontAwesomeIcon icon={faArrowRight} />
+					</Button>
 				</div>
 			</div>
 		</div>

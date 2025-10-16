@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { describe, it, expect, vi, type Mock } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { QuizPage } from '@/pages/Quiz';
 import enTranslations from '../translations/en.json';
 import type { QuizPageParams, QuizResult } from '@/types';
@@ -97,10 +97,10 @@ describe('Initial render', () => {
 		render(<QuizPage {...defaultQuizPageProps} />);
 
 		const blockedNextQuestionBtn = screen.getByRole('button', {
-			name: /next question blocked/i,
+			name: /next question/i,
 		});
 
-		expect(blockedNextQuestionBtn).toBeInTheDocument();
+		expect(blockedNextQuestionBtn).toHaveAttribute('disabled');
 	});
 });
 
@@ -144,11 +144,11 @@ describe('Conditional rendering', () => {
 			name: new RegExp('A superset of Javascript', 'i'),
 		});
 
-		const nextQuestionHiddenBtn = screen.queryByRole('button', {
+		const nextQuestionDisabledBtn = screen.queryByRole('button', {
 			name: /^next question$/i,
 		});
 
-		expect(nextQuestionHiddenBtn).not.toBeInTheDocument();
+		expect(nextQuestionDisabledBtn).toHaveAttribute('disabled');
 
 		await user.click(correctOptionBtn);
 
@@ -156,7 +156,7 @@ describe('Conditional rendering', () => {
 			name: /^next question$/i,
 		});
 
-		expect(nextQuestionBtn).toBeInTheDocument();
+		expect(nextQuestionBtn).not.toHaveAttribute('disabled');
 	});
 });
 
