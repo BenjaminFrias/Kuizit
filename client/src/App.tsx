@@ -45,18 +45,10 @@ function App() {
 			setQuizData(generatedQuizData);
 			handlePageChange('quiz');
 		} catch (error: unknown) {
-			const errorMessage =
+			const baseErrorMsg =
 				apiError || (error instanceof Error ? error.message : t.unexpectedErr);
 
-			console.error('Error while fetching quiz in App: ', errorMessage);
-
-			let finalErrorMessage = `${t.unexpectedErr}, ${t.pleaseTryAgain}.`;
-
-			if (error instanceof Error) {
-				finalErrorMessage = `${error.message}, ${t.pleaseTryAgain}.`;
-			} else if (apiError) {
-				finalErrorMessage = `${t.unexpectedErr}, ${t.pleaseTryAgain}.`;
-			}
+			const finalErrorMessage = `${baseErrorMsg}, ${t.pleaseTryAgain}`;
 
 			setApiError(finalErrorMessage);
 			handlePageChange('input');
