@@ -1,7 +1,7 @@
 import type { QuizResultsPageParams } from '@/types';
 import BlurryShape from '@/components/decorative/BlurryShape';
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCrown } from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -27,12 +27,16 @@ export function QuizResultsPage({
 		return result;
 	};
 
-	setTimeout(() => {
-		setIsAnimating(false);
-	}, 300);
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			setIsAnimating(false);
+		}, 300);
+
+		return clearInterval(timer);
+	}, []);
 
 	const totalQuestions = quizResults.length;
-	const score = quizResults.filter((answer) => answer.isCorrect == true).length;
+	const score = quizResults.filter((answer) => answer.isCorrect).length;
 	const percentageScore = Math.floor((score / totalQuestions) * 100);
 
 	const scoreText = replacePlaceholders(t.quizScoreText, {
