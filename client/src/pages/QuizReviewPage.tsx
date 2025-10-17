@@ -27,7 +27,7 @@ export function QuizReviewPage({
 }: QuizReviewPageParams) {
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 	const [isExiting, setIsExiting] = useState(false);
-	const [isNext, setIsNext] = useState(false);
+	const [transitionDirection, setTransitionDirection] = useState<0 | 1 | -1>(0);
 
 	const currentQuestion = quizData[currentQuestionIndex];
 	const questionNumber = currentQuestionIndex + 1;
@@ -38,8 +38,8 @@ export function QuizReviewPage({
 
 	const handleNextQuestionIndex = () => {
 		if (currentQuestionIndex < quizData.length - 1) {
-			setIsNext(true);
 			setIsExiting(true);
+			setTransitionDirection(1);
 		} else {
 			onPageChange('results');
 		}
@@ -47,18 +47,14 @@ export function QuizReviewPage({
 
 	const handlePrevQuestionIndex = () => {
 		if (currentQuestionIndex > 0) {
-			setIsNext(false);
 			setIsExiting(true);
+			setTransitionDirection(-1);
 		}
 	};
 
 	const onQuestionTransitionEnd = () => {
 		if (isExiting) {
-			if (isNext) {
-				setCurrentQuestionIndex(currentQuestionIndex + 1);
-			} else {
-				setCurrentQuestionIndex(currentQuestionIndex - 1);
-			}
+			setCurrentQuestionIndex(currentQuestionIndex + transitionDirection);
 			setIsExiting(false);
 		}
 	};
