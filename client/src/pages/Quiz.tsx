@@ -1,6 +1,6 @@
 import BlurryShape from '@/components/decorative/BlurryShape';
 import { Button } from '@/components/ui/button';
-import type { QuizPageParams, QuizResult } from '@/types';
+import type { QuizPageParams, QuizResult, QuizResultQuestion } from '@/types';
 import { faArrowRight, faQuestion } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
@@ -25,7 +25,7 @@ export function QuizPage({
 	const t = useTranslation();
 	const [isExiting, setIsExiting] = useState(false);
 
-	const currentQuestion = quizData[currentQuestionIndex];
+	const currentQuestion: QuizResultQuestion = quizData[currentQuestionIndex];
 	const questionNumber = currentQuestionIndex + 1;
 	const totalQuestions = quizData.length;
 
@@ -103,11 +103,19 @@ export function QuizPage({
 				</div>
 				<div className="answerOptions flex-1 flex flex-col justify-center items-center w-full gap-3">
 					{currentQuestion.options.map((option, index) => {
+						// Set option class for correct and wrong options
 						let optionClass = '';
 						if (selectedAnswer !== null) {
-							if (option.answer === true) {
-								optionClass = 'bg-correct text-white';
+							if (option.answer) {
+								optionClass = 'bg-correct text-white border-transparent';
+							} else if (
+								index === selectedAnswer &&
+								selectedAnswer !== currentQuestion.correctAnswerIndex
+							) {
+								optionClass = 'bg-wrong text-white border-transparent';
 							}
+						} else {
+							optionClass = 'hover:bg-custom-light-gray/10';
 						}
 
 						return (
@@ -116,29 +124,11 @@ export function QuizPage({
 								onTransitionEnd={onQuestionTransitionEnd}
 								className={`w-full py-3 flex justify-center items-center font-primary text-center
 								font-medium text-custom-gray/80 cursor-pointer select-none border-1 border-custom-light-gray/50
-								rounded-full transition-all duration-300 ${
-									isExiting
-										? 'opacity-0 translate-y-20'
-										: 'opacity-100 translate-y-0'
-								}
+								rounded-full transition-all duration-300 
+								${isExiting ? 'opacity-0 translate-y-20' : 'opacity-100 translate-y-0'}
 								
-								${optionClass} ${
-									selectedAnswer === null
-										? 'hover:bg-custom-light-gray/10 '
-										: index === currentQuestion.correctAnswerIndex
-										? 'border-transparent'
-										: ''
-								}
+								${optionClass}
 								
-								${
-									selectedAnswer !== null
-										? index === selectedAnswer
-											? selectedAnswer !== currentQuestion.correctAnswerIndex
-												? 'bg-wrong text-white border-transparent'
-												: ''
-											: ''
-										: ''
-								}
 								`}
 								onClick={() => {
 									handleQuestionAnswer(index);

@@ -1,4 +1,8 @@
-import type { QuizReviewPageParams } from '@/types';
+import type {
+	QuizResultOption,
+	QuizResultQuestion,
+	QuizReviewPageParams,
+} from '@/types';
 import BlurryShape from '@/components/decorative/BlurryShape';
 import { Button } from '@/components/ui/button';
 import {
@@ -27,9 +31,9 @@ export function QuizReviewPage({
 }: QuizReviewPageParams) {
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 	const [isExiting, setIsExiting] = useState(false);
-	const [isNext, setIsNext] = useState(false);
+	const [transitionDirection, setTransitionDirection] = useState<0 | 1 | -1>(0);
 
-	const currentQuestion = quizData[currentQuestionIndex];
+	const currentQuestion: QuizResultQuestion = quizData[currentQuestionIndex];
 	const questionNumber = currentQuestionIndex + 1;
 	const totalQuestions = quizData.length;
 	const selectedAnswerIndex = quizResults[currentQuestionIndex].selectedIndex;
@@ -38,8 +42,8 @@ export function QuizReviewPage({
 
 	const handleNextQuestionIndex = () => {
 		if (currentQuestionIndex < quizData.length - 1) {
-			setIsNext(true);
 			setIsExiting(true);
+			setTransitionDirection(1);
 		} else {
 			onPageChange('results');
 		}
@@ -47,18 +51,14 @@ export function QuizReviewPage({
 
 	const handlePrevQuestionIndex = () => {
 		if (currentQuestionIndex > 0) {
-			setIsNext(false);
 			setIsExiting(true);
+			setTransitionDirection(-1);
 		}
 	};
 
 	const onQuestionTransitionEnd = () => {
 		if (isExiting) {
-			if (isNext) {
-				setCurrentQuestionIndex(currentQuestionIndex + 1);
-			} else {
-				setCurrentQuestionIndex(currentQuestionIndex - 1);
-			}
+			setCurrentQuestionIndex(currentQuestionIndex + transitionDirection);
 			setIsExiting(false);
 		}
 	};
@@ -80,11 +80,7 @@ export function QuizReviewPage({
 				</div>
 				<p
 					className={`text-custom-white text-center md:self-start font-medium z-1 transition-all duration-300
-                    ${
-											isExiting
-												? 'opacity-0 translate-y-3'
-												: 'opacity-100 translate-y-0'
-										}
+						${isExiting ? 'opacity-0 translate-y-3' : 'opacity-100 translate-y-0'}
                     `}
 					onTransitionEnd={onQuestionTransitionEnd}
 				>
@@ -92,11 +88,8 @@ export function QuizReviewPage({
 				</p>
 				<h1
 					className={`font-primary text-custom-white text-shadow-title/30  font-medium text-center text-3xl  w-full z-1 
-                    md:self-start md:text-start md:text-5xl transition-all duration-300 ${
-											isExiting
-												? 'opacity-0 translate-y-3'
-												: 'opacity-100 translate-y-0'
-										}`}
+						md:self-start md:text-start md:text-5xl transition-all duration-300
+						${isExiting ? 'opacity-0 translate-y-3' : 'opacity-100 translate-y-0'}`}
 					onTransitionEnd={onQuestionTransitionEnd}
 				>
 					{currentQuestion.question}
@@ -112,38 +105,28 @@ export function QuizReviewPage({
 					></div>
 				</div>
 				<div className="answerOptions flex-1 flex flex-col justify-center items-center w-full gap-3">
-					{currentQuestion.options.map((option, index) => {
+					{currentQuestion.options.map((option: QuizResultOption, index) => {
+						// Set class for correct and wrong options
 						let optionClass = '';
-						if (option.answer === true) {
-							optionClass = 'bg-correct text-white';
+						if (option.answer) {
+							optionClass = 'bg-correct text-white border-transparent';
+						} else if (
+							index === selectedAnswerIndex &&
+							selectedAnswerIndex !== currentQuestion.correctAnswerIndex
+						) {
+							optionClass = 'bg-wrong text-white border-transparent';
 						}
 
 						return (
 							<button
 								key={index}
-								className={`w-full py-3 flex justify-center items-center font-primary text-center
-                                    font-medium text-custom-gray/80 cursor-pointer select-none border-1 border-custom-light-gray/50
-                                    rounded-full transition-all duration-300 ${
-																			isExiting
-																				? 'opacity-0 translate-y-20'
-																				: 'opacity-100 translate-y-0'
-																		}
+								className={`w-full py-3 flex justify-center items-center font-primary text-center font-medium 
+									text-custom-gray/80 cursor-pointer select-none border-1 border-custom-light-gray/50
+                                    rounded-full transition-all duration-300
+									${isExiting ? 'opacity-0 translate-y-20' : 'opacity-100 translate-y-0'}
                                     
-                                    ${optionClass} ${
-									index === currentQuestion.correctAnswerIndex
-										? 'border-transparent'
-										: ''
-								}
-                                    
-                                    ${
-																			index === selectedAnswerIndex
-																				? selectedAnswerIndex !==
-																				  currentQuestion.correctAnswerIndex
-																					? 'bg-wrong text-white border-transparent'
-																					: ''
-																				: ''
-																		}
-                                    `}
+                                    ${optionClass}
+                                `}
 								onTransitionEnd={onQuestionTransitionEnd}
 							>
 								{option.optionText}

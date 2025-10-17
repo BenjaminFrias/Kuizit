@@ -32,7 +32,9 @@ export function QuizResultsPage({
 			setIsAnimating(false);
 		}, 300);
 
-		return clearInterval(timer);
+		return () => {
+			clearInterval(timer);
+		};
 	}, []);
 
 	const totalQuestions = quizResults.length;
