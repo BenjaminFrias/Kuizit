@@ -36,12 +36,12 @@ export type QuizReviewPageParams = {
 	onPageChange: (page: Page) => void;
 };
 
-type QuizResultOption = {
+export type QuizResultOption = {
 	optionText: string;
 	answer: boolean;
 };
 
-type QuizResultQuestion = {
+export type QuizResultQuestion = {
 	type: string;
 	question: string;
 	correctAnswerIndex: number;
