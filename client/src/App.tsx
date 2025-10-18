@@ -42,6 +42,12 @@ function App() {
 			setIsQuizLoading(true);
 
 			const generatedQuizData = await generateQuiz(inputQuizData);
+
+			// Fallback for empty generated quiz data
+			if (!generatedQuizData || generatedQuizData.length === 0) {
+				throw new Error(t.pleaseTryAgain);
+			}
+
 			setQuizData(generatedQuizData);
 			handlePageChange('quiz');
 		} catch (error: unknown) {
