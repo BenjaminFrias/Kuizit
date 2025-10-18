@@ -33,13 +33,20 @@ async function fetchGeneratedQuiz(
 		const result: QuizData = await response.json();
 		return result;
 	} else {
-		const jsonError = await response.json();
-		console.error('API Error:', jsonError.error);
-		throw new Error(jsonError.error);
+		let errText = await response.text();
+
+		try {
+			const j = JSON.parse(errText);
+			errText = j.error || errText;
+		} catch {
+			// do nothing
+		}
+		throw new Error(errText);
 	}
 }
 
-const API_BASE_URL: string = import.meta.env.VITE_API_URL;
+const API_BASE_URL: string =
+	import.meta.env.VITE_API_URL ?? 'http://localhost:3000';
 
 export const useQuizApi = () => {
 	const [apiError, setApiError] = useState<string | null>(null);
