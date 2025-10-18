@@ -24,14 +24,8 @@ export default function validateQuizContent({
 			throw new Error(validationMessages.fileNotFoundErr);
 		}
 
-		if (Array.isArray(quizContent)) {
-			if (quizContent.length === 0) {
-				throw new Error(validationMessages.fileNotFoundErr);
-			}
-
-			if (!validateFileType(quizContent[0])) {
-				throw new Error(validationMessages.fileTypeErr);
-			}
+		if (quizContent instanceof File && !validateFileType(quizContent)) {
+			throw new Error(validationMessages.fileTypeErr);
 		}
 	}
 
