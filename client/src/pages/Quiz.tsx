@@ -1,5 +1,10 @@
 import { Button } from '@/components/ui/button';
-import type { QuizPageParams, QuizResult, QuizResultQuestion } from '@/types';
+import type {
+	QuizPageParams,
+	QuizResult,
+	QuizResultOption,
+	QuizResultQuestion,
+} from '@/types';
 import { faArrowRight, faQuestion } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
@@ -66,7 +71,7 @@ export function QuizPage({
 
 	const answerOptions = (
 		<>
-			{currentQuestion.options.map((option, index) => {
+			{currentQuestion.options.map((option: QuizResultOption, index) => {
 				// Set option class for correct and wrong options
 				let optionClass = '';
 				if (selectedAnswer !== null) {
