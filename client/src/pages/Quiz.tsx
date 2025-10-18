@@ -49,7 +49,7 @@ export function QuizPage({
 
 	const onQuestionTransitionEnd = () => {
 		if (isExiting) {
-			setCurrentQuestionIndex(currentQuestionIndex + 1);
+			setCurrentQuestionIndex((i) => i + 1);
 			setSelectedAnswer(null);
 			setIsExiting(false);
 		}
