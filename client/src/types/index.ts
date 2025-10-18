@@ -6,7 +6,7 @@ type Difficulty = 'easy' | 'medium' | 'hard' | 'expert';
 type NumberQuestions = 5 | 10 | 15 | 20;
 export type QuizSettings = {
 	quizInputType: InputOption;
-	content: string | File | File[] | undefined;
+	content: string | File | undefined;
 	numQuestions: NumberQuestions;
 	difficulty: Difficulty;
 	optionTypes: AnswerOptions;
