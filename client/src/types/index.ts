@@ -42,7 +42,7 @@ export type QuizResultOption = {
 };
 
 export type QuizResultQuestion = {
-	type: string;
+	type: AnswerOptions;
 	question: string;
 	correctAnswerIndex: number;
 	options: QuizResultOption[];
