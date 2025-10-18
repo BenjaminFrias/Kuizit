@@ -12,7 +12,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState } from 'react';
 
-export default function Inputpage({
+export default function InputPage({
 	setApiError,
 	onQuizSubmit,
 	initialSettings,

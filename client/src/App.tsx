@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState, type ReactElement } from 'react';
 import './App.css';
 import HomePage from './pages/HomePage';
-import Inputpage from './pages/InputPage';
+import InputPage from './pages/InputPage';
 import QuizLoadingPage from './pages/QuizLoadingPage';
 import type { Page, QuizSettings, QuizData, QuizResult } from './types';
 import { QuizPage } from './pages/Quiz';
@@ -84,7 +84,7 @@ function App() {
 	const pageComponents: PageComponentsMap = {
 		home: <HomePage onPageChange={handlePageChange} />,
 		input: (
-			<Inputpage
+			<InputPage
 				onQuizSubmit={handleGenerateQuiz}
 				initialSettings={quizSettings}
 				setApiError={setApiError}

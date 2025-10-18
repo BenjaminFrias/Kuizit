@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { describe, it, expect, vi } from 'vitest';
-import Inputpage from '@/pages/InputPage';
+import InputPage from '@/pages/InputPage';
 import type { InputPageParams } from '@/types';
 import enTranslations from '../translations/en.json';
 import type { Translations as TranslationType } from '@/types/translations';
@@ -27,7 +27,7 @@ vi.mock('@/hooks/useTranslation', () => ({
 // TESTS
 describe('Initial render', () => {
 	it('should render the Logo component', () => {
-		render(<Inputpage {...defaultInputPageProps} />);
+		render(<InputPage {...defaultInputPageProps} />);
 		const logoComponent = screen.getByRole('img', {
 			name: /Kuizit logo/i,
 		});
@@ -36,12 +36,12 @@ describe('Initial render', () => {
 	});
 
 	it('should display the main page title', () => {
-		render(<Inputpage {...defaultInputPageProps} />);
+		render(<InputPage {...defaultInputPageProps} />);
 		expect(screen.getByText(enTranslations.titleInputPage)).toBeInTheDocument();
 	});
 
 	it('should render all 3 quiz input type buttons', () => {
-		render(<Inputpage {...defaultInputPageProps} />);
+		render(<InputPage {...defaultInputPageProps} />);
 
 		const inputOptionNames = [
 			enTranslations.promptOption,
@@ -59,7 +59,7 @@ describe('Initial render', () => {
 	});
 
 	it('should display all section titles', () => {
-		render(<Inputpage {...defaultInputPageProps} />);
+		render(<InputPage {...defaultInputPageProps} />);
 
 		const difficultyTitle = screen.getByText(enTranslations.difficultyTitle);
 		const typeAnswersTitle = screen.getByText(enTranslations.typeAnswersTitle);
@@ -73,7 +73,7 @@ describe('Initial render', () => {
 	});
 
 	it('should render all difficulty mode buttons', () => {
-		render(<Inputpage {...defaultInputPageProps} />);
+		render(<InputPage {...defaultInputPageProps} />);
 
 		const difficultyNames = [
 			enTranslations.easyOption,
@@ -92,7 +92,7 @@ describe('Initial render', () => {
 	});
 
 	it('should render all answer type buttons', () => {
-		render(<Inputpage {...defaultInputPageProps} />);
+		render(<InputPage {...defaultInputPageProps} />);
 
 		const answerOptionsNames = [
 			enTranslations.multipleChoiceOption,
@@ -109,7 +109,7 @@ describe('Initial render', () => {
 	});
 
 	it('should render generate quiz button', () => {
-		render(<Inputpage {...defaultInputPageProps} />);
+		render(<InputPage {...defaultInputPageProps} />);
 
 		const generateBtnRegex = new RegExp(enTranslations.generateQuizBtn, 'i');
 
@@ -123,7 +123,7 @@ describe('Initial render', () => {
 
 describe('Conditional rendering', () => {
 	it('should display correct textarea when prompt option selected', () => {
-		render(<Inputpage {...defaultInputPageProps} />);
+		render(<InputPage {...defaultInputPageProps} />);
 
 		const promptTextarea = screen.getByPlaceholderText(
 			enTranslations.quizPromptPlaceholder
@@ -134,7 +134,7 @@ describe('Conditional rendering', () => {
 
 	it('should display correct textarea when link option selected', async () => {
 		const user = userEvent.setup();
-		render(<Inputpage {...defaultInputPageProps} />);
+		render(<InputPage {...defaultInputPageProps} />);
 
 		const linkOptionBtn = screen.getByRole('button', {
 			name: new RegExp(enTranslations.linkOption, 'i'),
@@ -151,7 +151,7 @@ describe('Conditional rendering', () => {
 
 	it('should render file upload component when file option is selected', async () => {
 		const user = userEvent.setup();
-		render(<Inputpage {...defaultInputPageProps} />);
+		render(<InputPage {...defaultInputPageProps} />);
 
 		const fileOptionBtn = screen.getByRole('button', {
 			name: new RegExp(enTranslations.fileOption, 'i'),
@@ -164,7 +164,7 @@ describe('Conditional rendering', () => {
 	});
 
 	it('should not render file upload component when prompt option is selected', () => {
-		render(<Inputpage {...defaultInputPageProps} />);
+		render(<InputPage {...defaultInputPageProps} />);
 
 		const fileUploadComponent = screen.queryByText(enTranslations.dragAndDrop);
 		expect(fileUploadComponent).toBeNull();
@@ -172,7 +172,7 @@ describe('Conditional rendering', () => {
 
 	it('should not render file upload component when link option is selected', async () => {
 		const user = userEvent.setup();
-		render(<Inputpage {...defaultInputPageProps} />);
+		render(<InputPage {...defaultInputPageProps} />);
 
 		const linkOptionBtn = screen.getByRole('button', {
 			name: new RegExp(enTranslations.linkOption, 'i'),
@@ -191,7 +191,7 @@ describe('Conditional rendering', () => {
 		});
 		Object.defineProperty(file, 'size', { value: 1024 * 100 });
 
-		render(<Inputpage {...defaultInputPageProps} />);
+		render(<InputPage {...defaultInputPageProps} />);
 
 		const fileOptionBtn = screen.getByRole('button', {
 			name: new RegExp(enTranslations.fileOption, 'i'),
@@ -211,7 +211,7 @@ describe('Conditional rendering', () => {
 
 	it('should display error when there is an apiError in props', async () => {
 		const apiErrorMessage = 'Invalid prompt. Please try again';
-		render(<Inputpage {...defaultInputPageProps} apiError={apiErrorMessage} />);
+		render(<InputPage {...defaultInputPageProps} apiError={apiErrorMessage} />);
 
 		const errorElement = screen.getByText(apiErrorMessage);
 
@@ -245,7 +245,7 @@ describe('Interaction and states', () => {
 		'should have bg-primary class when the $nameKey button is clicked',
 		async (nameKey) => {
 			const user = userEvent.setup();
-			render(<Inputpage {...defaultInputPageProps} />);
+			render(<InputPage {...defaultInputPageProps} />);
 
 			const buttonName = enTranslations[nameKey];
 			const optionBtn = screen.getByRole('button', {
@@ -262,7 +262,7 @@ describe('Interaction and states', () => {
 		'should have bg-primary class when the $nameKey button is clicked',
 		async (nameKey) => {
 			const user = userEvent.setup();
-			render(<Inputpage {...defaultInputPageProps} />);
+			render(<InputPage {...defaultInputPageProps} />);
 
 			const buttonName = enTranslations[nameKey];
 			const optionBtn = screen.getByRole('button', {
@@ -279,7 +279,7 @@ describe('Interaction and states', () => {
 		'should have bg-primary class when the $nameKey button is clicked',
 		async (nameKey) => {
 			const user = userEvent.setup();
-			render(<Inputpage {...defaultInputPageProps} />);
+			render(<InputPage {...defaultInputPageProps} />);
 
 			const buttonName = enTranslations[nameKey];
 			const optionBtn = screen.getByRole('button', {
@@ -296,7 +296,7 @@ describe('Interaction and states', () => {
 		'should have bg-primary class when the "%d" button is clicked',
 		async (number) => {
 			const user = userEvent.setup();
-			render(<Inputpage {...defaultInputPageProps} />);
+			render(<InputPage {...defaultInputPageProps} />);
 
 			const buttonName = String(number);
 			const optionBtn = screen.getByRole('button', {
@@ -312,7 +312,7 @@ describe('Interaction and states', () => {
 	it('should display text correctly in textarea when user type text (prompt option)', async () => {
 		const user = userEvent.setup();
 
-		render(<Inputpage {...defaultInputPageProps} />);
+		render(<InputPage {...defaultInputPageProps} />);
 
 		const textarea = screen.getByPlaceholderText(
 			enTranslations.quizPromptPlaceholder
@@ -326,7 +326,7 @@ describe('Interaction and states', () => {
 
 	it('should display text correctly in textarea when user type link (link option)', async () => {
 		const user = userEvent.setup();
-		render(<Inputpage {...defaultInputPageProps} />);
+		render(<InputPage {...defaultInputPageProps} />);
 
 		const linkOptionBtn = screen.getByRole('button', {
 			name: new RegExp(enTranslations.linkOption, 'i'),
@@ -349,7 +349,7 @@ describe('Interaction and states', () => {
 
 	it('should display error when generate quiz button is clicked without content', async () => {
 		const user = userEvent.setup();
-		render(<Inputpage {...defaultInputPageProps} />);
+		render(<InputPage {...defaultInputPageProps} />);
 
 		const generateBtnRegex = new RegExp(enTranslations.generateQuizBtn, 'i');
 
@@ -365,7 +365,7 @@ describe('Interaction and states', () => {
 
 	it('should call onQuizSubmit when generate quiz button is clicked with correct data', async () => {
 		const user = userEvent.setup();
-		render(<Inputpage {...defaultInputPageProps} />);
+		render(<InputPage {...defaultInputPageProps} />);
 		const mockOnQuizSubmit = defaultInputPageProps.onQuizSubmit;
 
 		const generateBtnRegex = new RegExp(enTranslations.generateQuizBtn, 'i');
