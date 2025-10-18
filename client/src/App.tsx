@@ -32,7 +32,7 @@ function App() {
 
 	const handleGenerateQuiz = async (newSettings: QuizSettings) => {
 		setApiError(null);
-		setQuizSettings(newSettings);
+		setQuizSettings({ ...newSettings });
 
 		const inputQuizData: QuizSettings = {
 			...newSettings,

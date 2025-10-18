@@ -22,11 +22,12 @@ export default function InputPage({
 	const [localError, setLocalError] = useState<null | string>(apiError);
 	const [files, setFiles] = useState<File[]>([]);
 
-	const [quizSettings, setQuizSettings] =
-		useState<QuizSettings>(initialSettings);
+	const [quizSettings, setQuizSettings] = useState<QuizSettings>({
+		...initialSettings,
+	});
 
 	useEffect(() => {
-		setQuizSettings(initialSettings);
+		setQuizSettings({ ...initialSettings });
 		setLocalError(apiError);
 	}, [initialSettings, apiError]);
 
