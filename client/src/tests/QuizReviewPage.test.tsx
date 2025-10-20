@@ -142,16 +142,13 @@ describe('Conditional render', () => {
 		const user = userEvent.setup();
 		render(<QuizReviewPage {...defaultQuizReviewParams} />);
 
-		const correctOptionBtn = screen.getByRole('button', {
-			name: /A superset of Javascript/i,
-		});
-
 		const nextQuestionBtn = screen.getByRole('button', {
 			name: /next question/i,
 		});
 
 		await user.click(nextQuestionBtn);
-		fireEvent.transitionEnd(correctOptionBtn);
+		const questionTitle = screen.getByLabelText('question-title');
+		fireEvent.transitionEnd(questionTitle);
 
 		const previousQuestionBtn = await screen.findByRole('button', {
 			name: /previous question/i,

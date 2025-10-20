@@ -43,6 +43,7 @@ export function QuizLayout({
 						${isExiting ? 'opacity-0 translate-y-3' : 'opacity-100 translate-y-0'}
                     `}
 					onTransitionEnd={onTransitionEnd}
+					aria-label="question-title"
 				>
 					{t.question} {questionNumber}
 				</p>
@@ -50,7 +51,6 @@ export function QuizLayout({
 					className={`font-primary text-custom-white text-shadow-title/30  font-medium text-center text-3xl  w-full z-1 
 						md:self-start md:text-start md:text-5xl transition-all duration-300
 						${isExiting ? 'opacity-0 translate-y-3' : 'opacity-100 translate-y-0'}`}
-					onTransitionEnd={onTransitionEnd}
 				>
 					{currentQuestion.question}
 				</h1>

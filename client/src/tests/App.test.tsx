@@ -221,22 +221,21 @@ describe('App tests', () => {
 		});
 
 		await user.click(nextQuestionBtn);
-		fireEvent.transitionEnd(correctOptionBtn1);
+		fireEvent.transitionEnd(screen.getByLabelText('question-title'));
 
 		// Select wrong option final question
 		const wrongOptionBtn2 = await screen.findByRole('button', {
 			name: new RegExp('Automatic memory management'),
 		});
 
-		expect(wrongOptionBtn2).toBeVisible();
 		await user.click(wrongOptionBtn2);
+		expect(wrongOptionBtn2).toBeVisible();
 
 		const nextQuestionBtn2 = screen.getByRole('button', {
 			name: /^next question$/i,
 		});
 
 		await user.click(nextQuestionBtn2);
-		fireEvent.transitionEnd(wrongOptionBtn2);
 
 		const quizResultsText = screen.getByTestId('results-page');
 		expect(quizResultsText).toBeVisible();
@@ -294,7 +293,7 @@ describe('App tests', () => {
 		});
 
 		await user.click(nextQuestionBtn);
-		fireEvent.transitionEnd(correctOptionBtn1);
+		fireEvent.transitionEnd(screen.getByLabelText('question-title'));
 
 		// Select wrong option final question
 		const wrongOptionBtn2 = await screen.findByRole('button', {
@@ -308,7 +307,6 @@ describe('App tests', () => {
 		});
 
 		await user.click(nextQuestionBtn2);
-		fireEvent.transitionEnd(wrongOptionBtn2);
 
 		const reviewAnswersBtn = screen.getByRole('button', {
 			name: new RegExp(enTranslations.reviewAnswers, 'i'),
@@ -372,7 +370,7 @@ describe('App tests', () => {
 		});
 
 		await user.click(nextQuestionBtn);
-		fireEvent.transitionEnd(correctOptionBtn1);
+		fireEvent.transitionEnd(screen.getByLabelText('question-title'));
 
 		// Select wrong option final question
 		const wrongOptionBtn2 = await screen.findByRole('button', {
@@ -386,7 +384,6 @@ describe('App tests', () => {
 		});
 
 		await user.click(nextQuestionBtn2);
-		fireEvent.transitionEnd(wrongOptionBtn2);
 
 		const reviewPage = screen.getByTestId('results-page');
 		expect(reviewPage).toBeVisible();
@@ -457,7 +454,7 @@ describe('App tests', () => {
 		});
 
 		await user.click(nextQuestionBtn);
-		fireEvent.transitionEnd(correctOptionBtn1);
+		fireEvent.transitionEnd(screen.getByLabelText('question-title'));
 
 		// Select wrong option final question
 		const wrongOptionBtn2 = await screen.findByRole('button', {
@@ -471,7 +468,6 @@ describe('App tests', () => {
 		});
 
 		await user.click(nextQuestionBtn2);
-		fireEvent.transitionEnd(wrongOptionBtn2);
 
 		const generateQuizBtnResults = screen.getByRole('button', {
 			name: new RegExp(enTranslations.generateQuizBtn, 'i'),
@@ -481,6 +477,7 @@ describe('App tests', () => {
 		const inputPage = screen.getByTestId('input-page');
 		expect(inputPage).toBeVisible();
 	});
+
 	it('Should reset quiz settings when generate quiz btn(results page) is clicked', async () => {
 		const user = userEvent.setup();
 
@@ -533,7 +530,7 @@ describe('App tests', () => {
 		});
 
 		await user.click(nextQuestionBtn);
-		fireEvent.transitionEnd(correctOptionBtn1);
+		fireEvent.transitionEnd(screen.getByLabelText('question-title'));
 
 		// Select wrong option final question
 		const wrongOptionBtn2 = await screen.findByRole('button', {
@@ -547,7 +544,6 @@ describe('App tests', () => {
 		});
 
 		await user.click(nextQuestionBtn2);
-		fireEvent.transitionEnd(wrongOptionBtn2);
 
 		const generateQuizBtnResults = screen.getByRole('button', {
 			name: new RegExp(enTranslations.generateQuizBtn, 'i'),

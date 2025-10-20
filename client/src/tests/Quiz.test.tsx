@@ -177,7 +177,9 @@ describe('UI Integration tests', () => {
 		});
 
 		await user.click(nextQuestionBtn);
-		fireEvent.transitionEnd(correctOptionBtn);
+
+		const questionTitle = screen.getByLabelText('question-title');
+		fireEvent.transitionEnd(questionTitle);
 
 		const nextQuestionWrongOption = screen.getByRole('button', {
 			name: new RegExp('Automatic memory management', 'i'),
@@ -212,7 +214,9 @@ describe('UI Integration tests', () => {
 		});
 
 		await user.click(nextQuestionBtn);
-		fireEvent.transitionEnd(correctOptionBtn);
+
+		const questionTitle = screen.getByLabelText('question-title');
+		fireEvent.transitionEnd(questionTitle);
 
 		const nextQuestionWrongOption = screen.getByRole('button', {
 			name: new RegExp('Automatic memory management', 'i'),

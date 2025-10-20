@@ -87,7 +87,6 @@ export function QuizReviewPage({
                                     
                                     ${optionClass}
                                 `}
-						onTransitionEnd={onQuestionTransitionEnd}
 					>
 						{option.optionText}
 					</button>

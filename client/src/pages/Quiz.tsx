@@ -49,7 +49,7 @@ export function QuizPage({
 
 	const onQuestionTransitionEnd = () => {
 		if (isExiting) {
-			setCurrentQuestionIndex((i) => i + 1);
+			setCurrentQuestionIndex(currentQuestionIndex + 1);
 			setSelectedAnswer(null);
 			setIsExiting(false);
 		}
@@ -90,7 +90,6 @@ export function QuizPage({
 				return (
 					<button
 						key={index}
-						onTransitionEnd={onQuestionTransitionEnd}
 						className={`w-full py-3 flex justify-center items-center font-primary text-center
 								font-medium text-custom-gray/80 cursor-pointer select-none border-1 border-custom-light-gray/50
 								rounded-full transition-all duration-300 
