@@ -7,7 +7,7 @@ import type {
 } from '@/types';
 import { faArrowRight, faQuestion } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import {
 	Dialog,
 	DialogContent,
@@ -47,13 +47,19 @@ export function QuizPage({
 		}
 	};
 
-	const onQuestionTransitionEnd = () => {
+	const onQuestionTransitionEnd = useCallback(() => {
 		if (isExiting) {
 			setCurrentQuestionIndex(currentQuestionIndex + 1);
 			setSelectedAnswer(null);
 			setIsExiting(false);
 		}
-	};
+	}, [
+		isExiting,
+		setCurrentQuestionIndex,
+		setSelectedAnswer,
+		setIsExiting,
+		currentQuestionIndex,
+	]);
 
 	const handleQuestionAnswer = (selectedIndex: number) => {
 		if (selectedAnswer !== null) {
