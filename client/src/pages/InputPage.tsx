@@ -72,6 +72,12 @@ export default function InputPage({
 		}
 	};
 
+	const resetAfterErrors = () => {
+		setApiError(null);
+		setLocalError(null);
+		handleSettingsChange('content', '');
+	};
+
 	const { quizInputType, content, difficulty, optionTypes, numQuestions } =
 		quizSettings;
 
@@ -96,8 +102,7 @@ export default function InputPage({
 						variant={`${quizInputType === 'prompt' ? 'green' : 'minimal'}`}
 						onClick={() => {
 							handleSettingsChange('quizInputType', 'prompt');
-							handleSettingsChange('content', '');
-							setApiError(null);
+							resetAfterErrors();
 						}}
 					>
 						{t.promptOption}
@@ -107,8 +112,8 @@ export default function InputPage({
 						size="md"
 						variant={`${quizInputType === 'file' ? 'green' : 'minimal'}`}
 						onClick={() => {
-							setApiError(null);
 							handleSettingsChange('quizInputType', 'file');
+							resetAfterErrors();
 						}}
 					>
 						{t.fileOption}
@@ -120,9 +125,8 @@ export default function InputPage({
 							quizInputType === 'youtube_link' ? 'green' : 'minimal'
 						}`}
 						onClick={() => {
-							setApiError(null);
 							handleSettingsChange('quizInputType', 'youtube_link');
-							handleSettingsChange('content', '');
+							resetAfterErrors();
 						}}
 					>
 						{t.linkOption}
