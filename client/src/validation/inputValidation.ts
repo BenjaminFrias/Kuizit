@@ -29,7 +29,14 @@ export default function validateQuizContent({
 		}
 	}
 
-	if (typeof quizContent === 'string') {
+	if (!quizContent) {
+		throw new Error(validationMessages.invalidPromptErr);
+	}
+
+	if (
+		typeof quizContent === 'string' &&
+		(inputType === 'prompt' || inputType === 'youtube_link')
+	) {
 		if (!quizContent || quizContent.trim() === '') {
 			throw new Error(validationMessages.invalidPromptErr);
 		}
