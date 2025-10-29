@@ -21,6 +21,7 @@ export default function InputPage({
 	const t = useTranslation();
 	const [localError, setLocalError] = useState<null | string>(apiError);
 	const [files, setFiles] = useState<File[]>([]);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const [quizSettings, setQuizSettings] = useState<QuizSettings>({
 		...initialSettings,
@@ -43,6 +44,7 @@ export default function InputPage({
 
 	const handleLocalSubmit = () => {
 		setLocalError(null);
+		setIsSubmitting(true);
 
 		try {
 			const validationMessages = {
@@ -66,16 +68,16 @@ export default function InputPage({
 
 			onQuizSubmit(newSettings);
 		} catch (error: unknown) {
-			if (error instanceof Error) {
-				setLocalError(error.message);
-			}
+			if (error instanceof Error) setLocalError(error.message);
+		} finally {
+			setIsSubmitting(false);
 		}
 	};
 
 	const resetAfterErrors = () => {
 		setApiError(null);
 		setLocalError(null);
-		handleSettingsChange('content', '');
+		handleSettingsChange('content', undefined);
 	};
 
 	const { quizInputType, content, difficulty, optionTypes, numQuestions } =
@@ -282,6 +284,7 @@ export default function InputPage({
 				size="md"
 				variant="green"
 				onClick={handleLocalSubmit}
+				disabled={isSubmitting}
 			>
 				{t.generateQuizBtn}
 				<FontAwesomeIcon icon={faWandMagicSparkles} />
