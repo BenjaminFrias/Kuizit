@@ -3,8 +3,11 @@ import Logo from '@/components/Logo';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useTranslation } from '@/hooks/useTranslation';
-import type { InputPageParams, QuizSettings } from '@/types';
-import validateQuizContent from '@/validation/inputValidation';
+import {
+	createSubmissionSettingsSchema,
+	type QuizSettings,
+} from '@/schemas/QuizSchema';
+import type { InputPageParams } from '@/types';
 import {
 	faCircleExclamation,
 	faWandMagicSparkles,
@@ -36,7 +39,7 @@ export default function InputPage({
 		key: K,
 		value: QuizSettings[K]
 	) => {
-		setQuizSettings((prevSettings) => ({
+		setQuizSettings((prevSettings: QuizSettings) => ({
 			...prevSettings,
 			[key]: value,
 		}));
@@ -46,32 +49,22 @@ export default function InputPage({
 		setLocalError(null);
 		setIsSubmitting(true);
 
-		try {
-			const validationMessages = {
-				fileNotFoundErr: t.fileNotFoundErr,
-				fileTypeErr: t.fileTypeErr,
-				invalidPromptErr: t.invalidPromptErr,
-				invalidYoutubeLinkErr: t.invalidYoutubeLinkErr,
-			};
+		let newSettings: QuizSettings = quizSettings;
 
-			let newSettings: QuizSettings = quizSettings;
-
-			// Change content to be files
-			if (quizSettings.quizInputType === 'file' && files && files.length > 0) {
-				newSettings = { ...quizSettings, content: files[0] };
-			}
-
-			validateQuizContent({
-				quizData: newSettings,
-				validationMessages,
-			}); // throw error when invalid data
-
-			onQuizSubmit(newSettings);
-		} catch (error: unknown) {
-			if (error instanceof Error) setLocalError(error.message);
-		} finally {
-			setIsSubmitting(false);
+		// Set content to be file when file uploaded
+		if (quizSettings.quizInputType === 'file' && files && files.length > 0) {
+			newSettings = { ...quizSettings, content: files[0] };
 		}
+
+		const QuizSubmissionSchema = createSubmissionSettingsSchema(t);
+		const result = QuizSubmissionSchema.safeParse(newSettings);
+
+		if (result.success) {
+			onQuizSubmit(newSettings);
+		} else {
+			setLocalError(result.error.issues[0].message);
+		}
+		setIsSubmitting(false);
 	};
 
 	const resetAfterErrors = () => {
