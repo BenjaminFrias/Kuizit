@@ -1,16 +1,6 @@
-export type Page = 'home' | 'input' | 'quiz' | 'results' | 'review';
+import type { QuizSettings } from '@/schemas/QuizSchema';
 
-type InputOption = 'prompt' | 'youtube_link' | 'file';
-type AnswerOptions = 'multiple_choice' | 'true_false';
-type Difficulty = 'easy' | 'medium' | 'hard' | 'expert';
-type NumberQuestions = 5 | 10 | 15 | 20;
-export type QuizSettings = {
-	quizInputType: InputOption;
-	content: string | File | undefined;
-	numQuestions: NumberQuestions;
-	difficulty: Difficulty;
-	optionTypes: AnswerOptions;
-};
+export type Page = 'home' | 'input' | 'quiz' | 'results' | 'review';
 
 export type InputPageParams = {
 	setApiError: (error: string | null) => void;
@@ -42,7 +32,7 @@ export type QuizResultOption = {
 };
 
 export type QuizResultQuestion = {
-	type: AnswerOptions;
+	type: 'multiple_choice' | 'true_false';
 	question: string;
 	correctAnswerIndex: number;
 	options: QuizResultOption[];
