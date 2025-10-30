@@ -1,4 +1,5 @@
-import type { QuizData, QuizSettings } from '@/types';
+import type { QuizSettings } from '@/schemas/QuizSchema';
+import type { QuizData } from '@/types';
 import { useState } from 'react';
 
 async function fetchGeneratedQuiz(
