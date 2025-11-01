@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { type Translations } from '@/types/translations';
+import { isYoutubeLink, validateFileType } from '@/utils/utilities';
 
 const InputOptionSchema = z.enum(['prompt', 'youtube_link', 'file']);
 const AnswerOptionsSchema = z.enum(['multiple_choice', 'true_false']);
@@ -10,25 +11,6 @@ const NumberQuestionsSchema = z.union([
 	z.literal(15),
 	z.literal(20),
 ]);
-
-function isYoutubeLink(link: string) {
-	const youtubeRegex =
-		/^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=|embed\/|v\/|shorts\/)?([a-zA-Z0-9_-]{11})(&.*)?$/;
-
-	return youtubeRegex.test(link);
-}
-
-function validateFileType(file: File): boolean {
-	const allowedMimeTypes = [
-		'application/pdf',
-		'text/plain',
-		'application/msword',
-		'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-		'text/markdown',
-	];
-
-	return allowedMimeTypes.includes(file.type);
-}
 
 const BaseQuizSettingsSchema = z.object({
 	quizInputType: InputOptionSchema,
