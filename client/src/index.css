@@ -28,6 +28,14 @@
 	box-shadow: none;
 }
 
+legend {
+	text-align: center;
+	font-family: var(--font-primary);
+	color: var(--color-custom-light-gray);
+	font-weight: 500;
+	margin-bottom: 0.5rem;
+}
+
 :root {
 	font-family: 'DM sans', Avenir, Helvetica, Arial, sans-serif;
 	line-height: 1.5;

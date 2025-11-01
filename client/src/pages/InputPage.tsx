@@ -1,5 +1,6 @@
 import { FileUploadDropZone } from '@/components/FileUploadDropZone';
 import Logo from '@/components/Logo';
+import { OptionGroup } from '@/components/OptionGroup';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -101,46 +102,19 @@ export default function InputPage({
 					<fieldset>
 						<legend className="sr-only">Quiz input types</legend>
 
-						<div className="input-types flex gap-2 w-full justify-center items-center">
-							<Button
-								className="flex-1"
-								size="md"
-								type="button"
-								variant={`${quizInputType === 'prompt' ? 'green' : 'minimal'}`}
-								onClick={() => {
-									handleSettingsChange('quizInputType', 'prompt');
-									resetAfterErrors();
-								}}
-							>
-								{t.promptOption}
-							</Button>
-							<Button
-								className="flex-1"
-								size="md"
-								type="button"
-								variant={`${quizInputType === 'file' ? 'green' : 'minimal'}`}
-								onClick={() => {
-									handleSettingsChange('quizInputType', 'file');
-									resetAfterErrors();
-								}}
-							>
-								{t.fileOption}
-							</Button>
-							<Button
-								className="flex-1"
-								size="md"
-								type="button"
-								variant={`${
-									quizInputType === 'youtube_link' ? 'green' : 'minimal'
-								}`}
-								onClick={() => {
-									handleSettingsChange('quizInputType', 'youtube_link');
-									resetAfterErrors();
-								}}
-							>
-								{t.linkOption}
-							</Button>
-						</div>
+						<OptionGroup
+							value={quizInputType}
+							options={[
+								{ value: 'prompt', label: t.promptOption },
+								{ value: 'file', label: t.fileOption },
+								{ value: 'youtube_link', label: t.linkOption },
+							]}
+							size="md"
+							onChange={(value) => {
+								handleSettingsChange('quizInputType', value);
+								resetAfterErrors();
+							}}
+						/>
 					</fieldset>
 
 					<fieldset>
@@ -185,135 +159,63 @@ export default function InputPage({
 						<div className="flex flex-col w-full justify-center gap-2">
 							<div className=" w-full">
 								<fieldset>
-									<legend className="text-center font-primary text-custom-light-gray font-medium">
-										{t.difficultyTitle}
-									</legend>
-									<div className="flex gap-2 mt-2 w-full" role="radiogroup">
-										<Button
-											className="flex-1"
-											size="sm"
-											type="button"
-											variant={`${difficulty === 'easy' ? 'green' : 'minimal'}`}
-											onClick={() => handleSettingsChange('difficulty', 'easy')}
-										>
-											{t.easyOption}
-										</Button>
-										<Button
-											className="flex-1"
-											size="sm"
-											type="button"
-											variant={`${
-												difficulty === 'medium' ? 'green' : 'minimal'
-											}`}
-											onClick={() =>
-												handleSettingsChange('difficulty', 'medium')
-											}
-										>
-											{t.mediumOption}
-										</Button>
-										<Button
-											className="flex-1"
-											size="sm"
-											type="button"
-											variant={`${difficulty === 'hard' ? 'green' : 'minimal'}`}
-											onClick={() => handleSettingsChange('difficulty', 'hard')}
-										>
-											{t.hardOption}
-										</Button>
-										<Button
-											className="flex-1"
-											size="sm"
-											type="button"
-											variant={`${
-												difficulty === 'expert' ? 'green' : 'minimal'
-											}`}
-											onClick={() =>
-												handleSettingsChange('difficulty', 'expert')
-											}
-										>
-											{t.expertOption}
-										</Button>
-									</div>
+									<legend>{t.difficultyTitle}</legend>
+
+									<OptionGroup
+										value={difficulty}
+										options={[
+											{ value: 'easy', label: t.easyOption },
+											{ value: 'medium', label: t.mediumOption },
+											{ value: 'hard', label: t.hardOption },
+											{ value: 'expert', label: t.expertOption },
+										]}
+										size="sm"
+										onChange={(value) => {
+											handleSettingsChange('difficulty', value);
+											resetAfterErrors();
+										}}
+									/>
 								</fieldset>
 							</div>
 							<div className="w-full">
 								<fieldset>
-									<legend className="text-center font-primary text-custom-light-gray font-medium">
-										{t.typeAnswersTitle}
-									</legend>
-									<div className="flex gap-2 mt-2 w-full">
-										<Button
-											className="flex-1"
-											size="sm"
-											type="button"
-											variant={`${
-												optionTypes === 'multiple_choice' ? 'green' : 'minimal'
-											}`}
-											onClick={() =>
-												handleSettingsChange('optionTypes', 'multiple_choice')
-											}
-										>
-											{t.multipleChoiceOption}
-										</Button>
-										<Button
-											className="flex-1"
-											size="sm"
-											type="button"
-											variant={`${
-												optionTypes === 'true_false' ? 'green' : 'minimal'
-											}`}
-											onClick={() =>
-												handleSettingsChange('optionTypes', 'true_false')
-											}
-										>
-											{t.trueFalseOption}
-										</Button>
-									</div>
+									<legend>{t.typeAnswersTitle}</legend>
+
+									<OptionGroup
+										value={optionTypes}
+										options={[
+											{
+												value: 'multiple_choice',
+												label: t.multipleChoiceOption,
+											},
+											{ value: 'true_false', label: t.trueFalseOption },
+										]}
+										size="sm"
+										onChange={(value) => {
+											handleSettingsChange('optionTypes', value);
+											resetAfterErrors();
+										}}
+									/>
 								</fieldset>
 							</div>
 							<div className="w-full">
 								<fieldset>
-									<legend className="text-center font-primary text-custom-light-gray font-medium">
-										{t.numberQuestionsTitle}
-									</legend>
-									<div className="flex gap-2 mt-2 w-full">
-										<Button
-											className="flex-1"
-											size="sm"
-											type="button"
-											variant={`${numQuestions === 5 ? 'green' : 'minimal'}`}
-											onClick={() => handleSettingsChange('numQuestions', 5)}
-										>
-											5
-										</Button>
-										<Button
-											className="flex-1"
-											size="sm"
-											type="button"
-											variant={`${numQuestions === 10 ? 'green' : 'minimal'}`}
-											onClick={() => handleSettingsChange('numQuestions', 10)}
-										>
-											10
-										</Button>
-										<Button
-											className="flex-1"
-											size="sm"
-											type="button"
-											variant={`${numQuestions === 15 ? 'green' : 'minimal'}`}
-											onClick={() => handleSettingsChange('numQuestions', 15)}
-										>
-											15
-										</Button>
-										<Button
-											className="flex-1"
-											size="sm"
-											type="button"
-											variant={`${numQuestions === 20 ? 'green' : 'minimal'}`}
-											onClick={() => handleSettingsChange('numQuestions', 20)}
-										>
-											20
-										</Button>
-									</div>
+									<legend>{t.numberQuestionsTitle}</legend>
+
+									<OptionGroup
+										value={numQuestions}
+										options={[
+											{ value: 5, label: 5 },
+											{ value: 10, label: 10 },
+											{ value: 15, label: 15 },
+											{ value: 20, label: 20 },
+										]}
+										size="sm"
+										onChange={(value) => {
+											handleSettingsChange('numQuestions', value);
+											resetAfterErrors();
+										}}
+									/>
 								</fieldset>
 							</div>
 						</div>

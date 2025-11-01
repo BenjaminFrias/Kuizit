@@ -51,7 +51,7 @@ describe('Initial render', () => {
 
 		const inputOptionRegex = new RegExp(inputOptionNames.join('|'), 'i');
 
-		const inputOptionBtns = screen.getAllByRole('button', {
+		const inputOptionBtns = screen.getAllByRole('radio', {
 			name: inputOptionRegex,
 		});
 
@@ -84,7 +84,7 @@ describe('Initial render', () => {
 
 		const difficultyRegex = new RegExp(difficultyNames.join('|'), 'i');
 
-		const difficultyBtns = screen.getAllByRole('button', {
+		const difficultyBtns = screen.getAllByRole('radio', {
 			name: difficultyRegex,
 		});
 
@@ -101,7 +101,7 @@ describe('Initial render', () => {
 
 		const answersRegex = new RegExp(answerOptionsNames.join('|'), 'i');
 
-		const answerOptionsBtns = screen.getAllByRole('button', {
+		const answerOptionsBtns = screen.getAllByRole('radio', {
 			name: answersRegex,
 		});
 
@@ -136,7 +136,7 @@ describe('Conditional rendering', () => {
 		const user = userEvent.setup();
 		render(<InputPage {...defaultInputPageProps} />);
 
-		const linkOptionBtn = screen.getByRole('button', {
+		const linkOptionBtn = screen.getByRole('radio', {
 			name: new RegExp(enTranslations.linkOption, 'i'),
 		});
 
@@ -153,7 +153,7 @@ describe('Conditional rendering', () => {
 		const user = userEvent.setup();
 		render(<InputPage {...defaultInputPageProps} />);
 
-		const fileOptionBtn = screen.getByRole('button', {
+		const fileOptionBtn = screen.getByRole('radio', {
 			name: new RegExp(enTranslations.fileOption, 'i'),
 		});
 
@@ -174,7 +174,7 @@ describe('Conditional rendering', () => {
 		const user = userEvent.setup();
 		render(<InputPage {...defaultInputPageProps} />);
 
-		const linkOptionBtn = screen.getByRole('button', {
+		const linkOptionBtn = screen.getByRole('radio', {
 			name: new RegExp(enTranslations.linkOption, 'i'),
 		});
 
@@ -193,7 +193,7 @@ describe('Conditional rendering', () => {
 
 		render(<InputPage {...defaultInputPageProps} />);
 
-		const fileOptionBtn = screen.getByRole('button', {
+		const fileOptionBtn = screen.getByRole('radio', {
 			name: new RegExp(enTranslations.fileOption, 'i'),
 		});
 
@@ -248,7 +248,7 @@ describe('Interaction and states', () => {
 			render(<InputPage {...defaultInputPageProps} />);
 
 			const buttonName = enTranslations[nameKey];
-			const optionBtn = screen.getByRole('button', {
+			const optionBtn = screen.getByRole('radio', {
 				name: new RegExp(buttonName, 'i'),
 			});
 
@@ -265,7 +265,7 @@ describe('Interaction and states', () => {
 			render(<InputPage {...defaultInputPageProps} />);
 
 			const buttonName = enTranslations[nameKey];
-			const optionBtn = screen.getByRole('button', {
+			const optionBtn = screen.getByRole('radio', {
 				name: new RegExp(buttonName, 'i'),
 			});
 
@@ -282,7 +282,7 @@ describe('Interaction and states', () => {
 			render(<InputPage {...defaultInputPageProps} />);
 
 			const buttonName = enTranslations[nameKey];
-			const optionBtn = screen.getByRole('button', {
+			const optionBtn = screen.getByRole('radio', {
 				name: new RegExp(buttonName, 'i'),
 			});
 
@@ -299,7 +299,7 @@ describe('Interaction and states', () => {
 			render(<InputPage {...defaultInputPageProps} />);
 
 			const buttonName = String(number);
-			const optionBtn = screen.getByRole('button', {
+			const optionBtn = screen.getByRole('radio', {
 				name: new RegExp(`\\b${buttonName}\\b`, 'i'),
 			});
 
@@ -328,7 +328,7 @@ describe('Interaction and states', () => {
 		const user = userEvent.setup();
 		render(<InputPage {...defaultInputPageProps} />);
 
-		const linkOptionBtn = screen.getByRole('button', {
+		const linkOptionBtn = screen.getByRole('radio', {
 			name: new RegExp(enTranslations.linkOption, 'i'),
 		});
 
