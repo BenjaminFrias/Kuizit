@@ -34,15 +34,11 @@ async function fetchGeneratedQuiz(
 		const result: QuizData = await response.json();
 		return result;
 	} else {
-		let errText = await response.text();
+		const result = await response
+			.json()
+			.catch(async () => ({ message: response.text() }));
 
-		try {
-			const j = JSON.parse(errText);
-			errText = j.error || errText;
-		} catch {
-			// do nothing
-		}
-		throw new Error(errText);
+		throw new Error(result.error || result.message || 'Unknown error');
 	}
 }
 
@@ -63,7 +59,7 @@ export const useQuizApi = () => {
 				API_BASE_URL
 			);
 			return generatedQuizData;
-		} catch (error) {
+		} catch (error: unknown) {
 			if (error instanceof Error) {
 				console.error('Error in API hook: ', error.message);
 				setApiError(error.message);
@@ -71,7 +67,6 @@ export const useQuizApi = () => {
 				console.log('An unexpected error occurred in API hook: ', error);
 				setApiError('An unexpected error occurred');
 			}
-
 			throw error;
 		}
 	};
