@@ -148,7 +148,9 @@ export default function InputPage({
 									icon={faCircleExclamation}
 									className="text-red-500"
 								/>
-								<p>{localError || apiError}</p>
+								<p>
+									{localError || apiError}, {t.pleaseTryAgain}.
+								</p>
 							</div>
 						) : null}
 					</fieldset>

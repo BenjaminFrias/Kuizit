@@ -62,10 +62,8 @@ export const useQuizApi = () => {
 		} catch (error: unknown) {
 			if (error instanceof Error) {
 				console.error('Error in API hook: ', error.message);
-				setApiError(error.message);
 			} else {
 				console.log('An unexpected error occurred in API hook: ', error);
-				setApiError('An unexpected error occurred');
 			}
 			throw error;
 		}

@@ -55,9 +55,7 @@ function App() {
 			const baseErrorMsg =
 				apiError || (error instanceof Error ? error.message : t.unexpectedErr);
 
-			const finalErrorMessage = `${baseErrorMsg}, ${t.pleaseTryAgain}`;
-
-			setApiError(finalErrorMessage);
+			setApiError(baseErrorMsg);
 			handlePageChange('input');
 		} finally {
 			setIsQuizLoading(false);
