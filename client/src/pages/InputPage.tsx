@@ -174,7 +174,6 @@ export default function InputPage({
 										size="sm"
 										onChange={(value) => {
 											handleSettingsChange('difficulty', value);
-											resetAfterErrors();
 										}}
 									/>
 								</fieldset>
@@ -195,7 +194,6 @@ export default function InputPage({
 										size="sm"
 										onChange={(value) => {
 											handleSettingsChange('optionTypes', value);
-											resetAfterErrors();
 										}}
 									/>
 								</fieldset>
@@ -215,7 +213,6 @@ export default function InputPage({
 										size="sm"
 										onChange={(value) => {
 											handleSettingsChange('numQuestions', value);
-											resetAfterErrors();
 										}}
 									/>
 								</fieldset>
