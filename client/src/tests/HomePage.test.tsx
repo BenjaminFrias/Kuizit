@@ -4,17 +4,20 @@ import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import enTranslations from '../translations/en.json';
+import { MemoryRouter, Routes, Route } from 'react-router';
+import { renderPageCustom } from './utils';
 
-const mockOnPageChange = vi.fn();
+export const MockInputPage = () => <h1>Input page</h1>;
+
 vi.mock('@/hooks/useTranslation', () => ({
 	useTranslation: () => enTranslations,
 }));
 
-beforeEach(() => {
-	render(<HomePage onPageChange={mockOnPageChange} />);
-});
-
 describe('Render HomePage components', () => {
+	beforeEach(() => {
+		renderPageCustom({ initialEntry: '/' });
+	});
+
 	it('Renders Logo Component', () => {
 		const logoComponent = screen.getByRole('img', {
 			name: /Kuizit logo/i,
@@ -60,16 +63,25 @@ describe('Render HomePage components', () => {
 });
 
 describe('Interaction in HomePage', async () => {
-	it('onPageChange called with generate quiz button', async () => {
-		const user = userEvent.setup();
+	it('should navigate to input page when generate quiz button is clicked', async () => {
+		render(
+			<MemoryRouter initialEntries={['/']}>
+				<Routes>
+					<Route path="/" element={<HomePage />} />
+					<Route path="/input" element={<MockInputPage />} />
+				</Routes>
+			</MemoryRouter>
+		);
 
+		const user = userEvent.setup();
 		const generateBtnRegex = new RegExp(enTranslations.generateQuizBtn, 'i');
-		const generateQuizBtn = screen.getByRole('button', {
+		const generateQuizBtn = screen.getAllByRole('button', {
 			name: generateBtnRegex,
 		});
 
-		await user.click(generateQuizBtn);
+		await user.click(generateQuizBtn[0]);
 
-		expect(mockOnPageChange).toHaveBeenCalledTimes(1);
+		const inputPage = screen.getByText('Input page');
+		expect(inputPage).toBeVisible();
 	});
 });

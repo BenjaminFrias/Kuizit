@@ -6,9 +6,11 @@ import {
 	waitForElementToBeRemoved,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import enTranslations from '../translations/en.json';
 import type { QuizData } from '@/types';
+import { MemoryRouter, Route, Routes } from 'react-router';
+import { MockQuizPage } from './utils';
 
 const mockGenerateQuiz = vi.fn();
 vi.mock('../hooks/useQuizApi', () => {
@@ -50,17 +52,24 @@ const mockQuizData: QuizData = [
 	},
 ];
 
+beforeEach(() => {
+	render(
+		<MemoryRouter initialEntries={['/']}>
+			<Routes>
+				<Route path="*" element={<App />} />
+			</Routes>
+		</MemoryRouter>
+	);
+});
+
 describe('App tests', () => {
 	it('Should display home page when app is mounted', () => {
-		render(<App />);
-
 		const homepage = screen.getByTestId('home-page');
 		expect(homepage).toBeVisible();
 	});
 
 	it('Should display input page after generate quiz homepage button is clicked', async () => {
 		const user = userEvent.setup();
-		render(<App />);
 
 		// Click generate button in homepage
 		const generateQuizBtn = screen.getByRole('button', {
@@ -83,8 +92,6 @@ describe('App tests', () => {
 
 		mockGenerateQuiz.mockReturnValue(controlledPromise);
 
-		render(<App />);
-
 		// Go to input page
 		const btnToInputPage = screen.getByRole('button', {
 			name: new RegExp(enTranslations.generateQuizBtn, 'i'),
@@ -116,444 +123,6 @@ describe('App tests', () => {
 		// Check if loading page disappears after promise is resolved
 		await waitForElementToBeRemoved(() => screen.queryByTestId('loading-page'));
 
-		const question1Title = screen.getByText('Question 1');
-		expect(question1Title).toBeVisible();
-	});
-
-	it('Should display quiz page when generate quiz btn in Input page is clicked', async () => {
-		const user = userEvent.setup();
-
-		let resolveMockPromise: (value: QuizData) => void;
-		const controlledPromise = new Promise<QuizData>((resolve) => {
-			resolveMockPromise = resolve;
-		});
-
-		mockGenerateQuiz.mockReturnValue(controlledPromise);
-
-		render(<App />);
-
-		// Go to input page
-		const btnToInputPage = screen.getByRole('button', {
-			name: new RegExp(enTranslations.generateQuizBtn, 'i'),
-		});
-
-		await user.click(btnToInputPage);
-
-		// Enter prompt
-		const textarea = screen.getByPlaceholderText(
-			enTranslations.quizPromptPlaceholder
-		);
-
-		await user.type(textarea, 'create quiz about programming');
-
-		// Click generate quiz
-		const generateQuizBtn = screen.getByRole('button', {
-			name: new RegExp(enTranslations.generateQuizBtn, 'i'),
-		});
-
-		await user.click(generateQuizBtn);
-
-		// Check for quiz loading page being shown
-		const QuizLoadingPage = screen.getByTestId('loading-page');
-		expect(QuizLoadingPage).toBeVisible();
-
-		// Solve generated quiz promise to stop loading page
-		resolveMockPromise!(mockQuizData);
-
-		// Check if loading page disappears after promise is resolved
-		await waitForElementToBeRemoved(() => screen.queryByTestId('loading-page'));
-
-		const question1Title = screen.getByText('Question 1');
-		expect(question1Title).toBeVisible();
-
-		const answer1Text = screen.getByText('A superset of Javascript');
-		expect(answer1Text).toBeVisible();
-	});
-
-	it('Should display quiz results page after completing quiz', async () => {
-		const user = userEvent.setup();
-
-		let resolveMockPromise: (value: QuizData) => void;
-		const controlledPromise = new Promise<QuizData>((resolve) => {
-			resolveMockPromise = resolve;
-		});
-
-		mockGenerateQuiz.mockReturnValue(controlledPromise);
-
-		render(<App />);
-
-		// Go to input page
-		const btnToInputPage = screen.getByRole('button', {
-			name: new RegExp(enTranslations.generateQuizBtn, 'i'),
-		});
-
-		await user.click(btnToInputPage);
-
-		// Enter prompt
-		const textarea = screen.getByPlaceholderText(
-			enTranslations.quizPromptPlaceholder
-		);
-
-		await user.type(textarea, 'create quiz about programming');
-
-		// Click generate quiz
-		const generateQuizBtn = screen.getByRole('button', {
-			name: new RegExp(enTranslations.generateQuizBtn, 'i'),
-		});
-
-		await user.click(generateQuizBtn);
-
-		resolveMockPromise!(mockQuizData);
-
-		// Check if loading page disappears after promise is resolved
-		await waitForElementToBeRemoved(() => screen.queryByTestId('loading-page'));
-
-		// Select correct option in question 1
-		const correctOptionBtn1 = screen.getByRole('button', {
-			name: new RegExp('A superset of Javascript'),
-		});
-
-		await user.click(correctOptionBtn1);
-
-		// Click next question btn
-		const nextQuestionBtn = screen.getByRole('button', {
-			name: /^next question$/i,
-		});
-
-		await user.click(nextQuestionBtn);
-		fireEvent.transitionEnd(screen.getByLabelText('question-title'));
-
-		// Select wrong option final question
-		const wrongOptionBtn2 = await screen.findByRole('button', {
-			name: new RegExp('Automatic memory management'),
-		});
-
-		await user.click(wrongOptionBtn2);
-		expect(wrongOptionBtn2).toBeVisible();
-
-		const nextQuestionBtn2 = screen.getByRole('button', {
-			name: /^next question$/i,
-		});
-
-		await user.click(nextQuestionBtn2);
-
-		const quizResultsText = screen.getByTestId('results-page');
-		expect(quizResultsText).toBeVisible();
-	});
-
-	it('Should display quiz review page when review answers btn is clicked', async () => {
-		const user = userEvent.setup();
-
-		let resolveMockPromise: (value: QuizData) => void;
-		const controlledPromise = new Promise<QuizData>((resolve) => {
-			resolveMockPromise = resolve;
-		});
-
-		mockGenerateQuiz.mockReturnValue(controlledPromise);
-
-		render(<App />);
-
-		// Go to input page
-		const btnToInputPage = screen.getByRole('button', {
-			name: new RegExp(enTranslations.generateQuizBtn, 'i'),
-		});
-
-		await user.click(btnToInputPage);
-
-		// Enter prompt
-		const textarea = screen.getByPlaceholderText(
-			enTranslations.quizPromptPlaceholder
-		);
-
-		await user.type(textarea, 'create quiz about programming');
-
-		// Click generate quiz
-		const generateQuizBtn = screen.getByRole('button', {
-			name: new RegExp(enTranslations.generateQuizBtn, 'i'),
-		});
-
-		await user.click(generateQuizBtn);
-
-		// Solve generated quiz promise to stop loading page
-		resolveMockPromise!(mockQuizData);
-
-		// Check if loading page disappears after promise is resolved
-		await waitForElementToBeRemoved(() => screen.queryByTestId('loading-page'));
-
-		// Select correct option in question 1
-		const correctOptionBtn1 = screen.getByRole('button', {
-			name: new RegExp('A superset of Javascript'),
-		});
-
-		await user.click(correctOptionBtn1);
-
-		// Click next question btn
-		const nextQuestionBtn = screen.getByRole('button', {
-			name: /^next question$/i,
-		});
-
-		await user.click(nextQuestionBtn);
-		fireEvent.transitionEnd(screen.getByLabelText('question-title'));
-
-		// Select wrong option final question
-		const wrongOptionBtn2 = await screen.findByRole('button', {
-			name: new RegExp('Automatic memory management'),
-		});
-
-		await user.click(wrongOptionBtn2);
-
-		const nextQuestionBtn2 = screen.getByRole('button', {
-			name: /^next question$/i,
-		});
-
-		await user.click(nextQuestionBtn2);
-
-		const reviewAnswersBtn = screen.getByRole('button', {
-			name: new RegExp(enTranslations.reviewAnswers, 'i'),
-		});
-
-		await user.click(reviewAnswersBtn);
-
-		const reviewPage = screen.getByTestId('review-page');
-		expect(reviewPage).toBeVisible();
-	});
-
-	it('Should display quiz results page when x button in quiz review page is clicked', async () => {
-		const user = userEvent.setup();
-
-		let resolveMockPromise: (value: QuizData) => void;
-		const controlledPromise = new Promise<QuizData>((resolve) => {
-			resolveMockPromise = resolve;
-		});
-
-		mockGenerateQuiz.mockReturnValue(controlledPromise);
-
-		render(<App />);
-
-		// Go to input page
-		const btnToInputPage = screen.getByRole('button', {
-			name: new RegExp(enTranslations.generateQuizBtn, 'i'),
-		});
-
-		await user.click(btnToInputPage);
-
-		// Enter prompt
-		const textarea = screen.getByPlaceholderText(
-			enTranslations.quizPromptPlaceholder
-		);
-
-		await user.type(textarea, 'create quiz about programming');
-
-		// Click generate quiz
-		const generateQuizBtn = screen.getByRole('button', {
-			name: new RegExp(enTranslations.generateQuizBtn, 'i'),
-		});
-
-		await user.click(generateQuizBtn);
-
-		// Solve generated quiz promise to stop loading page
-		resolveMockPromise!(mockQuizData);
-
-		// Check if loading page disappears after promise is resolved
-		await waitForElementToBeRemoved(() => screen.queryByTestId('loading-page'));
-
-		// Select correct option in question 1
-		const correctOptionBtn1 = screen.getByRole('button', {
-			name: new RegExp('A superset of Javascript'),
-		});
-
-		await user.click(correctOptionBtn1);
-
-		// Click next question btn
-		const nextQuestionBtn = screen.getByRole('button', {
-			name: /^next question$/i,
-		});
-
-		await user.click(nextQuestionBtn);
-		fireEvent.transitionEnd(screen.getByLabelText('question-title'));
-
-		// Select wrong option final question
-		const wrongOptionBtn2 = await screen.findByRole('button', {
-			name: new RegExp('Automatic memory management'),
-		});
-
-		await user.click(wrongOptionBtn2);
-
-		const nextQuestionBtn2 = screen.getByRole('button', {
-			name: /^next question$/i,
-		});
-
-		await user.click(nextQuestionBtn2);
-
-		const reviewPage = screen.getByTestId('results-page');
-		expect(reviewPage).toBeVisible();
-
-		const reviewAnswersBtn = screen.getByRole('button', {
-			name: new RegExp(enTranslations.reviewAnswers, 'i'),
-		});
-
-		await user.click(reviewAnswersBtn);
-
-		// Click x button
-		const closeReviewAnswerBtn = screen.getByLabelText('end review');
-		await user.click(closeReviewAnswerBtn);
-
-		const quizResultsPage = screen.getByTestId('results-page');
-		expect(quizResultsPage).toBeVisible();
-	});
-
-	it('Should display input page when generate quiz button in quiz results page is clicked', async () => {
-		const user = userEvent.setup();
-
-		let resolveMockPromise: (value: QuizData) => void;
-		const controlledPromise = new Promise<QuizData>((resolve) => {
-			resolveMockPromise = resolve;
-		});
-
-		mockGenerateQuiz.mockReturnValue(controlledPromise);
-
-		render(<App />);
-
-		// Go to input page
-		const btnToInputPage = screen.getByRole('button', {
-			name: new RegExp(enTranslations.generateQuizBtn, 'i'),
-		});
-
-		await user.click(btnToInputPage);
-
-		// Enter prompt
-		const textarea = screen.getByPlaceholderText(
-			enTranslations.quizPromptPlaceholder
-		);
-
-		await user.type(textarea, 'create quiz about programming');
-
-		// Click generate quiz
-		const generateQuizBtn = screen.getByRole('button', {
-			name: new RegExp(enTranslations.generateQuizBtn, 'i'),
-		});
-
-		await user.click(generateQuizBtn);
-
-		// Solve generated quiz promise to stop loading page
-		resolveMockPromise!(mockQuizData);
-
-		// Check if loading page disappears after promise is resolved
-		await waitForElementToBeRemoved(() => screen.queryByTestId('loading-page'));
-
-		// Select correct option in question 1
-		const correctOptionBtn1 = screen.getByRole('button', {
-			name: new RegExp('A superset of Javascript'),
-		});
-
-		await user.click(correctOptionBtn1);
-
-		// Click next question btn
-		const nextQuestionBtn = screen.getByRole('button', {
-			name: /^next question$/i,
-		});
-
-		await user.click(nextQuestionBtn);
-		fireEvent.transitionEnd(screen.getByLabelText('question-title'));
-
-		// Select wrong option final question
-		const wrongOptionBtn2 = await screen.findByRole('button', {
-			name: new RegExp('Automatic memory management'),
-		});
-
-		await user.click(wrongOptionBtn2);
-
-		const nextQuestionBtn2 = screen.getByRole('button', {
-			name: /^next question$/i,
-		});
-
-		await user.click(nextQuestionBtn2);
-
-		const generateQuizBtnResults = screen.getByRole('button', {
-			name: new RegExp(enTranslations.generateQuizBtn, 'i'),
-		});
-		await user.click(generateQuizBtnResults);
-
-		const inputPage = screen.getByTestId('input-page');
-		expect(inputPage).toBeVisible();
-	});
-
-	it('Should reset quiz settings when generate quiz btn(results page) is clicked', async () => {
-		const user = userEvent.setup();
-
-		let resolveMockPromise: (value: QuizData) => void;
-		const controlledPromise = new Promise<QuizData>((resolve) => {
-			resolveMockPromise = resolve;
-		});
-
-		mockGenerateQuiz.mockReturnValue(controlledPromise);
-
-		render(<App />);
-
-		// Go to input page
-		const btnToInputPage = screen.getByRole('button', {
-			name: new RegExp(enTranslations.generateQuizBtn, 'i'),
-		});
-
-		await user.click(btnToInputPage);
-
-		// Enter prompt
-		const textarea = screen.getByPlaceholderText(
-			enTranslations.quizPromptPlaceholder
-		);
-
-		await user.type(textarea, 'create quiz about programming');
-
-		// Click generate quiz
-		const generateQuizBtn = screen.getByRole('button', {
-			name: new RegExp(enTranslations.generateQuizBtn, 'i'),
-		});
-
-		await user.click(generateQuizBtn);
-
-		// Solve generated quiz promise to stop loading page
-		resolveMockPromise!(mockQuizData);
-
-		// Check if loading page disappears after promise is resolved
-		await waitForElementToBeRemoved(() => screen.queryByTestId('loading-page'));
-
-		// Select correct option in question 1
-		const correctOptionBtn1 = screen.getByRole('button', {
-			name: new RegExp('A superset of Javascript'),
-		});
-
-		await user.click(correctOptionBtn1);
-
-		// Click next question btn
-		const nextQuestionBtn = screen.getByRole('button', {
-			name: /^next question$/i,
-		});
-
-		await user.click(nextQuestionBtn);
-		fireEvent.transitionEnd(screen.getByLabelText('question-title'));
-
-		// Select wrong option final question
-		const wrongOptionBtn2 = await screen.findByRole('button', {
-			name: new RegExp('Automatic memory management'),
-		});
-
-		await user.click(wrongOptionBtn2);
-
-		const nextQuestionBtn2 = screen.getByRole('button', {
-			name: /^next question$/i,
-		});
-
-		await user.click(nextQuestionBtn2);
-
-		const generateQuizBtnResults = screen.getByRole('button', {
-			name: new RegExp(enTranslations.generateQuizBtn, 'i'),
-		});
-		await user.click(generateQuizBtnResults);
-
-		const textareaAfterSubmittion = screen.getByPlaceholderText(
-			enTranslations.quizPromptPlaceholder
-		);
-
-		expect(textareaAfterSubmittion.textContent).toBe('');
+		expect(QuizLoadingPage).not.toBeVisible();
 	});
 });

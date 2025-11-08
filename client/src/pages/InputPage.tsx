@@ -21,6 +21,7 @@ export default function InputPage({
 	onQuizSubmit,
 	initialSettings,
 	apiError,
+	resetQuizStates,
 }: InputPageParams) {
 	const t = useTranslation();
 	const [localError, setLocalError] = useState<null | string>(apiError);
@@ -30,6 +31,10 @@ export default function InputPage({
 	const [quizSettings, setQuizSettings] = useState<QuizSettings>({
 		...initialSettings,
 	});
+
+	useEffect(() => {
+		resetQuizStates();
+	}, [resetQuizStates]);
 
 	useEffect(() => {
 		setQuizSettings({ ...initialSettings });

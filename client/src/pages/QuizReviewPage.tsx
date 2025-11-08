@@ -23,29 +23,29 @@ import {
 } from '@/components/ui/dialog';
 import { useTranslation } from '@/hooks/useTranslation';
 import { QuizLayout } from './QuizLayout';
+import { useNavigate } from 'react-router';
 
 export function QuizReviewPage({
 	quizData,
 	quizResults,
-	onPageChange,
 }: QuizReviewPageParams) {
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 	const [isExiting, setIsExiting] = useState(false);
 	const [transitionDirection, setTransitionDirection] = useState<0 | 1 | -1>(0);
+	const navigate = useNavigate();
+	const t = useTranslation();
 
 	const currentQuestion: QuizResultQuestion = quizData[currentQuestionIndex];
 	const questionNumber = currentQuestionIndex + 1;
 	const totalQuestions = quizData.length;
 	const selectedAnswerIndex = quizResults[currentQuestionIndex].selectedIndex;
 
-	const t = useTranslation();
-
 	const handleNextQuestionIndex = () => {
 		if (currentQuestionIndex < quizData.length - 1) {
 			setIsExiting(true);
 			setTransitionDirection(1);
 		} else {
-			onPageChange('results');
+			navigate('/results');
 		}
 	};
 
@@ -100,7 +100,7 @@ export function QuizReviewPage({
 			<Button
 				size="responsive"
 				variant="minimal"
-				onClick={() => onPageChange('results')}
+				onClick={() => navigate('/results')}
 				aria-label="end review"
 			>
 				<FontAwesomeIcon icon={faX} />

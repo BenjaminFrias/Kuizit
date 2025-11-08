@@ -7,23 +7,21 @@ export type InputPageParams = {
 	onQuizSubmit: (QuizSettings: QuizSettings) => void;
 	initialSettings: QuizSettings;
 	apiError: string | null;
+	resetQuizStates: () => void;
 };
 
 export type QuizPageParams = {
-	onPageChange: (pageName: Page) => void;
 	quizData: QuizData;
 	onQuizSubmittion: (newQuizResult: QuizResult) => void;
 };
 
 export type QuizResultsPageParams = {
 	quizResults: QuizResult;
-	onPageChange: (page: Page) => void;
 };
 
 export type QuizReviewPageParams = {
 	quizData: QuizData;
 	quizResults: QuizResult;
-	onPageChange: (page: Page) => void;
 };
 
 export type QuizResultOption = {

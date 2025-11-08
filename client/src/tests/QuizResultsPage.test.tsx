@@ -1,9 +1,11 @@
 import { QuizResultsPage } from '@/pages/QuizResultsPage';
 import type { QuizResultsPageParams } from '@/types';
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import enTranslations from '../translations/en.json';
 import userEvent from '@testing-library/user-event';
+import { MemoryRouter, Route, Routes } from 'react-router';
+import { MockInputPage, MockReviewPage } from './utils';
 
 vi.mock('@/hooks/useTranslation', () => ({
 	useTranslation: () => enTranslations,
@@ -24,11 +26,21 @@ const defaultQuizResultsPageProps: QuizResultsPageParams = {
 			selectedIndex: 1,
 		},
 	],
-	onPageChange: vi.fn(),
 };
 
 beforeEach(() => {
-	render(<QuizResultsPage {...defaultQuizResultsPageProps} />);
+	render(
+		<MemoryRouter initialEntries={['/results']}>
+			<Routes>
+				<Route
+					path="/results"
+					element={<QuizResultsPage {...defaultQuizResultsPageProps} />}
+				/>
+				<Route path="/review" element={<MockReviewPage />} />
+				<Route path="/input" element={<MockInputPage />} />
+			</Routes>
+		</MemoryRouter>
+	);
 });
 
 describe('Initial render', () => {
@@ -97,12 +109,9 @@ describe('UI interactions', () => {
 			name: new RegExp(enTranslations.reviewAnswers),
 		});
 
-		const mockOnPageChange = defaultQuizResultsPageProps.onPageChange;
-
 		await user.click(reviewAnswersBtn);
 
-		expect(mockOnPageChange).toHaveBeenCalled();
-		expect(mockOnPageChange).toHaveBeenCalledWith('review');
+		expect(screen.getByText('Review page'));
 	});
 
 	it('should call onPageChange with input when clicking generate quiz button', async () => {
@@ -111,12 +120,8 @@ describe('UI interactions', () => {
 			name: new RegExp(enTranslations.generateQuizBtn, 'i'),
 		});
 
-		const mockOnPageChange = defaultQuizResultsPageProps.onPageChange as Mock;
-
-		mockOnPageChange.mockClear();
 		await user.click(generateQuizBtn);
 
-		expect(mockOnPageChange).toHaveBeenCalled();
-		expect(mockOnPageChange).toHaveBeenCalledWith('input');
+		expect(screen.getByText('Input page'));
 	});
 });

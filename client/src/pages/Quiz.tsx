@@ -18,17 +18,15 @@ import {
 } from '@/components/ui/dialog';
 import { useTranslation } from '@/hooks/useTranslation';
 import { QuizLayout } from './QuizLayout';
+import { useNavigate } from 'react-router';
 
-export function QuizPage({
-	quizData,
-	onPageChange,
-	onQuizSubmittion,
-}: QuizPageParams) {
+export function QuizPage({ quizData, onQuizSubmittion }: QuizPageParams) {
 	const [quizResultData, setQuizResultData] = useState<QuizResult>([]);
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 	const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
 	const t = useTranslation();
 	const [isExiting, setIsExiting] = useState(false);
+	const navigate = useNavigate();
 
 	const currentQuestion: QuizResultQuestion = quizData[currentQuestionIndex];
 	const questionNumber = currentQuestionIndex + 1;
@@ -43,7 +41,7 @@ export function QuizPage({
 			setIsExiting(true);
 		} else {
 			onQuizSubmittion(quizResultData);
-			onPageChange('results');
+			navigate('/results');
 		}
 	};
 

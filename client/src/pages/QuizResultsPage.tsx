@@ -5,11 +5,9 @@ import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCrown } from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from '@/hooks/useTranslation';
+import { Link } from 'react-router';
 
-export function QuizResultsPage({
-	quizResults,
-	onPageChange,
-}: QuizResultsPageParams) {
+export function QuizResultsPage({ quizResults }: QuizResultsPageParams) {
 	const [isAnimating, setIsAnimating] = useState(true);
 	const t = useTranslation();
 
@@ -91,16 +89,16 @@ export function QuizResultsPage({
 				</p>
 			</div>
 			<div className="flex flex-col md:flex-row gap-3 z-1 mb-10 shortFadeIn">
-				<Button
-					size="md"
-					variant="secondary"
-					onClick={() => onPageChange('review')}
-				>
-					{t.reviewAnswers}
-				</Button>
-				<Button size="md" variant="green" onClick={() => onPageChange('input')}>
-					{t.generateQuizBtn}
-				</Button>
+				<Link to="/review">
+					<Button size="md" variant="secondary">
+						{t.reviewAnswers}
+					</Button>
+				</Link>
+				<Link to="/input">
+					<Button size="md" variant="green">
+						{t.generateQuizBtn}
+					</Button>
+				</Link>
 			</div>
 			<div
 				className="absolute -top-50 w-90 h-90 left-50 right-0 md:w-140

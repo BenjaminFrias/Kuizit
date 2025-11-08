@@ -1,15 +1,17 @@
-import { useCallback, useEffect, useState, type ReactElement } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import './App.css';
 import HomePage from './pages/HomePage';
 import InputPage from './pages/InputPage';
 import QuizLoadingPage from './pages/QuizLoadingPage';
-import type { Page, QuizData, QuizResult } from './types';
+import type { QuizData, QuizResult } from './types';
 import type { QuizSettings } from './schemas/QuizSchema';
 import { QuizPage } from './pages/Quiz';
 import { QuizResultsPage } from './pages/QuizResultsPage';
 import { QuizReviewPage } from './pages/QuizReviewPage';
 import { useTranslation } from './hooks/useTranslation';
 import { useQuizApi } from './hooks/useQuizApi';
+import { Routes, Route, useNavigate } from 'react-router';
+import ProtectedRoutes from './utils/ProtectedRoutes';
 
 const DEFAULT_QUIZ_SETTINGS: QuizSettings = {
 	quizInputType: 'prompt',
@@ -20,7 +22,6 @@ const DEFAULT_QUIZ_SETTINGS: QuizSettings = {
 };
 
 function App() {
-	const [currentPage, setCurrentPage] = useState<Page>('home');
 	const [quizData, setQuizData] = useState<QuizData>([]);
 	const [isQuizLoading, setIsQuizLoading] = useState(false);
 	const [quizResultData, setQuizResultData] = useState<QuizResult>([]);
@@ -28,8 +29,16 @@ function App() {
 	const [quizSettings, setQuizSettings] = useState<QuizSettings>({
 		...DEFAULT_QUIZ_SETTINGS,
 	});
-
 	const { generateQuiz, apiError, setApiError } = useQuizApi();
+	const navigate = useNavigate();
+
+	const quizRouteAccess = useMemo(() => {
+		return quizData && quizData.length > 0;
+	}, [quizData]);
+
+	const quizResultsRouteAccess = useMemo(() => {
+		return quizResultData && quizResultData.length > 0;
+	}, [quizResultData]);
 
 	const handleGenerateQuiz = async (newSettings: QuizSettings) => {
 		setApiError(null);
@@ -45,18 +54,18 @@ function App() {
 			const generatedQuizData = await generateQuiz(inputQuizData);
 
 			// Fallback for empty generated quiz data
-			if (!generatedQuizData || generatedQuizData.length === 0) {
+			if (!generatedQuizData?.length) {
 				throw new Error(t.pleaseTryAgain);
 			}
 
 			setQuizData(generatedQuizData);
-			handlePageChange('quiz');
+			navigate('/quiz');
 		} catch (error: unknown) {
 			const baseErrorMsg =
 				apiError || (error instanceof Error ? error.message : t.unexpectedErr);
 
 			setApiError(baseErrorMsg);
-			handlePageChange('input');
+			navigate('/input');
 		} finally {
 			setIsQuizLoading(false);
 		}
@@ -66,63 +75,60 @@ function App() {
 		setQuizResultData(quizResults);
 	};
 
-	const handlePageChange = (pageName: Page) => {
-		setCurrentPage(pageName);
-	};
-
 	const resetQuizStates = useCallback(() => {
 		setQuizSettings({ ...DEFAULT_QUIZ_SETTINGS });
 		setQuizResultData([]);
 	}, [setQuizSettings, setQuizResultData]);
 
-	useEffect(() => {
-		if (currentPage === 'input') {
-			resetQuizStates();
-		}
-	}, [currentPage, resetQuizStates]);
+	if (isQuizLoading) return <QuizLoadingPage />;
 
-	if (isQuizLoading) {
-		return <QuizLoadingPage />;
-	}
+	return (
+		<Routes>
+			<Route path="/" element={<HomePage />} />
 
-	type PageComponentsMap = Record<Page, ReactElement>;
-	const pageComponents: PageComponentsMap = {
-		home: <HomePage onPageChange={handlePageChange} />,
-		input: (
-			<InputPage
-				onQuizSubmit={handleGenerateQuiz}
-				initialSettings={quizSettings}
-				setApiError={setApiError}
-				apiError={apiError}
+			<Route
+				path="/input"
+				element={
+					<InputPage
+						onQuizSubmit={handleGenerateQuiz}
+						initialSettings={quizSettings}
+						setApiError={setApiError}
+						apiError={apiError}
+						resetQuizStates={resetQuizStates}
+					/>
+				}
 			/>
-		),
-		quiz: (
-			<QuizPage
-				onPageChange={handlePageChange}
-				quizData={quizData}
-				onQuizSubmittion={handleOptionSubmittion}
-			/>
-		),
-		results: (
-			<QuizResultsPage
-				quizResults={quizResultData}
-				onPageChange={handlePageChange}
-			/>
-		),
-		review: (
-			<QuizReviewPage
-				quizData={quizData}
-				quizResults={quizResultData}
-				onPageChange={handlePageChange}
-			/>
-		),
-	};
 
-	const renderPage = () => {
-		return pageComponents[currentPage];
-	};
+			<Route element={<ProtectedRoutes canAccess={quizRouteAccess} />}>
+				<Route
+					path="/quiz"
+					element={
+						<QuizPage
+							quizData={quizData}
+							onQuizSubmittion={handleOptionSubmittion}
+						/>
+					}
+				/>
 
-	return renderPage();
+				<Route element={<ProtectedRoutes canAccess={quizResultsRouteAccess} />}>
+					<Route
+						path="/results"
+						element={<QuizResultsPage quizResults={quizResultData} />}
+					/>
+
+					<Route
+						path="/review"
+						element={
+							<QuizReviewPage
+								quizData={quizData}
+								quizResults={quizResultData}
+							/>
+						}
+					/>
+				</Route>
+			</Route>
+		</Routes>
+	);
 }
 
 export default App;

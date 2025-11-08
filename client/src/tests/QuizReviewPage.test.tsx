@@ -2,10 +2,11 @@ import { QuizReviewPage } from '@/pages/QuizReviewPage';
 import type { QuizReviewPageParams } from '@/types';
 import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, vi, it, expect } from 'vitest';
+import { MemoryRouter, Route, Routes } from 'react-router';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { MockResultsPage } from './utils';
 
 const defaultQuizReviewParams: QuizReviewPageParams = {
-	onPageChange: vi.fn(),
 	quizData: [
 		{
 			type: 'multiple_choice',
@@ -46,31 +47,37 @@ const defaultQuizReviewParams: QuizReviewPageParams = {
 	],
 };
 
+beforeEach(() => {
+	render(
+		<MemoryRouter initialEntries={['/review']}>
+			<Routes>
+				<Route
+					path="/review"
+					element={<QuizReviewPage {...defaultQuizReviewParams} />}
+				/>
+				<Route path="/results" element={<MockResultsPage />} />
+			</Routes>
+		</MemoryRouter>
+	);
+});
+
 describe('Initial render', () => {
 	it('should render question 1 text', () => {
-		render(<QuizReviewPage {...defaultQuizReviewParams} />);
-
 		const questionNumberTitle = screen.getByText('Question 1');
 		expect(questionNumberTitle).toBeVisible();
 	});
 
 	it('should render first question title correctly', () => {
-		render(<QuizReviewPage {...defaultQuizReviewParams} />);
-
 		const questionTitle = screen.getByText('What is TypeScript?');
 		expect(questionTitle).toBeVisible();
 	});
 
 	it('should render decorative blurry shape', () => {
-		render(<QuizReviewPage {...defaultQuizReviewParams} />);
-
 		const blurryShape = screen.getByTestId('blurry-shape');
 		expect(blurryShape).toBeVisible();
 	});
 
 	it('should render progress bar', () => {
-		render(<QuizReviewPage {...defaultQuizReviewParams} />);
-
 		const progressBar = screen.getByTestId('progress-bar');
 		expect(progressBar).toBeVisible();
 	});
@@ -85,7 +92,6 @@ describe('Initial render', () => {
 	it.each(answerOptionsTestCases)(
 		'should render the "%s" answer option button',
 		(testCase) => {
-			render(<QuizReviewPage {...defaultQuizReviewParams} />);
 			const buttonName = testCase;
 
 			const answerBtn = screen.getByRole('button', {
@@ -97,8 +103,6 @@ describe('Initial render', () => {
 	);
 
 	it('should render close(x) button', () => {
-		render(<QuizReviewPage {...defaultQuizReviewParams} />);
-
 		const endReviewBtn = screen.getByRole('button', {
 			name: /end review/i,
 		});
@@ -107,8 +111,6 @@ describe('Initial render', () => {
 	});
 
 	it('should render explanation button', () => {
-		render(<QuizReviewPage {...defaultQuizReviewParams} />);
-
 		const explanationBtn = screen.getByRole('button', {
 			name: /explanation/i,
 		});
@@ -117,8 +119,6 @@ describe('Initial render', () => {
 	});
 
 	it('should render next answered question button', () => {
-		render(<QuizReviewPage {...defaultQuizReviewParams} />);
-
 		const endReviewBtn = screen.getByRole('button', {
 			name: /next question/i,
 		});
@@ -127,8 +127,6 @@ describe('Initial render', () => {
 	});
 
 	it('should not render previous answered question button in first question', () => {
-		render(<QuizReviewPage {...defaultQuizReviewParams} />);
-
 		const endReviewBtn = screen.queryByRole('button', {
 			name: /previous question/i,
 		});
@@ -140,8 +138,6 @@ describe('Initial render', () => {
 describe('Conditional render', () => {
 	it('should render previous answered question button after first question', async () => {
 		const user = userEvent.setup();
-		render(<QuizReviewPage {...defaultQuizReviewParams} />);
-
 		const nextQuestionBtn = screen.getByRole('button', {
 			name: /next question/i,
 		});
@@ -157,38 +153,33 @@ describe('Conditional render', () => {
 		expect(previousQuestionBtn).toBeVisible();
 	});
 
-	it('should call onPageChange when clicking end review button (x)', async () => {
+	it('should redirect to results page when clicking end review button (x)', async () => {
 		const user = userEvent.setup();
-		render(<QuizReviewPage {...defaultQuizReviewParams} />);
-		const mockOnPageChange = defaultQuizReviewParams.onPageChange;
-
 		const endReviewBtn = screen.getByRole('button', {
 			name: /end review/i,
 		});
 
 		await user.click(endReviewBtn);
 
-		expect(mockOnPageChange).toHaveBeenCalled();
-		expect(mockOnPageChange).toHaveBeenCalledWith('results');
+		expect(screen.getByText('Results page'));
 	});
 
-	it('should call onPageChange after clicking next answered button in the final question ', async () => {
+	it('should redirect to results after clicking next answered button in the final question ', async () => {
 		const user = userEvent.setup();
-		render(<QuizReviewPage {...defaultQuizReviewParams} />);
-		const mockOnPageChange = defaultQuizReviewParams.onPageChange;
-
 		const nextQuestionBtn = screen.getByRole('button', {
 			name: /next question/i,
 		});
 
 		await user.click(nextQuestionBtn);
+		const questionTitle = screen.getByLabelText('question-title');
+		fireEvent.transitionEnd(questionTitle);
 
-		const finalNextQuestionBtn = await screen.findByRole('button', {
+		const finalNextQuestionBtn = screen.getByRole('button', {
 			name: /next question/i,
 		});
 
 		await user.click(finalNextQuestionBtn);
 
-		expect(mockOnPageChange).toHaveBeenCalled();
+		expect(screen.getByText('Results page'));
 	});
 });

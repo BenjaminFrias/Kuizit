@@ -4,11 +4,11 @@ import OptionsCheckIllustration from '@/components/decorative/OptionsCheckIllust
 import { Button } from '@/components/ui/button';
 import { faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import type { onPageChangeType } from '@/types';
 import { useTranslation } from '@/hooks/useTranslation';
 import Logo from '@/components/Logo';
+import { Link } from 'react-router';
 
-export default function HomePage({ onPageChange }: onPageChangeType) {
+export default function HomePage() {
 	const t = useTranslation();
 
 	return (
@@ -36,15 +36,16 @@ export default function HomePage({ onPageChange }: onPageChangeType) {
 					<p className="shortFadeIn font-primary text-white text-lg text-center md:max-w-120 mt-8 z-999 md:z-1">
 						{t.taglineHome}
 					</p>
-					<Button
-						className="shortFadeIn mt-12 z-999"
-						size="lg"
-						variant="green"
-						onClick={() => onPageChange('input')}
-					>
-						{t.generateQuizBtn}
-						<FontAwesomeIcon icon={faWandMagicSparkles} />
-					</Button>
+					<Link to="/input">
+						<Button
+							className="shortFadeIn mt-12 z-999"
+							size="lg"
+							variant="green"
+						>
+							{t.generateQuizBtn}
+							<FontAwesomeIcon icon={faWandMagicSparkles} />
+						</Button>
+					</Link>
 
 					<div
 						className="longFadeIn absolute -bottom-30 left-10 w-35 h-60 lg:w-65 lg:h-80 -rotate-25

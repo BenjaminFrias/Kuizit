@@ -1,17 +1,18 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { QuizPage } from '@/pages/Quiz';
 import enTranslations from '../translations/en.json';
 import type { QuizPageParams, QuizResult } from '@/types';
 import userEvent from '@testing-library/user-event';
+import { MemoryRouter, Route, Routes } from 'react-router';
+import { MockResultsPage } from './utils';
 
 vi.mock('@/hooks/useTranslation', () => ({
 	useTranslation: () => enTranslations,
 }));
 
 const defaultQuizPageProps: QuizPageParams = {
-	onPageChange: vi.fn(),
 	onQuizSubmittion: vi.fn(),
 	quizData: [
 		{
@@ -43,31 +44,34 @@ const defaultQuizPageProps: QuizPageParams = {
 	],
 };
 
+beforeEach(() => {
+	render(
+		<MemoryRouter initialEntries={['/quiz']}>
+			<Routes>
+				<Route path="/quiz" element={<QuizPage {...defaultQuizPageProps} />} />
+				<Route path="/results" element={<MockResultsPage />} />
+			</Routes>
+		</MemoryRouter>
+	);
+});
+
 describe('Initial render', () => {
 	it('should render question 1 subtitle', () => {
-		render(<QuizPage {...defaultQuizPageProps} />);
-
 		const questionNumberTitle = screen.getByText('Question 1');
 		expect(questionNumberTitle).toBeInTheDocument();
 	});
 
 	it('should render first question title correctly', () => {
-		render(<QuizPage {...defaultQuizPageProps} />);
-
 		const questionTitle = screen.getByText('What is TypeScript?');
 		expect(questionTitle).toBeInTheDocument();
 	});
 
 	it('should render decorative blurry shape', () => {
-		render(<QuizPage {...defaultQuizPageProps} />);
-
 		const blurryShape = screen.getByTestId('blurry-shape');
 		expect(blurryShape).toBeInTheDocument();
 	});
 
 	it('should render progress bar', () => {
-		render(<QuizPage {...defaultQuizPageProps} />);
-
 		const progressBar = screen.getByTestId('progress-bar');
 		expect(progressBar).toBeInTheDocument();
 	});
@@ -82,7 +86,6 @@ describe('Initial render', () => {
 	it.each(answerOptionsTestCases)(
 		'should render the "%s" answer option button',
 		(testCase) => {
-			render(<QuizPage {...defaultQuizPageProps} />);
 			const buttonName = testCase;
 
 			const answerBtn = screen.getByRole('button', {
@@ -94,8 +97,6 @@ describe('Initial render', () => {
 	);
 
 	it('should render next question blocked button', () => {
-		render(<QuizPage {...defaultQuizPageProps} />);
-
 		const blockedNextQuestionBtn = screen.getByRole('button', {
 			name: /next question/i,
 		});
@@ -107,8 +108,6 @@ describe('Initial render', () => {
 describe('Conditional rendering', () => {
 	it('should display the correct option in green when clicking the correct one', async () => {
 		const user = userEvent.setup();
-		render(<QuizPage {...defaultQuizPageProps} />);
-
 		const correctOptionBtn = screen.getByRole('button', {
 			name: new RegExp('A superset of Javascript', 'i'),
 		});
@@ -120,8 +119,6 @@ describe('Conditional rendering', () => {
 
 	it('should display the correct answer in green and the wrong answer in red when clicking a wrong option', async () => {
 		const user = userEvent.setup();
-		render(<QuizPage {...defaultQuizPageProps} />);
-
 		const wrongOptionBtn = screen.getByRole('button', {
 			name: new RegExp('A python superset'),
 		});
@@ -138,8 +135,6 @@ describe('Conditional rendering', () => {
 
 	it('should unlock next question button after answering', async () => {
 		const user = userEvent.setup();
-		render(<QuizPage {...defaultQuizPageProps} />);
-
 		const correctOptionBtn = screen.getByRole('button', {
 			name: new RegExp('A superset of Javascript', 'i'),
 		});
@@ -163,8 +158,6 @@ describe('Conditional rendering', () => {
 describe('UI Integration tests', () => {
 	it('should call onPageChange after clicking next question button with last question index', async () => {
 		const user = userEvent.setup();
-		render(<QuizPage {...defaultQuizPageProps} />);
-		const mockOnPageChange = defaultQuizPageProps.onPageChange;
 
 		const correctOptionBtn = screen.getByRole('button', {
 			name: new RegExp('A superset of Javascript', 'i'),
@@ -195,12 +188,12 @@ describe('UI Integration tests', () => {
 
 		await user.click(nextQuestionBtn2);
 
-		expect(mockOnPageChange).toHaveBeenCalled();
+		const resultsPage = screen.getByText('Results page');
+		expect(resultsPage).toBeVisible();
 	});
 
 	it('should call onAnswerSubmittion with correct data after completing quiz', async () => {
 		const user = userEvent.setup();
-		render(<QuizPage {...defaultQuizPageProps} />);
 		const mockOnQuizSubmittion = defaultQuizPageProps.onQuizSubmittion;
 
 		const correctOptionBtn = screen.getByRole('button', {
