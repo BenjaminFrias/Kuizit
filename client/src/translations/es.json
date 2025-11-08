@@ -32,5 +32,6 @@
 	"yourScoreIs": "Tu puntuación es",
 	"quizScoreText": "Tienes {correctCount} de {totalCount} preguntas correctas",
 	"reviewAnswers": "Revisar respuestas",
-	"dragAndDrop": "Arrastra y suelta o selecciona archivos para subir"
+	"dragAndDrop": "Arrastra y suelta o selecciona archivos para subir",
+	"title404": "¡Ups! La página que estaba buscando no existe."
 }

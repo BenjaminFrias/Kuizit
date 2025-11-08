@@ -33,4 +33,5 @@ export type Translations = {
 	quizScoreText: string;
 	reviewAnswers: string;
 	dragAndDrop: string;
+	title404: string;
 };

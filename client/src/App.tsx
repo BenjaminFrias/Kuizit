@@ -12,6 +12,7 @@ import { useTranslation } from './hooks/useTranslation';
 import { useQuizApi } from './hooks/useQuizApi';
 import { Routes, Route, useNavigate } from 'react-router';
 import ProtectedRoutes from './utils/ProtectedRoutes';
+import { Page404 } from './pages/404';
 
 const DEFAULT_QUIZ_SETTINGS: QuizSettings = {
 	quizInputType: 'prompt',
@@ -127,6 +128,8 @@ function App() {
 					/>
 				</Route>
 			</Route>
+
+			<Route path="*" element={<Page404 />} />
 		</Routes>
 	);
 }

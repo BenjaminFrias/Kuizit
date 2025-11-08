@@ -32,5 +32,6 @@
 	"yourScoreIs": "Your score is",
 	"quizScoreText": "You got {correctCount} out of {totalCount} questions correctly",
 	"reviewAnswers": "Review answers",
-	"dragAndDrop": "Drag and drop or choose files to upload"
+	"dragAndDrop": "Drag and drop or choose files to upload",
+	"title404": "Oops! The page you were looking for doesn't exist."
 }
