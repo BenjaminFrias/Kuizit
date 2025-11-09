@@ -6,7 +6,7 @@ import { faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router';
 
-export function Page404() {
+export default function Page404() {
 	const t = useTranslation();
 	return (
 		<div

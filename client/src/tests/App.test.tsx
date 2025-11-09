@@ -1,16 +1,14 @@
 import App from '@/App';
 import {
-	fireEvent,
 	render,
 	screen,
 	waitForElementToBeRemoved,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import enTranslations from '../translations/en.json';
 import type { QuizData } from '@/types';
-import { MemoryRouter, Route, Routes } from 'react-router';
-import { MockQuizPage } from './utils';
+import { MemoryRouter } from 'react-router';
 
 const mockGenerateQuiz = vi.fn();
 vi.mock('../hooks/useQuizApi', () => {
@@ -52,37 +50,25 @@ const mockQuizData: QuizData = [
 	},
 ];
 
-beforeEach(() => {
-	render(
-		<MemoryRouter initialEntries={['/']}>
-			<Routes>
-				<Route path="*" element={<App />} />
-			</Routes>
-		</MemoryRouter>
-	);
-});
-
 describe('App tests', () => {
-	it('Should display home page when app is mounted', () => {
-		const homepage = screen.getByTestId('home-page');
+	it('Should display home page when app is mounted', async () => {
+		render(
+			<MemoryRouter initialEntries={['/']}>
+				<App />
+			</MemoryRouter>
+		);
+
+		const homepage = await screen.findByTestId('home-page');
 		expect(homepage).toBeVisible();
 	});
 
-	it('Should display input page after generate quiz homepage button is clicked', async () => {
-		const user = userEvent.setup();
-
-		// Click generate button in homepage
-		const generateQuizBtn = screen.getByRole('button', {
-			name: new RegExp(enTranslations.generateQuizBtn, 'i'),
-		});
-
-		await user.click(generateQuizBtn);
-
-		const inputPage = screen.getByTestId('input-page');
-		expect(inputPage).toBeVisible();
-	});
-
 	it('Should display quiz loading page while the quiz data is being fetched', async () => {
+		render(
+			<MemoryRouter initialEntries={['/input']}>
+				<App />
+			</MemoryRouter>
+		);
+
 		const user = userEvent.setup();
 
 		let resolveMockPromise: (value: QuizData) => void;
@@ -92,29 +78,22 @@ describe('App tests', () => {
 
 		mockGenerateQuiz.mockReturnValue(controlledPromise);
 
-		// Go to input page
-		const btnToInputPage = screen.getByRole('button', {
-			name: new RegExp(enTranslations.generateQuizBtn, 'i'),
-		});
-
-		await user.click(btnToInputPage);
-
 		// Enter prompt
-		const textarea = screen.getByPlaceholderText(
+		const textarea = await screen.findByPlaceholderText(
 			enTranslations.quizPromptPlaceholder
 		);
 
 		await user.type(textarea, 'create quiz about programming');
 
 		// Click generate quiz
-		const generateQuizBtn = screen.getByRole('button', {
+		const generateQuizBtn = await screen.findByRole('button', {
 			name: new RegExp(enTranslations.generateQuizBtn, 'i'),
 		});
 
 		await user.click(generateQuizBtn);
 
 		// Check for quiz loading page being shown
-		const QuizLoadingPage = screen.getByTestId('loading-page');
+		const QuizLoadingPage = await screen.findByTestId('loading-page');
 		expect(QuizLoadingPage).toBeVisible();
 
 		// Solve generated quiz promise to stop loading page

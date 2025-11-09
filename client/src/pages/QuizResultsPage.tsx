@@ -7,7 +7,9 @@ import { faCrown } from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Link } from 'react-router';
 
-export function QuizResultsPage({ quizResults }: QuizResultsPageParams) {
+export default function QuizResultsPage({
+	quizResults,
+}: QuizResultsPageParams) {
 	const [isAnimating, setIsAnimating] = useState(true);
 	const t = useTranslation();
 

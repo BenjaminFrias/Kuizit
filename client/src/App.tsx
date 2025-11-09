@@ -1,18 +1,19 @@
-import { useCallback, useMemo, useState } from 'react';
+import { lazy, Suspense, useCallback, useMemo, useState } from 'react';
 import './App.css';
-import HomePage from './pages/HomePage';
-import InputPage from './pages/InputPage';
-import QuizLoadingPage from './pages/QuizLoadingPage';
 import type { QuizData, QuizResult } from './types';
 import type { QuizSettings } from './schemas/QuizSchema';
-import { QuizPage } from './pages/Quiz';
-import { QuizResultsPage } from './pages/QuizResultsPage';
-import { QuizReviewPage } from './pages/QuizReviewPage';
 import { useTranslation } from './hooks/useTranslation';
 import { useQuizApi } from './hooks/useQuizApi';
 import { Routes, Route, useNavigate } from 'react-router';
 import ProtectedRoutes from './utils/ProtectedRoutes';
-import { Page404 } from './pages/404';
+import QuizLoadingPage from './pages/QuizLoadingPage';
+
+const HomePage = lazy(() => import('./pages/HomePage'));
+const InputPage = lazy(() => import('./pages/InputPage'));
+const QuizPage = lazy(() => import('./pages/Quiz'));
+const QuizResultsPage = lazy(() => import('./pages/QuizResultsPage'));
+const QuizReviewPage = lazy(() => import('./pages/QuizReviewPage'));
+const Page404 = lazy(() => import('./pages/404'));
 
 const DEFAULT_QUIZ_SETTINGS: QuizSettings = {
 	quizInputType: 'prompt',
@@ -84,53 +85,57 @@ function App() {
 	if (isQuizLoading) return <QuizLoadingPage />;
 
 	return (
-		<Routes>
-			<Route path="/" element={<HomePage />} />
+		<Suspense fallback={null}>
+			<Routes>
+				<Route path="/" element={<HomePage />} />
 
-			<Route
-				path="/input"
-				element={
-					<InputPage
-						onQuizSubmit={handleGenerateQuiz}
-						initialSettings={quizSettings}
-						setApiError={setApiError}
-						apiError={apiError}
-						resetQuizStates={resetQuizStates}
-					/>
-				}
-			/>
-
-			<Route element={<ProtectedRoutes canAccess={quizRouteAccess} />}>
 				<Route
-					path="/quiz"
+					path="/input"
 					element={
-						<QuizPage
-							quizData={quizData}
-							onQuizSubmittion={handleOptionSubmittion}
+						<InputPage
+							onQuizSubmit={handleGenerateQuiz}
+							initialSettings={quizSettings}
+							setApiError={setApiError}
+							apiError={apiError}
+							resetQuizStates={resetQuizStates}
 						/>
 					}
 				/>
 
-				<Route element={<ProtectedRoutes canAccess={quizResultsRouteAccess} />}>
+				<Route element={<ProtectedRoutes canAccess={quizRouteAccess} />}>
 					<Route
-						path="/results"
-						element={<QuizResultsPage quizResults={quizResultData} />}
-					/>
-
-					<Route
-						path="/review"
+						path="/quiz"
 						element={
-							<QuizReviewPage
+							<QuizPage
 								quizData={quizData}
-								quizResults={quizResultData}
+								onQuizSubmittion={handleOptionSubmittion}
 							/>
 						}
 					/>
-				</Route>
-			</Route>
 
-			<Route path="*" element={<Page404 />} />
-		</Routes>
+					<Route
+						element={<ProtectedRoutes canAccess={quizResultsRouteAccess} />}
+					>
+						<Route
+							path="/results"
+							element={<QuizResultsPage quizResults={quizResultData} />}
+						/>
+
+						<Route
+							path="/review"
+							element={
+								<QuizReviewPage
+									quizData={quizData}
+									quizResults={quizResultData}
+								/>
+							}
+						/>
+					</Route>
+				</Route>
+
+				<Route path="*" element={<Page404 />} />
+			</Routes>
+		</Suspense>
 	);
 }
 

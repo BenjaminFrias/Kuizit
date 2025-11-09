@@ -20,7 +20,10 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { QuizLayout } from './QuizLayout';
 import { useNavigate } from 'react-router';
 
-export function QuizPage({ quizData, onQuizSubmittion }: QuizPageParams) {
+export default function QuizPage({
+	quizData,
+	onQuizSubmittion,
+}: QuizPageParams) {
 	const [quizResultData, setQuizResultData] = useState<QuizResult>([]);
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 	const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);

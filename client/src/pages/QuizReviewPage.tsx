@@ -25,7 +25,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { QuizLayout } from './QuizLayout';
 import { useNavigate } from 'react-router';
 
-export function QuizReviewPage({
+export default function QuizReviewPage({
 	quizData,
 	quizResults,
 }: QuizReviewPageParams) {

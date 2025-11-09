@@ -1,4 +1,4 @@
-import { QuizResultsPage } from '@/pages/QuizResultsPage';
+import QuizResultsPage from '@/pages/QuizResultsPage';
 import type { QuizResultsPageParams } from '@/types';
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';

@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { QuizPage } from '@/pages/Quiz';
+import QuizPage from '@/pages/Quiz';
 import enTranslations from '../translations/en.json';
 import type { QuizPageParams, QuizResult } from '@/types';
 import userEvent from '@testing-library/user-event';
