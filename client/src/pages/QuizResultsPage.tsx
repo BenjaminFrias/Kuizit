@@ -55,7 +55,7 @@ export default function QuizResultsPage({
 				{t.quizResultsTitle}
 			</h2>
 			<div className="relative flex flex-col w-full gap-2 justify-center ">
-				<div className="text-custom-white text-center">
+				<div className="text-custom-white text-center" aria-hidden="true">
 					<FontAwesomeIcon icon={faCrown} size="2x" data-testid="crown-icon" />
 				</div>
 				<p
@@ -104,13 +104,15 @@ export default function QuizResultsPage({
 			</div>
 			<div
 				className="absolute -top-50 w-90 h-90 left-50 right-0 md:w-140
-											md:h-140 md:-top-30 md:bottom-0 md:-right-80 md:left-auto lg:w-200 lg:h-200 opacity-80 "
+				md:h-140 md:-top-30 md:bottom-0 md:-right-80 md:left-auto lg:w-200 lg:h-200 opacity-80"
+				aria-hidden="true"
 			>
 				<BlurryShape />
 			</div>
 			<div
 				className="absolute -bottom-50 w-90 h-90 left-0 right-50 md:w-140
-											md:h-140 md:top-30 md:bottom-0 md:-left-80 lg:w-200 lg:h-200 opacity-80 "
+				md:h-140 md:top-30 md:bottom-0 md:-left-80 lg:w-200 lg:h-200 opacity-80"
+				aria-hidden="true"
 			>
 				<BlurryShape />
 			</div>

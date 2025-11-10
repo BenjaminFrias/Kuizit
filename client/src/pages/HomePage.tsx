@@ -49,14 +49,16 @@ export default function HomePage() {
 
 					<div
 						className="longFadeIn absolute -bottom-30 left-10 w-35 h-60 lg:w-65 lg:h-80 -rotate-25
-					md:w-55 md:h-70 md: md:-left-5 md:-rotate-12 lg:left-30 z-4"
+						md:w-55 md:h-70 md: md:-left-5 md:-rotate-12 lg:left-30 z-4"
+						aria-hidden="true"
 					>
 						<OptionsCheckIllustration />
 					</div>
 
 					<div
 						className="longFadeIn absolute -bottom-30 right-10 w-35 h-60 rotate-25
-					md:w-55 md:h-70 md:right-2 lg:right-30 lg:w-65 lg:h-80 md:rotate-12 z-4"
+						md:w-55 md:h-70 md:right-2 lg:right-30 lg:w-65 lg:h-80 md:rotate-12 z-4"
+						aria-hidden="true"
 					>
 						<MagicTextIllustration />
 					</div>
@@ -65,6 +67,7 @@ export default function HomePage() {
 					<div
 						className="absolute -top-50 w-90 h-90 -left-25 md:w-140
 						md:h-140 md:-top-50 md:-left-70 lg:-top-100 lg:-left-110 lg:w-200 lg:h-200 opacity-80 z-3"
+						aria-hidden="true"
 					>
 						<BlurryShape />
 					</div>
@@ -72,16 +75,23 @@ export default function HomePage() {
 					<div
 						className="absolute -bottom-45 -right-12 w-120 h-120 md:w-240 md:h-240 md:-bottom-0
 						md:-top-10 md:-right-190 lg:w-300 lg:h-300 z-3"
+						aria-hidden="true"
 					>
 						<BlurryShape />
 					</div>
 				</div>
 			</div>
-			<div className="z-1">
-				<div className="absolute -bottom-25 -right-32 w-120 h-120 md:-top-10 md:-right-100 md:w-300 md:h-300 -z-2">
+			<div className=" z-1" aria-hidden="true">
+				<div
+					className="absolute -bottom-25 -right-32 w-120 h-120 md:-top-10 md:-right-100 md:w-300 md:h-300 -z-2"
+					aria-hidden="true"
+				>
 					<BlurryShape />
 				</div>
-				<div className="absolute -top-55 w-90 h-90 -left-25 md:-top-100 md:-left-90 md:w-200 md:h-200 opacity-80 -z-2">
+				<div
+					className="absolute -top-55 w-90 h-90 -left-25 md:-top-100 md:-left-90 md:w-200 md:h-200 opacity-80 -z-2"
+					aria-hidden="true"
+				>
 					<BlurryShape />
 				</div>
 			</div>

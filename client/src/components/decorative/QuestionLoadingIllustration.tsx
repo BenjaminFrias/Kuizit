@@ -12,6 +12,7 @@ export default function QuestionLoadingIllustration() {
                 rounded-full transition-all duration-300 bg-custom-green
             `}
 			data-testid="question-loading-decorative"
+			aria-hidden="true"
 		>
 			<FontAwesomeIcon
 				icon={faWandMagicSparkles}

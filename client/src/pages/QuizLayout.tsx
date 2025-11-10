@@ -34,7 +34,8 @@ export function QuizLayout({
 			>
 				<div
 					className="absolute -top-50 w-90 h-90 left-0 right-0 md:w-140
-                                            md:h-140 md:top-0 md:bottom-0 md:-left-70 lg:-left-110 lg:w-200 lg:h-200 opacity-80 "
+					md:h-140 md:top-0 md:bottom-0 md:-left-70 lg:-left-110 lg:w-200 lg:h-200 opacity-80"
+					aria-hidden="true"
 				>
 					<BlurryShape />
 				</div>
@@ -56,7 +57,7 @@ export function QuizLayout({
 				</h1>
 			</div>
 			<div className="relative flex flex-col flex-3 w-full px-5 pb-8 gap-10 md:flex-1/3 justify-between items-center py-5 bg-custom-white">
-				<div className="flex w-full relative">
+				<div className="flex w-full relative" aria-hidden="true">
 					<div className="progress-bar absolute w-[100%] bg-custom-light-gray/15 h-1 rounded-full transition-all duration-300"></div>
 					<div
 						className="progress-bar absolute max-w-full bg-custom-green h-1 rounded-full transition-all duration-300"
