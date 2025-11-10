@@ -42,7 +42,7 @@ app.post(
 			res.status(200).json(validatedQuizData);
 		} catch (error: any) {
 			console.error('Quiz generation failed: ', error);
-			res.status(500).json({ error: 'Internal server error.' });
+			res.status(500).json({ error: 'Internal server error' });
 		}
 	}
 );
