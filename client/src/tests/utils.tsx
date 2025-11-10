@@ -1,7 +1,7 @@
 import HomePage from '@/pages/HomePage';
 import InputPage from '@/pages/InputPage';
-import { QuizPage } from '@/pages/Quiz';
-import { QuizResultsPage } from '@/pages/QuizResultsPage';
+import QuizPage from '@/pages/Quiz';
+import QuizResultsPage from '@/pages/QuizResultsPage';
 import type {
 	InputPageParams,
 	QuizPageParams,
