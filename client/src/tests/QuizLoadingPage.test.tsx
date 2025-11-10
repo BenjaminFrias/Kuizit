@@ -15,12 +15,12 @@ beforeEach(() => {
 describe('Loading component', () => {
 	it('should render main text correctly', () => {
 		expect(
-			screen.getByText(`${enTranslations.generating}...`)
+			screen.getByText(`${enTranslations.generating}`)
 		).toBeInTheDocument();
 	});
 
 	it('should render spinner icon correctly', () => {
-		const iconElement = screen.getByTestId('loadingIcon');
+		const iconElement = screen.getByTestId('question-loading-decorative');
 		expect(iconElement).toBeInTheDocument();
 	});
 });

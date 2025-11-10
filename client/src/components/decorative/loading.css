@@ -1,0 +1,67 @@
+.generating-text {
+	animation: loading-text ease 3s infinite;
+}
+
+@keyframes loading-text {
+	0% {
+		opacity: 40%;
+		color: auto;
+	}
+	50% {
+		opacity: 100%;
+		color: var(--color-custom-green);
+	}
+	100% {
+		color: auto;
+		opacity: 40%;
+	}
+}
+
+.question-box {
+	animation: box-in ease 3s infinite;
+}
+
+@keyframes box-in {
+	0% {
+		bottom: -30px;
+		opacity: 0;
+		scale: 0.8;
+	}
+	40% {
+		scale: 1;
+		bottom: 0px;
+		opacity: 100%;
+	}
+	40%,
+	50% {
+		scale: 1.05;
+	}
+	60% {
+		scale: 1;
+		bottom: 0px;
+		opacity: 100%;
+	}
+	100% {
+		bottom: 30px;
+		opacity: 0;
+	}
+}
+
+.question-text {
+	animation: load ease 3s infinite;
+}
+
+@keyframes load {
+	0% {
+		width: 0%;
+		opacity: 20%;
+	}
+	40%,
+	60% {
+		opacity: 1;
+		width: 100%;
+	}
+	100% {
+		opacity: 0;
+	}
+}
