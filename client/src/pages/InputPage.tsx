@@ -225,7 +225,7 @@ export default function InputPage({
 						</div>
 					</fieldset>
 					<Button
-						className="longFadeIn mt-6 max-w-[300px] self-center"
+						className="longFadeIn mt-3 max-w-[300px] self-center"
 						size="md"
 						variant="green"
 						type="submit"
