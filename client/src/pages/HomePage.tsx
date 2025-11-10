@@ -36,12 +36,8 @@ export default function HomePage() {
 					<p className="shortFadeIn font-primary text-white text-lg text-center md:max-w-120 mt-8 z-999 md:z-1">
 						{t.taglineHome}
 					</p>
-					<Link to="/input">
-						<Button
-							className="shortFadeIn mt-12 z-999"
-							size="lg"
-							variant="green"
-						>
+					<Link to="/input" className="z-999">
+						<Button className="shortFadeIn mt-12 " size="lg" variant="green">
 							{t.generateQuizBtn}
 							<FontAwesomeIcon icon={faWandMagicSparkles} />
 						</Button>
