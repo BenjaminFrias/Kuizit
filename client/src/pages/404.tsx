@@ -26,12 +26,8 @@ export default function Page404() {
 					>
 						{t.title404}
 					</h1>
-					<Link to="/input">
-						<Button
-							className="shortFadeIn mt-12 z-999"
-							size="lg"
-							variant="green"
-						>
+					<Link to="/input" className="z-999">
+						<Button className="shortFadeIn mt-12" size="lg" variant="green">
 							{t.generateQuizBtn}
 							<FontAwesomeIcon icon={faWandMagicSparkles} />
 						</Button>
