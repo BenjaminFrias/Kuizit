@@ -50,6 +50,8 @@ function App() {
 			...newSettings,
 		};
 
+		const preloadQuiz = import('./pages/Quiz');
+
 		try {
 			setIsQuizLoading(true);
 
@@ -60,6 +62,7 @@ function App() {
 				throw new Error(t.pleaseTryAgain);
 			}
 
+			await preloadQuiz;
 			setQuizData(generatedQuizData);
 			navigate('/quiz');
 		} catch (error: unknown) {
