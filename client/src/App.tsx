@@ -7,8 +7,8 @@ import { useQuizApi } from './hooks/useQuizApi';
 import { Routes, Route, useNavigate } from 'react-router';
 import ProtectedRoutes from './utils/ProtectedRoutes';
 import QuizLoadingPage from './pages/QuizLoadingPage';
+import HomePage from './pages/HomePage';
 
-const HomePage = lazy(() => import('./pages/HomePage'));
 const InputPage = lazy(() => import('./pages/InputPage'));
 const QuizPage = lazy(() => import('./pages/Quiz'));
 const QuizResultsPage = lazy(() => import('./pages/QuizResultsPage'));
@@ -88,13 +88,16 @@ function App() {
 	if (isQuizLoading) return <QuizLoadingPage />;
 
 	return (
-		<Suspense fallback={null}>
-			<Routes>
-				<Route path="/" element={<HomePage />} />
+		<Routes>
+			<Route path="/" element={<HomePage />} />
 
-				<Route
-					path="/input"
-					element={
+			<Route
+				path="/input"
+				loader
+				element={
+					<Suspense
+						fallback={<div className="w-screen h-screen bg-custom-white"></div>}
+					>
 						<InputPage
 							onQuizSubmit={handleGenerateQuiz}
 							initialSettings={quizSettings}
@@ -102,43 +105,62 @@ function App() {
 							apiError={apiError}
 							resetQuizStates={resetQuizStates}
 						/>
+					</Suspense>
+				}
+			/>
+
+			<Route element={<ProtectedRoutes canAccess={quizRouteAccess} />}>
+				<Route
+					path="/quiz"
+					element={
+						<QuizPage
+							quizData={quizData}
+							onQuizSubmittion={handleOptionSubmittion}
+						/>
 					}
 				/>
 
-				<Route element={<ProtectedRoutes canAccess={quizRouteAccess} />}>
+				<Route element={<ProtectedRoutes canAccess={quizResultsRouteAccess} />}>
 					<Route
-						path="/quiz"
+						path="/results"
 						element={
-							<QuizPage
-								quizData={quizData}
-								onQuizSubmittion={handleOptionSubmittion}
-							/>
+							<Suspense
+								fallback={
+									<div className="w-screen h-screen bg-custom-gray"></div>
+								}
+							>
+								<QuizResultsPage quizResults={quizResultData} />
+							</Suspense>
 						}
 					/>
 
 					<Route
-						element={<ProtectedRoutes canAccess={quizResultsRouteAccess} />}
-					>
-						<Route
-							path="/results"
-							element={<QuizResultsPage quizResults={quizResultData} />}
-						/>
-
-						<Route
-							path="/review"
-							element={
+						path="/review"
+						element={
+							<Suspense
+								fallback={
+									<div className="w-screen h-screen bg-green-400"></div>
+								}
+							>
 								<QuizReviewPage
 									quizData={quizData}
 									quizResults={quizResultData}
 								/>
-							}
-						/>
-					</Route>
+							</Suspense>
+						}
+					/>
 				</Route>
+			</Route>
 
-				<Route path="*" element={<Page404 />} />
-			</Routes>
-		</Suspense>
+			<Route
+				path="*"
+				element={
+					<Suspense>
+						<Page404 />
+					</Suspense>
+				}
+			/>
+		</Routes>
 	);
 }
 
