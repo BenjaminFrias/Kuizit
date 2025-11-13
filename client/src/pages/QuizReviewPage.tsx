@@ -23,7 +23,7 @@ import {
 } from '@/components/ui/dialog';
 import { useTranslation } from '@/hooks/useTranslation';
 import { QuizLayout } from './QuizLayout';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 
 export default function QuizReviewPage({
 	quizData,
@@ -97,14 +97,11 @@ export default function QuizReviewPage({
 
 	const navigationButtons = (
 		<>
-			<Button
-				size="responsive"
-				variant="minimal"
-				onClick={() => navigate('/results')}
-				aria-label="end review"
-			>
-				<FontAwesomeIcon icon={faX} />
-			</Button>
+			<Link to={'/results'}>
+				<Button size="responsive" variant="minimal" aria-label="end review">
+					<FontAwesomeIcon icon={faX} />
+				</Button>
+			</Link>
 			<Dialog>
 				<DialogTrigger asChild>
 					<Button
